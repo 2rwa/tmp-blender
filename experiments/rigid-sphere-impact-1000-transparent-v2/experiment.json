@@ -1,0 +1,16 @@
+{
+  "id": "rigid-sphere-impact-1000-transparent-v2",
+  "title": "Rigid Sphere Impact 1000 Transparent V2",
+  "description": "A heavier, higher-quality 1000-body sphere impact experiment with transparent physical containment walls.",
+  "preview_source": "poster.png",
+  "required_outputs": [
+    "rigid-sphere-impact-1000-transparent-v2.mp4",
+    "poster.png",
+    "rigid-sim.blend",
+    "rigid-result.blend"
+  ],
+  "repo_blends": [
+    "rigid-sim.blend",
+    "rigid-result.blend"
+  ]
+}

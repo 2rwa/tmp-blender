@@ -60,6 +60,7 @@ A push that changes `experiments/<id>/` automatically runs that experiment. Shar
 - [fire-column](experiments/fire-column/) — lightweight animated flame column
 - [fluid-dam-break](experiments/fluid-dam-break/) — Mantaflow liquid dam-break simulation
 - [rigid-sphere-impact-1000](experiments/rigid-sphere-impact-1000/) — heavy sphere impact into 1000 rigid bodies
+- [rigid-sphere-impact-1000-transparent-v2](experiments/rigid-sphere-impact-1000-transparent-v2/) — higher-quality sphere impact with transparent containment walls
 
 
 ## GitHub Pages gallery
