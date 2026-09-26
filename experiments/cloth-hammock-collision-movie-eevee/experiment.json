@@ -1,0 +1,29 @@
+{
+  "id": "cloth-hammock-collision-movie-eevee",
+  "title": "Cloth Hammock Collision Movie EEVEE",
+  "description": "An 8-second presentation-oriented extension of the cloth hammock experiment with two-stage sphere impacts, moving wind/turbulence, and a slow animated camera. Cloth physics is baked to shape keys before parallel EEVEE rendering.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 192,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 108,
+    "blend": "cloth-hammock-collision-movie-eevee.blend",
+    "video": "cloth-hammock-collision-movie-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "cloth-hammock-collision-movie-eevee.blend",
+    "cloth-hammock-collision-movie-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "cloth-hammock-collision-movie-eevee.mp4",
+    "cloth-hammock-collision-movie-eevee.blend",
+    "cloth-hammock-collision-movie-eevee-report.json"
+  ],
+  "repo_blends": [
+    "cloth-hammock-collision-movie-eevee.blend"
+  ]
+}
