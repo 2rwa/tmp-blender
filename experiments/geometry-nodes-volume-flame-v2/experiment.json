@@ -1,0 +1,29 @@
+{
+  "id": "geometry-nodes-volume-flame-v2",
+  "title": "Geometry Nodes Volume Flame v2",
+  "description": "Second-pass low-cost pre-render of a procedural flame using two Geometry Nodes volume layers (outer and core) tuned to avoid the washed-out look of the first attempt.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 96,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 48,
+    "blend": "geometry-nodes-volume-flame-v2.blend",
+    "video": "volume-flame-v2.mp4"
+  },
+  "prepared_outputs": [
+    "geometry-nodes-volume-flame-v2.blend",
+    "geometry-nodes-volume-flame-v2-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "volume-flame-v2.mp4",
+    "geometry-nodes-volume-flame-v2.blend",
+    "geometry-nodes-volume-flame-v2-report.json"
+  ],
+  "repo_blends": [
+    "geometry-nodes-volume-flame-v2.blend"
+  ]
+}
