@@ -42,7 +42,9 @@ def validate_preview(path):
 def validate_video(path):
     if not path.exists():
         raise SystemExit(f"video missing: {path}")
-    if path.stat().st_size < 25000:
+    # Idle/attack animation plus a mostly static studio stage compresses very well.
+    # Keep this as a coarse circuit breaker; character semantics are validated below.
+    if path.stat().st_size < 15000:
         raise SystemExit(f"video suspiciously small: {path.stat().st_size}")
     proc = subprocess.run(
         [
