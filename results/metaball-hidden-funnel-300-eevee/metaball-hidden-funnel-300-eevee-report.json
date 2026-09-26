@@ -21,16 +21,16 @@
   "physics": {
     "proxy_count": 300,
     "proxy_radius": 0.095,
-    "rigid_substeps_per_frame": 8,
-    "solver_iterations": 24,
+    "rigid_substeps_per_frame": 16,
+    "solver_iterations": 32,
     "hidden_funnel": true,
     "hidden_tube": true,
-    "simulation_seconds": 1.328,
+    "simulation_seconds": 2.799,
     "exited_count": 300,
     "first_exit_frame": 33,
-    "last_exit_frame": 130,
-    "in_dish_final": 39,
-    "leaked_below_world": 243
+    "last_exit_frame": 137,
+    "in_dish_final": 180,
+    "leaked_below_world": 90
   },
   "blend": "metaball-hidden-funnel-300-eevee.blend"
 }
