@@ -37,3 +37,5 @@ Code in this experiment is MIT-0. Generated Blender files, renders, videos, and 
 See ../../LICENSE and ../../LICENSES/.
 
 Pipeline revision: frame-sequence pre-render v1
+
+Pipeline revision: frame-sequence pre-render v2
