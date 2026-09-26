@@ -1,0 +1,37 @@
+{
+  "video": "ripple-grid.mp4",
+  "preview": {
+    "path": "output/preview.png",
+    "size_bytes": 289518,
+    "width": 480,
+    "height": 360,
+    "luminance_min": 2,
+    "luminance_max": 230,
+    "luminance_mean": 44.214,
+    "luminance_stddev": 37.047,
+    "unique_colors_64x48": 2372,
+    "sha256": "d5a698d809a5d873bd6b7bcbef5c47f395b35fc592ea8febeb9d65ad509bb92a"
+  },
+  "movie": {
+    "path": "output/ripple-grid.mp4",
+    "size_bytes": 275282,
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 4.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "96",
+    "sha256": "98ed756265d9f2cd4c7bdb5e55976683871bccae43dee2c9efc7d3b067fc603e"
+  },
+  "geometry_nodes": {
+    "node_group": "GN_RippleGridMovie",
+    "node_count": 18,
+    "grid_point_count": 961,
+    "frame_start": 1,
+    "frame_end": 96,
+    "fps": 24,
+    "evaluated_vertices": 40362,
+    "evaluated_edges": 115320,
+    "evaluated_polygons": 76880,
+    "blend_size_bytes": 923838
+  }
+}
