@@ -1,0 +1,20 @@
+{
+  "experiment": "rpg-character-motion-showreel-long-eevee",
+  "source_sha": "b04a3984b061b70b9f9cde3797cd062d6b78f4b7",
+  "run_id": "36280865475",
+  "run_number": "52",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 1872,
+    "fps": 24,
+    "chunk_size": 120,
+    "preview_frame": 936,
+    "blend": "rpg-character-motion-showreel-long-eevee.blend",
+    "video": "rpg-character-motion-showreel-long-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "rpg-character-motion-showreel-long-eevee.blend",
+    "rpg-character-motion-showreel-long-eevee-report.json"
+  ]
+}
