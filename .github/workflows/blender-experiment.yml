@@ -127,10 +127,14 @@ jobs:
         run: |
           blender --version
           python3 -c "from PIL import Image; print('Pillow OK')"
+          command -v xvfb-run
           if ldd "$(command -v blender)" | grep -F "not found"; then
             echo "Missing Blender shared library dependency."
             exit 1
           fi
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --python-expr "print('BLENDER_XVFB_OK')"
 
       - name: Save shared Blender runtime cache
         if: steps.render-cache.outputs.cache-hit != 'true' && steps.blender-runtime-cache.outputs.cache-hit != 'true'
@@ -149,7 +153,9 @@ jobs:
         if: steps.render-cache.outputs.cache-hit != 'true'
         run: |
           set -o pipefail
-          blender --background --python "experiments/$EXPERIMENT/scene.py" 2>&1 | tee output/blender-scene.log
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --python "experiments/$EXPERIMENT/scene.py" 2>&1 | tee output/blender-scene.log
           if grep -Fq "Traceback (most recent call last):" output/blender-scene.log; then
             echo "Blender Python traceback detected."
             exit 1
