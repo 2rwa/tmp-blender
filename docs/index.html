@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>tmp-blender gallery</title>
+<style>
+:root { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color:#edf3f8; background:#0a0d12; }
+* { box-sizing:border-box; }
+body { margin:0; background:radial-gradient(circle at top,#162231 0,#0a0d12 42rem); }
+header { max-width:1200px; margin:auto; padding:42px 22px 18px; }
+h1 { margin:0 0 8px; font-size:clamp(2rem,5vw,4rem); letter-spacing:-.04em; }
+header p { margin:0; color:#9fb2c5; }
+main { max-width:1200px; margin:auto; padding:22px; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px; }
+.card { overflow:hidden; border:1px solid #253244; border-radius:18px; background:#101722d9; box-shadow:0 18px 50px #0007; }
+.visual { aspect-ratio:16/9; background:#000; display:flex; align-items:center; justify-content:center; }
+.visual img,.visual video { width:100%; height:100%; object-fit:cover; display:block; }
+.body { padding:18px; }
+h2 { margin:0; font-size:1.35rem; }
+.id,.source { color:#8297aa; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem; }
+table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem; }
+th,td { padding:5px 0; border-bottom:1px solid #202d3d; text-align:left; }
+th { color:#8fa4b8; font-weight:500; }
+td { text-align:right; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+a { color:#78c4ff; text-decoration:none; }
+a:hover { text-decoration:underline; }
+.links { font-size:.88rem; line-height:1.8; }
+footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
+</style>
+</head>
+<body>
+<header>
+  <h1>tmp-blender</h1>
+  <p>GitHub Actionsで生成したBlender実験の公開ギャラリー。preview / validation / 短い動画を直接確認できます。</p>
+</header>
+<main>
+
+        <article class="card">
+          <div class="visual"><img src="assets/fire-column/preview.jpg" alt="Fire Column preview"></div>
+          <div class="body">
+            <h2>Fire Column</h2>
+            <p class="id">fire-column</p>
+            <p>A short stylized flame animation built from layered emissive flame tongues, flickering light, glow, and rising sparks.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/5c9e0e14f0c596f3f247b07cc1d58a209ad7b590">5c9e0e14f0</a></p>
+            <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>95,958 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>72.766</td></tr><tr><th>bright_pixel_ratio</th><td>0.182305</td></tr><tr><th>warm_pixel_ratio</th><td>0.068837</td></tr></table>
+            <p class="links"><a href="assets/fire-column/preview.jpg">preview</a> · <a href="assets/fire-column/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/fire-column">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/fire-column">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36213194885">Actions #8</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><img src="assets/orbital-sculpture/preview.jpg" alt="Orbital Sculpture preview"></div>
+          <div class="body">
+            <h2>Orbital Sculpture</h2>
+            <p class="id">orbital-sculpture</p>
+            <p>Procedural metallic sphere, tilted torus, and two colored orbital rings.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/8eac3eb2774e7134da6c819b673f4b212bed2c66">8eac3eb277</a></p>
+            <table><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>640</td></tr></table>
+            <p class="links"><a href="assets/orbital-sculpture/preview.jpg">preview</a> · <a href="assets/orbital-sculpture/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/orbital-sculpture">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/orbital-sculpture">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36214565772">Actions #12</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><img src="assets/water-dump/preview.jpg" alt="Water Dump preview"></div>
+          <div class="body">
+            <h2>Water Dump</h2>
+            <p class="id">water-dump</p>
+            <p>A short water-like pour animation using an animated Ocean surface, a continuous stream, falling droplets, and a splash ring.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/5c9e0e14f0c596f3f247b07cc1d58a209ad7b590">5c9e0e14f0</a></p>
+            <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>128,655 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>42.403</td></tr><tr><th>poster_unique_colors_64x36</th><td>1241</td></tr></table>
+            <p class="links"><a href="assets/water-dump/preview.jpg">preview</a> · <a href="assets/water-dump/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/water-dump">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/water-dump">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36213194885">Actions #8</a></p>
+          </div>
+        </article>
+        
+</main>
+<footer>Generated from committed results. Full .blend files and large media remain in GitHub Actions artifacts.</footer>
+</body>
+</html>

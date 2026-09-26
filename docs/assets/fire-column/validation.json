@@ -1,0 +1,16 @@
+{
+  "video": "fire-column.mp4",
+  "video_size_bytes": 95958,
+  "container": "mp4",
+  "width": 640,
+  "height": 360,
+  "duration_seconds": 3.0,
+  "fps": 24,
+  "poster": "poster.png",
+  "poster_luminance_min": 0,
+  "poster_luminance_max": 252,
+  "poster_luminance_stddev": 72.766,
+  "bright_pixel_ratio": 0.182305,
+  "warm_pixel_ratio": 0.068837,
+  "sha256": "8671d04b119b7bfeb822c90a9cf43ff11250077b0285c0d07cbcd8adfe0c29a8"
+}
