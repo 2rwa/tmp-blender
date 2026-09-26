@@ -11,8 +11,8 @@ Recommended pattern:
 1. push the experiment,
 2. check discovery/preflight,
 3. watch for immediate Blender/Python/API failures,
-4. if the job has entered genuine long-running work, return the conversation turn,
-5. check the run again on the next user turn.
+4. if the job has entered genuine long-running work, stop continuous polling,
+5. check the run again later.
 
 This is especially important for Mantaflow, large rigid-body scenes, animation rendering, and other tasks likely to exceed roughly 30 seconds.
 
@@ -84,9 +84,8 @@ Current policy:
 - selected `.blend` files below 95 MiB: commit to Git
 - small MP4s below 5 MiB: copy to `results/<id>/media.mp4` for Pages
 - large simulation caches/intermediates: Actions cache/artifact
-- large persistent outputs worth keeping later: Dropbox is an available future option
 
-The current conversation intentionally does not optimize repository size.
+Repository size is intentionally not optimized during normal experiments.
 
 ## Temporary-repository philosophy
 
@@ -101,7 +100,7 @@ It is acceptable to:
 - later copy successful experiments into dedicated repositories,
 - eventually rewrite history or delete the repository.
 
-A separate local maintenance/cleanup batch should handle repository cleanup rather than making every experiment storage-aware.
+Repository cleanup should be handled as a separate maintenance task rather than making every experiment storage-aware.
 
 ## Licensing rule
 
@@ -145,16 +144,10 @@ The current public gallery is:
 https://2rwa.github.io/tmp-blender/
 
 
-## Resuming from another conversation
+## Resuming work
 
 Use `docs/notes/START-HERE.md` as the canonical handoff entrypoint.
 
-A new conversation should first read that file and then verify GitHub `main` and any referenced Actions run/result before modifying the repository.
+Before modifying the repository, read that file and verify GitHub `main` plus any referenced Actions run/result.
 
-The shortest resume instruction is:
-
-```text
-2rwa/tmp-blender の docs/notes/START-HERE.md を読んで、GitHubの現在状態を確認して作業を再開して。
-```
-
-GitHub is the source of truth. Do not rely only on an old chat summary when repository state may have advanced via Actions bot commits.
+GitHub is the source of truth; repository state may have advanced through Actions-generated commits.

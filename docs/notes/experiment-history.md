@@ -148,7 +148,6 @@ Published outputs:
 - `rigid-sim.blend`: 9,613,412 bytes
 - `rigid-result.blend`: 9,613,412 bytes
 
-The user described the result as "良い感じ".
 
 ## GitHub Pages
 
@@ -164,4 +163,4 @@ The first `.blend` Git publication limit was 10 MiB. That was intentionally cons
 
 The repository was later explicitly classified as a disposable public test repository, so the threshold was raised to 95 MiB per file. Storage growth is currently acceptable; useful content can be copied out and the repository can be cleaned or discarded later.
 
-A separate local cleanup batch is planned rather than constraining experiments during this conversation.
+Repository cleanup is intentionally treated as a separate maintenance task rather than constraining experiments.

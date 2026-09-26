@@ -133,7 +133,6 @@ Git, Actions cache, and Actions artifacts intentionally have different roles.
 | Actions cache | Expensive intermediate/render checkpoints |
 | Actions artifact | Full temporary output, including large caches and files |
 | GitHub Pages | Human inspection of previews, validation, and small video |
-| Dropbox (future option) | Large outputs worth retaining outside Git |
 
 Mantaflow simulation caches, for example, stay outside Git even when the resulting `.blend` files are committed.
 

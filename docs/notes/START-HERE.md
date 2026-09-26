@@ -2,9 +2,9 @@
 
 Updated: 2026-09-26
 
-This is the first file to read when resuming `2rwa/tmp-blender` from a new ChatGPT conversation.
+This is the first file to read when resuming work on `2rwa/tmp-blender`.
 
-別のChatGPT会話から `2rwa/tmp-blender` の作業を再開するときは、まずこのファイルを読んでください。
+`2rwa/tmp-blender` の作業を再開するときは、まずこのファイルを読んでください。
 
 ## Repository
 
@@ -14,9 +14,9 @@ This is the first file to read when resuming `2rwa/tmp-blender` from a new ChatG
 - Purpose: disposable public Blender experiment repository driven by GitHub Actions
 - Current Blender runtime: Blender 4.0.2 on GitHub-hosted Linux runner via Xvfb/software GL
 
-This repository is intentionally allowed to grow. Do not optimize repository size during normal experiments unless explicitly asked. Useful work can later be copied elsewhere and the repository can be cleaned/re-written/deleted in a separate maintenance batch.
+This repository is intentionally allowed to grow during experiments. Useful work can later be copied elsewhere, and repository cleanup can be handled separately.
 
-このrepoは一時的な公開テスト用です。通常の実験中は容量最適化を優先しません。必要な成果物は後で別repoへ移し、掃除は別バッチで行う方針です。
+このrepoは一時的な公開テスト用です。通常の実験では容量最適化を優先せず、必要な成果物の整理やrepo掃除は別作業として扱います。
 
 ## Current state
 
@@ -56,7 +56,6 @@ Observed validation:
 - both `.blend` files are committed to Git
 - Pages deployment succeeded
 
-The user described the transparent-wall result as "良い感じ".
 
 ## Previous experiments
 
@@ -106,10 +105,10 @@ For simulations/renders likely to take more than roughly 30 seconds:
 1. commit/push experiment changes,
 2. verify Actions discovery and cheap preflight,
 3. check for immediate Blender/Python/API failures,
-4. once real long-running simulation/render work has started, stop polling and return the conversation turn,
-5. inspect the run on the next user turn.
+4. once real long-running simulation/render work has started, stop polling continuously,
+5. inspect the run later rather than keeping an interactive session blocked.
 
-Do not block the conversation by repeatedly polling a long Actions job.
+Do not waste time repeatedly polling a long Actions job.
 
 ### Expensive work checkpointing
 
@@ -211,29 +210,14 @@ Natural next experiments include:
 
 When starting a new experiment, create a new experiment ID rather than overwriting a successful prior experiment unless the user explicitly asks to revise it.
 
-## Copy/paste prompt for a new ChatGPT conversation
+## Resume checklist
 
-```text
-GitHub repo 2rwa/tmp-blender の作業を再開してください。
+When resuming work:
 
-最初に main の
-docs/notes/START-HERE.md
-を読み、必要なら
-docs/notes/architecture.md
-docs/notes/experiment-history.md
-docs/notes/operations.md
-も確認してください。
+1. read this file,
+2. verify the current `main` branch,
+3. check any relevant recent Actions run,
+4. inspect the current result under `results/`,
+5. continue from GitHub as the source of truth.
 
-GitHubをsource of truthとして現在状態を確認してから進めてください。
-長時間のBlender render/simulationはGitHub Actionsへ投げ、preflightと即時エラーだけ確認し、本処理に入ったら会話を返してください。
-validatorだけの失敗では、render checkpointが使えるなら再レンダーしないでください。
-tmp-blenderは一時repoなので、この作業ではrepo容量を気にしすぎなくて構いません。
-```
-
-## Shortest possible resume instruction
-
-A new conversation can usually start with only:
-
-```text
-2rwa/tmp-blender の docs/notes/START-HERE.md を読んで、GitHubの現在状態を確認して作業を再開して。
-```
+必要に応じて `architecture.md`、`experiment-history.md`、`operations.md` も参照してください。

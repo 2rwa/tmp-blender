@@ -6,7 +6,7 @@ This repository is structured for throwing many unrelated Blender experiments at
 
 > **Resume / 再開:** [START HERE — handoff guide](docs/notes/START-HERE.md)
 >
-> 別の会話から再開するときは、まずこのファイルを読めば現在地と運用ルールを復元できます。
+> 作業を再開するときは、まずこのファイルで現在地と運用ルールを確認できます。
 
 ## Layout
 
@@ -78,7 +78,7 @@ The workflow regenerates both root index.html and docs/, so the gallery works wi
 
 ### Small .blend files in Git
 
-Experiments may opt in to publishing selected .blend files through the `repo_blends` manifest field. For this temporary test repository, storage growth is not treated as an optimization target. Selected .blend files are committed directly under `results/<experiment>/` up to a 95 MiB per-file safety threshold, leaving only GitHub's hard single-file limit as the practical guardrail. Larger files remain in the Actions artifact. Cleanup/history rewriting can be handled separately from a local maintenance batch when needed.
+Experiments may opt in to publishing selected .blend files through the `repo_blends` manifest field. For this temporary test repository, storage growth is not treated as an optimization target. Selected .blend files are committed directly under `results/<experiment>/` up to a 95 MiB per-file safety threshold, leaving only GitHub's hard single-file limit as the practical guardrail. Larger files remain in the Actions artifact. Repository cleanup or history rewriting can be handled separately when needed.
 
 ## License / ライセンス
 
