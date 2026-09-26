@@ -1,0 +1,24 @@
+tmp-blender Licensing / ライセンス
+
+Unless otherwise noted / 特記のない限り:
+
+1. CODE / コード
+   Source code, Python scripts, GitHub Actions workflows, and HTML are licensed under MIT-0.
+   ソースコード、Python スクリプト、GitHub Actions workflow、HTML は MIT-0 です。
+
+   See / 参照: LICENSES/MIT-0.txt
+
+2. GENERATED ASSETS / 生成アセット
+   Blender files, rendered images, videos, and other generated assets are released under CC0 1.0 Universal (CC0-1.0).
+   Blender ファイル、レンダリング画像、動画、その他の生成アセットは CC0 1.0 Universal (CC0-1.0) とします。
+
+   See / 参照: LICENSES/CC0-1.0.md
+
+3. THIRD-PARTY MATERIAL / 第三者由来素材
+   If any file, experiment, or generated work incorporates third-party data, assets, source material, or other external content, those portions remain subject to the original source's license and terms. The licenses in this repository apply only to rights that the repository authors are entitled to grant.
+
+   第三者のデータ、アセット、素材、ソース、その他の外部コンテンツを利用している部分は、利用元のライセンスおよび利用条件に従います。このリポジトリのライセンスは、リポジトリ作者が許諾できる権利にのみ適用されます。
+
+4. SPECIFIC NOTICES / 個別表記
+   A file-specific or experiment-specific license notice, when present, controls for that material.
+   個別のファイルや実験に別のライセンス表記がある場合は、その表記が当該素材について優先されます。
