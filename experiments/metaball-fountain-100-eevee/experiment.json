@@ -1,0 +1,29 @@
+{
+  "id": "metaball-fountain-100-eevee",
+  "title": "Metaball Fountain 100 EEVEE",
+  "description": "One hundred animated metaball elements spray from a nozzle, bounce inside a basin, and merge into smooth mercury-like blobs.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 144,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 108,
+    "blend": "metaball-fountain-100-eevee.blend",
+    "video": "metaball-fountain-100-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "metaball-fountain-100-eevee.blend",
+    "metaball-fountain-100-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "metaball-fountain-100-eevee.mp4",
+    "metaball-fountain-100-eevee.blend",
+    "metaball-fountain-100-eevee-report.json"
+  ],
+  "repo_blends": [
+    "metaball-fountain-100-eevee.blend"
+  ]
+}
