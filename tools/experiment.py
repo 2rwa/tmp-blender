@@ -14,7 +14,7 @@ OUTPUT_DIR = ROOT / "output"
 RESULTS_DIR = ROOT / "results"
 SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 PAGE_MEDIA_MAX_BYTES = 5 * 1024 * 1024
-REPO_BLEND_MAX_BYTES = 10 * 1024 * 1024
+REPO_BLEND_MAX_BYTES = 95 * 1024 * 1024
 
 
 def experiment_dir(experiment_id: str) -> Path:
@@ -233,7 +233,7 @@ def publish(args: argparse.Namespace) -> int:
         for name, size in published_blends:
             lines.append(f"- Git: [{name}](./{name}) ({size:,} bytes)")
         for name, size in skipped_blends:
-            lines.append(f"- Artifact only: `{name}` ({size:,} bytes; exceeds {REPO_BLEND_MAX_BYTES:,}-byte Git threshold)")
+            lines.append(f"- Artifact only: `{name}` ({size:,} bytes; exceeds {REPO_BLEND_MAX_BYTES:,}-byte Git safety threshold)")
         lines.append("")
 
     lines.extend([

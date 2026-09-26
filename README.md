@@ -72,4 +72,4 @@ The workflow regenerates both root index.html and docs/, so the gallery works wi
 
 ### Small .blend files in Git
 
-Experiments may opt in to publishing selected .blend files through the `repo_blends` manifest field. Files up to 10 MiB are committed under `results/<experiment>/`. Larger .blend files stay in the Actions artifact; if those become worth retaining long-term, Dropbox is the next storage option.
+Experiments may opt in to publishing selected .blend files through the `repo_blends` manifest field. For this temporary test repository, storage growth is not treated as an optimization target. Selected .blend files are committed directly under `results/<experiment>/` up to a 95 MiB per-file safety threshold, leaving only GitHub's hard single-file limit as the practical guardrail. Larger files remain in the Actions artifact. Cleanup/history rewriting can be handled separately from a local maintenance batch when needed.

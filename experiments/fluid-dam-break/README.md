@@ -21,4 +21,4 @@ Outputs:
 - `fluid-cache/` — external Mantaflow cache, artifact/cache only
 - `validation.json`
 
-The two .blend files opt in to Git publication. Each is committed only when it is 10 MiB or smaller. Larger files remain in the Actions artifact, leaving Dropbox as the next long-term storage option.
+The two .blend files opt in to Git publication. Because this is a disposable test repository, they are committed directly up to a 95 MiB per-file safety threshold. Larger files remain in the Actions artifact; repository cleanup or extraction of useful results can be handled separately later.
