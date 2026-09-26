@@ -1,0 +1,20 @@
+{
+  "experiment": "geometry-nodes-volume-flame-v2-cycles",
+  "source_sha": "54e08f2fcc65916212027f6c0ab1ac510bb34106",
+  "run_id": "36234997583",
+  "run_number": "31",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 48,
+    "fps": 24,
+    "chunk_size": 12,
+    "preview_frame": 24,
+    "blend": "geometry-nodes-volume-flame-v2-cycles.blend",
+    "video": "volume-flame-v2-cycles.mp4"
+  },
+  "published_prepared_outputs": [
+    "geometry-nodes-volume-flame-v2-cycles.blend",
+    "geometry-nodes-volume-flame-v2-cycles-report.json"
+  ]
+}
