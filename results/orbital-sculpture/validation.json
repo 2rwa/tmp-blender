@@ -1,6 +1,6 @@
 {
   "path": "output/render.png",
-  "size_bytes": 492900,
+  "size_bytes": 492820,
   "width": 640,
   "height": 640,
   "luminance_min": 0,
@@ -8,5 +8,5 @@
   "luminance_mean": 47.769,
   "luminance_stddev": 42.64,
   "unique_colors_64x64": 2274,
-  "sha256": "8b3571ed2ca74411732ed7fa7d5e43ac4063d55d011876bf96d77c97329a93b7"
+  "sha256": "d46df006b0e58af92c3a2db9ae19b3e94cdd55fbdd1c9b9bbe5153a87a7cec00"
 }
