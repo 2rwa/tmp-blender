@@ -1,8 +1,22 @@
 {
   "id": "geometry-nodes-ripple-grid-movie",
   "title": "Geometry Nodes Ripple Grid Movie",
-  "description": "Animated Geometry Nodes ripple field using Scene Time, Grid displacement, point conversion, Icosphere instancing, and MP4 rendering.",
+  "description": "Low-cost frame-sequence pre-render for validating an animated Geometry Nodes ripple field before higher-quality Colab rendering.",
   "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 96,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 48,
+    "blend": "geometry-nodes-movie.blend",
+    "video": "ripple-grid.mp4"
+  },
+  "prepared_outputs": [
+    "geometry-nodes-movie.blend",
+    "geometry-nodes-report.json"
+  ],
   "required_outputs": [
     "preview.png",
     "ripple-grid.mp4",

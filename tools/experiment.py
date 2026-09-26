@@ -97,6 +97,207 @@ def discover(args: argparse.Namespace) -> int:
     return 0
 
 
+
+def frame_sequence_config(experiment_id: str) -> dict | None:
+    manifest = load_manifest(experiment_id)
+    if manifest.get("render_mode") != "frame-sequence":
+        return None
+
+    raw = manifest.get("frame_sequence") or {}
+    start = int(raw.get("start", 1))
+    end = int(raw.get("end", 0))
+    fps = int(raw.get("fps", 24))
+    chunk_size = int(raw.get("chunk_size", 24))
+    preview_frame = int(raw.get("preview_frame", start))
+    blend = str(raw.get("blend", "")).strip()
+    video = str(raw.get("video", "")).strip()
+
+    if start < 0 or end < start:
+        raise SystemExit(f"invalid frame range for {experiment_id}: {start}..{end}")
+    if fps <= 0:
+        raise SystemExit(f"invalid fps for {experiment_id}: {fps}")
+    if chunk_size <= 0:
+        raise SystemExit(f"invalid chunk_size for {experiment_id}: {chunk_size}")
+    if not (start <= preview_frame <= end):
+        raise SystemExit(
+            f"preview_frame outside frame range for {experiment_id}: {preview_frame}"
+        )
+    if not blend:
+        raise SystemExit(f"frame_sequence.blend is required for {experiment_id}")
+    if not video:
+        raise SystemExit(f"frame_sequence.video is required for {experiment_id}")
+
+    return {
+        "experiment": experiment_id,
+        "frame_start": start,
+        "frame_end": end,
+        "fps": fps,
+        "chunk_size": chunk_size,
+        "preview_frame": preview_frame,
+        "blend": blend,
+        "video": video,
+    }
+
+
+def plan(args: argparse.Namespace) -> int:
+    try:
+        selected = json.loads(args.experiments)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"invalid experiments JSON: {exc}") from exc
+
+    if not isinstance(selected, list) or not all(isinstance(item, str) for item in selected):
+        raise SystemExit("--experiments must be a JSON list of experiment ids")
+
+    standard_experiments: list[str] = []
+    movie_experiments: list[dict] = []
+    movie_chunks: list[dict] = []
+
+    for experiment_id in selected:
+        experiment_dir(experiment_id)
+        config = frame_sequence_config(experiment_id)
+        if config is None:
+            standard_experiments.append(experiment_id)
+            continue
+
+        movie_experiments.append(config)
+        start = config["frame_start"]
+        end = config["frame_end"]
+        chunk_size = config["chunk_size"]
+        for chunk_start in range(start, end + 1, chunk_size):
+            chunk_end = min(end, chunk_start + chunk_size - 1)
+            movie_chunks.append(
+                {
+                    "experiment": experiment_id,
+                    "start": chunk_start,
+                    "end": chunk_end,
+                    "chunk": f"{chunk_start:06d}-{chunk_end:06d}",
+                    "blend": config["blend"],
+                }
+            )
+
+    print(
+        "standard_experiments="
+        + json.dumps(standard_experiments, separators=(",", ":"))
+    )
+    print(
+        "movie_experiments="
+        + json.dumps(movie_experiments, separators=(",", ":"))
+    )
+    print("movie_chunks=" + json.dumps(movie_chunks, separators=(",", ":")))
+    return 0
+
+
+def prepared_output_paths(experiment_id: str) -> list[Path]:
+    manifest = load_manifest(experiment_id)
+    names = ["blender-version.txt"]
+    names.extend(manifest.get("prepared_outputs", []))
+    unique = []
+    seen = set()
+    for name in names:
+        if name in seen:
+            continue
+        seen.add(name)
+        unique.append(OUTPUT_DIR / str(name))
+    return unique
+
+
+def check_prepared(experiment_id: str) -> int:
+    missing = []
+    empty = []
+    for path in prepared_output_paths(experiment_id):
+        if not path.is_file():
+            missing.append(str(path.relative_to(ROOT)))
+        elif path.stat().st_size == 0:
+            empty.append(str(path.relative_to(ROOT)))
+
+    if missing or empty:
+        if missing:
+            print("missing prepared outputs:", ", ".join(missing))
+        if empty:
+            print("empty prepared outputs:", ", ".join(empty))
+        return 1
+
+    print(json.dumps({"experiment": experiment_id, "prepared": "ok"}, indent=2))
+    return 0
+
+
+def check_frames(experiment_id: str, start: int, end: int) -> int:
+    frame_sequence_config(experiment_id)
+    if end < start:
+        raise SystemExit(f"invalid frame range: {start}..{end}")
+
+    missing = []
+    empty = []
+    for frame in range(start, end + 1):
+        path = OUTPUT_DIR / "frames" / f"frame_{frame:04d}.png"
+        if not path.is_file():
+            missing.append(str(path.relative_to(ROOT)))
+        elif path.stat().st_size == 0:
+            empty.append(str(path.relative_to(ROOT)))
+
+    if missing or empty:
+        if missing:
+            print("missing frames:", ", ".join(missing[:12]))
+        if empty:
+            print("empty frames:", ", ".join(empty[:12]))
+        return 1
+
+    print(
+        json.dumps(
+            {
+                "experiment": experiment_id,
+                "frames": {"start": start, "end": end, "count": end - start + 1},
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+def publish_prepared(args: argparse.Namespace) -> int:
+    experiment_id = args.experiment
+    if check_prepared(experiment_id) != 0:
+        return 1
+
+    manifest = load_manifest(experiment_id)
+    destination = RESULTS_DIR / experiment_id
+    destination.mkdir(parents=True, exist_ok=True)
+
+    published = []
+    for name in manifest.get("prepared_outputs", []):
+        source = OUTPUT_DIR / str(name)
+        target = destination / Path(str(name)).name
+        if source.suffix == ".blend" and source.stat().st_size > REPO_BLEND_MAX_BYTES:
+            print(
+                f"prepared blend too large for Git; artifact only: "
+                f"{source.name} ({source.stat().st_size} bytes)"
+            )
+            continue
+        shutil.copy2(source, target)
+        published.append(target.name)
+
+    version_source = OUTPUT_DIR / "blender-version.txt"
+    if version_source.is_file():
+        shutil.copy2(version_source, destination / "blender-version.txt")
+
+    metadata = {
+        "experiment": experiment_id,
+        "source_sha": args.source_sha,
+        "run_id": args.run_id,
+        "run_number": args.run_number,
+        "render_mode": manifest.get("render_mode"),
+        "frame_sequence": manifest.get("frame_sequence"),
+        "published_prepared_outputs": published,
+    }
+    (destination / "pre-render.json").write_text(
+        json.dumps(metadata, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    print(f"published pre-render outputs to {destination.relative_to(ROOT)}")
+    return 0
+
+
+
 def required_output_paths(experiment_id: str) -> list[Path]:
     manifest = load_manifest(experiment_id)
     names = ["validation.json", "blender-version.txt", manifest["preview_source"]]
@@ -274,6 +475,17 @@ def build_parser() -> argparse.ArgumentParser:
     discover_parser.add_argument("--before", default="")
     discover_parser.add_argument("--after", default="")
 
+    plan_parser = sub.add_parser("plan")
+    plan_parser.add_argument("--experiments", required=True)
+
+    prepared_check_parser = sub.add_parser("check-prepared")
+    prepared_check_parser.add_argument("experiment")
+
+    frames_check_parser = sub.add_parser("check-frames")
+    frames_check_parser.add_argument("experiment")
+    frames_check_parser.add_argument("start", type=int)
+    frames_check_parser.add_argument("end", type=int)
+
     render_check_parser = sub.add_parser("check-render")
     render_check_parser.add_argument("experiment")
 
@@ -285,6 +497,12 @@ def build_parser() -> argparse.ArgumentParser:
     publish_parser.add_argument("--source-sha", required=True)
     publish_parser.add_argument("--run-id", required=True)
     publish_parser.add_argument("--run-number", required=True)
+
+    prepared_publish_parser = sub.add_parser("publish-prepared")
+    prepared_publish_parser.add_argument("experiment")
+    prepared_publish_parser.add_argument("--source-sha", required=True)
+    prepared_publish_parser.add_argument("--run-id", required=True)
+    prepared_publish_parser.add_argument("--run-number", required=True)
     return parser
 
 
@@ -292,12 +510,20 @@ def main() -> int:
     args = build_parser().parse_args()
     if args.command == "discover":
         return discover(args)
+    if args.command == "plan":
+        return plan(args)
+    if args.command == "check-prepared":
+        return check_prepared(args.experiment)
+    if args.command == "check-frames":
+        return check_frames(args.experiment, args.start, args.end)
     if args.command == "check-render":
         return check_render(args.experiment)
     if args.command == "check":
         return check(args.experiment)
     if args.command == "publish":
         return publish(args)
+    if args.command == "publish-prepared":
+        return publish_prepared(args)
     raise AssertionError(args.command)
 
 

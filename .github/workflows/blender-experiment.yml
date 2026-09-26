@@ -28,6 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       experiments: ${{ steps.select.outputs.experiments }}
+      standard_experiments: ${{ steps.plan.outputs.standard_experiments }}
+      movie_experiments: ${{ steps.plan.outputs.movie_experiments }}
+      movie_chunks: ${{ steps.plan.outputs.movie_chunks }}
 
     steps:
       - name: Checkout
@@ -50,15 +53,23 @@ jobs:
             --before "$BEFORE_SHA" \
             --after "$AFTER_SHA" >> "$GITHUB_OUTPUT"
 
+      - name: Plan render modes and frame chunks
+        id: plan
+        env:
+          SELECTED_EXPERIMENTS: ${{ steps.select.outputs.experiments }}
+        run: |
+          python3 tools/experiment.py plan \
+            --experiments "$SELECTED_EXPERIMENTS" >> "$GITHUB_OUTPUT"
+
   render:
     needs: discover
-    if: needs.discover.outputs.experiments != '[]'
+    if: needs.discover.outputs.standard_experiments != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        experiment: ${{ fromJSON(needs.discover.outputs.experiments) }}
+        experiment: ${{ fromJSON(needs.discover.outputs.standard_experiments) }}
     env:
       EXPERIMENT: ${{ matrix.experiment }}
       BLENDER_VERSION: "4.0.2"
@@ -218,15 +229,311 @@ jobs:
           retention-days: 7
           overwrite: true
 
-  publish:
-    needs: [discover, render]
-    if: needs.discover.outputs.experiments != '[]'
+
+  prepare_movie:
+    needs: discover
+    if: needs.discover.outputs.movie_experiments != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        experiment: ${{ fromJSON(needs.discover.outputs.experiments) }}
+        item: \${{ fromJSON(needs.discover.outputs.movie_experiments) }}
+    env:
+      EXPERIMENT: \${{ matrix.item.experiment }}
+      BLENDER_VERSION: "4.0.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Cheap Python preflight
+        run: |
+          python3 -m py_compile \
+            tools/experiment.py \
+            "experiments/$EXPERIMENT/scene.py" \
+            "experiments/$EXPERIMENT/validate.py"
+
+      - name: Restore shared Blender runtime cache
+        id: blender-runtime-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-\${{ runner.os }}-x64-\${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build shared Blender runtime cache
+        if: steps.blender-runtime-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/python .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          python3 -m pip install --disable-pip-version-check --no-compile --target .cache/blender-runtime/python "Pillow==10.2.0"
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure shared Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "PYTHONPATH=$GITHUB_WORKSPACE/.cache/blender-runtime/python" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu" >> "$GITHUB_ENV"
+
+      - name: Save shared Blender runtime cache
+        if: steps.blender-runtime-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-\${{ runner.os }}-x64-\${{ env.BLENDER_VERSION }}-v1
+
+      - name: Verify Blender headless runtime
+        run: |
+          blender --version
+          command -v xvfb-run
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy xvfb-run -a -s "-screen 0 1280x720x24" blender --background --python-expr "print('BLENDER_XVFB_OK')"
+
+      - name: Prepare git and rebase before generation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Record Blender version
+        run: |
+          mkdir -p output
+          blender --version | tee output/blender-version.txt
+
+      - name: Build and save pre-render Blend
+        env:
+          BLENDER_PREPARE_ONLY: "1"
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --python "experiments/$EXPERIMENT/scene.py" 2>&1 | tee output/blender-scene.log
+          if grep -Fq "Traceback (most recent call last):" output/blender-scene.log; then
+            echo "Blender Python traceback detected."
+            exit 1
+          fi
+          python3 tools/experiment.py check-prepared "$EXPERIMENT"
+
+      - name: Generate persistent pre-render result
+        run: |
+          python3 tools/experiment.py publish-prepared "$EXPERIMENT" \
+            --source-sha "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-number "$GITHUB_RUN_NUMBER"
+
+      - name: Commit Blend before rendering
+        id: commit-prepared
+        run: |
+          git add "results/$EXPERIMENT/"
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish $EXPERIMENT pre-render blend [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push pre-render result with one conflict retry
+        if: steps.commit-prepared.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Upload prepared scene for render jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-prepared-\${{ matrix.item.experiment }}
+          path: |
+            output/blender-version.txt
+            output/*.blend
+            output/*-report.json
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  render_movie_chunks:
+    needs: [discover, prepare_movie]
+    if: needs.discover.outputs.movie_chunks != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        chunk: \${{ fromJSON(needs.discover.outputs.movie_chunks) }}
+    env:
+      EXPERIMENT: \${{ matrix.chunk.experiment }}
+      BLEND_NAME: \${{ matrix.chunk.blend }}
+      FRAME_START: \${{ matrix.chunk.start }}
+      FRAME_END: \${{ matrix.chunk.end }}
+      CHUNK_ID: \${{ matrix.chunk.chunk }}
+      BLENDER_VERSION: "4.0.2"
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Download prepared scene
+        uses: actions/download-artifact@v4
+        with:
+          name: blender-prepared-\${{ matrix.chunk.experiment }}
+          path: output
+
+      - name: Restore shared Blender runtime cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-\${{ runner.os }}-x64-\${{ env.BLENDER_VERSION }}-v1
+          fail-on-cache-miss: true
+
+      - name: Configure shared Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "PYTHONPATH=$GITHUB_WORKSPACE/.cache/blender-runtime/python" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu" >> "$GITHUB_ENV"
+
+      - name: Compute frame cache key
+        id: frame-key
+        run: |
+          blend_sha="$(sha256sum "output/$BLEND_NAME" | cut -d' ' -f1)"
+          echo "key=blender-frames-$RUNNER_OS-$BLENDER_VERSION-$EXPERIMENT-$blend_sha-$CHUNK_ID-v1" >> "$GITHUB_OUTPUT"
+
+      - name: Restore PNG frame chunk
+        id: frame-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: output/frames
+          key: \${{ steps.frame-key.outputs.key }}
+
+      - name: Verify restored PNG frame chunk
+        if: steps.frame-cache.outputs.cache-hit == 'true'
+        run: python3 tools/experiment.py check-frames "$EXPERIMENT" "$FRAME_START" "$FRAME_END"
+
+      - name: Render PNG frame chunk
+        if: steps.frame-cache.outputs.cache-hit != 'true'
+        run: |
+          set -o pipefail
+          rm -rf output/frames
+          mkdir -p output/frames
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background "output/$BLEND_NAME" -s "$FRAME_START" -e "$FRAME_END" \
+              -o "$GITHUB_WORKSPACE/output/frames/frame_####" -F PNG -a 2>&1 | tee output/blender-frames.log
+          if grep -Fq "Traceback (most recent call last):" output/blender-frames.log; then
+            echo "Blender Python traceback detected."
+            exit 1
+          fi
+          python3 tools/experiment.py check-frames "$EXPERIMENT" "$FRAME_START" "$FRAME_END"
+
+      - name: Save PNG frame chunk cache
+        if: steps.frame-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: output/frames
+          key: \${{ steps.frame-key.outputs.key }}
+
+      - name: Upload frame chunk for same-run assembly
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-frames-\${{ matrix.chunk.experiment }}-\${{ matrix.chunk.chunk }}
+          path: output/frames/*.png
+          if-no-files-found: error
+          retention-days: 2
+          overwrite: true
+
+  assemble_movie:
+    needs: [discover, prepare_movie, render_movie_chunks]
+    if: needs.discover.outputs.movie_experiments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        item: \${{ fromJSON(needs.discover.outputs.movie_experiments) }}
+    env:
+      EXPERIMENT: \${{ matrix.item.experiment }}
+      FRAME_START: \${{ matrix.item.frame_start }}
+      FRAME_END: \${{ matrix.item.frame_end }}
+      FPS: \${{ matrix.item.fps }}
+      PREVIEW_FRAME: \${{ matrix.item.preview_frame }}
+      VIDEO_NAME: \${{ matrix.item.video }}
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Install validation dependencies
+        run: python3 -m pip install --disable-pip-version-check --no-compile "Pillow==10.2.0"
+
+      - name: Download prepared scene
+        uses: actions/download-artifact@v4
+        with:
+          name: blender-prepared-\${{ matrix.item.experiment }}
+          path: output
+
+      - name: Download all PNG chunks
+        uses: actions/download-artifact@v4
+        with:
+          pattern: blender-frames-\${{ matrix.item.experiment }}-*
+          path: output/frames
+          merge-multiple: true
+
+      - name: Verify complete frame sequence
+        run: |
+          python3 tools/experiment.py check-frames "$EXPERIMENT" "$FRAME_START" "$FRAME_END"
+          count="$(find output/frames -name 'frame_*.png' -type f | wc -l)"
+          echo "frame_count=$count"
+
+      - name: Build preview and MP4
+        run: |
+          printf -v preview_path 'output/frames/frame_%04d.png' "$PREVIEW_FRAME"
+          cp "$preview_path" output/preview.png
+          ffmpeg -y -framerate "$FPS" -start_number "$FRAME_START" -i output/frames/frame_%04d.png \
+            -c:v libx264 -preset veryfast -crf 30 -pix_fmt yuv420p "output/$VIDEO_NAME"
+
+      - name: Validate assembled pre-render
+        run: |
+          python3 "experiments/$EXPERIMENT/validate.py"
+          python3 tools/experiment.py check "$EXPERIMENT"
+          cat output/validation.json
+
+      - name: Drop duplicate frame copies before final cache
+        run: rm -rf output/frames
+
+      - name: Save validated output cache
+        uses: actions/cache/save@v6
+        with:
+          path: output
+          key: blender-validated-\${{ matrix.item.experiment }}-\${{ runner.os }}-\${{ github.run_id }}
+
+      - name: Upload assembled experiment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-\${{ matrix.item.experiment }}
+          path: output/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: [discover, render]
+    if: needs.discover.outputs.standard_experiments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        experiment: ${{ fromJSON(needs.discover.outputs.standard_experiments) }}
     env:
       EXPERIMENT: ${{ matrix.experiment }}
 
@@ -287,9 +594,78 @@ jobs:
           git rebase "origin/${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
+
+  publish_movie:
+    needs: [discover, assemble_movie]
+    if: needs.discover.outputs.movie_experiments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        item: \${{ fromJSON(needs.discover.outputs.movie_experiments) }}
+    env:
+      EXPERIMENT: \${{ matrix.item.experiment }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install publish dependencies
+        run: python3 -m pip install --disable-pip-version-check --no-compile "Pillow==10.2.0"
+
+      - name: Restore validated output cache
+        uses: actions/cache/restore@v6
+        with:
+          path: output
+          key: blender-validated-\${{ matrix.item.experiment }}-\${{ runner.os }}-\${{ github.run_id }}
+          fail-on-cache-miss: true
+
+      - name: Verify cached output
+        run: python3 tools/experiment.py check "$EXPERIMENT"
+
+      - name: Prepare git and rebase
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate persistent result
+        run: |
+          python3 tools/experiment.py publish "$EXPERIMENT" \
+            --source-sha "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-number "$GITHUB_RUN_NUMBER"
+
+      - name: Commit result
+        id: commit-result
+        run: |
+          git add "results/$EXPERIMENT/"
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish $EXPERIMENT result [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push result with one conflict retry
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:$GITHUB_REF_NAME"; then exit 0; fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
   pages:
-    needs: publish
-    if: needs.publish.result == 'success'
+    needs: [publish, publish_movie]
+    if: >-
+      ${{ always() &&
+          (needs.publish.result == 'success' || needs.publish.result == 'skipped') &&
+          (needs.publish_movie.result == 'success' || needs.publish_movie.result == 'skipped') &&
+          !(needs.publish.result == 'skipped' && needs.publish_movie.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
 

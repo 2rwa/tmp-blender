@@ -31,12 +31,12 @@ def validate_preview(path: Path) -> dict:
         raise SystemExit(f"preview missing: {path}")
 
     size_bytes = path.stat().st_size
-    if size_bytes < 25_000:
+    if size_bytes < 10_000:
         raise SystemExit(f"preview suspiciously small: {size_bytes} bytes")
 
     with Image.open(path) as image:
         image.load()
-        if image.size != (768, 576):
+        if image.size != (480, 360):
             raise SystemExit(f"unexpected preview size: {image.size}")
 
         rgb = image.convert("RGB")
@@ -53,14 +53,14 @@ def validate_preview(path: Path) -> dict:
             raise SystemExit(f"insufficient luminance range: {extrema}")
         if stddev < 12.0:
             raise SystemExit(f"preview looks too uniform: stddev={stddev:.2f}")
-        if unique_colors < 160:
+        if unique_colors < 100:
             raise SystemExit(f"preview has too little visual variation: {unique_colors} colors")
 
     return {
         "path": str(path),
         "size_bytes": size_bytes,
-        "width": 768,
-        "height": 576,
+        "width": 480,
+        "height": 360,
         "luminance_min": extrema[0],
         "luminance_max": extrema[1],
         "luminance_mean": round(mean, 3),
@@ -73,7 +73,7 @@ def validate_preview(path: Path) -> dict:
 def validate_video(path: Path) -> dict:
     if not path.exists():
         raise SystemExit(f"video missing: {path}")
-    if path.stat().st_size < 80_000:
+    if path.stat().st_size < 30_000:
         raise SystemExit(f"video suspiciously small: {path.stat().st_size} bytes")
 
     probe = subprocess.run(
@@ -102,7 +102,7 @@ def validate_video(path: Path) -> dict:
     width = int(stream.get("width", 0))
     height = int(stream.get("height", 0))
     duration = float(stream.get("duration") or fmt.get("duration") or 0.0)
-    if width != 768 or height != 576:
+    if width != 480 or height != 360:
         raise SystemExit(f"unexpected video size: {(width, height)}")
     if not (3.5 <= duration <= 4.5):
         raise SystemExit(f"unexpected video duration: {duration:.3f}s")
@@ -136,6 +136,11 @@ def validate_geometry_nodes(report_path: Path, blend_path: Path) -> dict:
         raise SystemExit(f"unexpected modifier: {report.get('modifier')!r}")
     if report.get("grid_point_count") != 31 * 31:
         raise SystemExit(f"unexpected grid point count: {report.get('grid_point_count')}")
+    if report.get("resolution_x") != 480 or report.get("resolution_y") != 360:
+        raise SystemExit(
+            f"unexpected pre-render resolution: "
+            f"{report.get('resolution_x')}x{report.get('resolution_y')}"
+        )
     if int(report.get("evaluated_vertices", 0)) < 10_000:
         raise SystemExit(f"evaluated Geometry Nodes mesh too small: {report.get('evaluated_vertices')}")
     if int(report.get("evaluated_polygons", 0)) < 20_000:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import bpy
@@ -21,6 +22,10 @@ GRID_SIZE = 12.0
 FRAME_START = 1
 FRAME_END = 96
 FPS = 24
+RESOLUTION_X = 480
+RESOLUTION_Y = 360
+RENDER_SAMPLES = 16
+PREPARE_ONLY = os.environ.get("BLENDER_PREPARE_ONLY") == "1"
 
 
 def clear_scene() -> None:
@@ -195,13 +200,18 @@ def build_scene() -> None:
     clear_scene()
     scene = bpy.context.scene
     engine = choose_engine(scene)
+    render_samples = None
+    eevee = getattr(scene, "eevee", None)
+    if eevee is not None and hasattr(eevee, "taa_render_samples"):
+        eevee.taa_render_samples = RENDER_SAMPLES
+        render_samples = int(eevee.taa_render_samples)
 
     scene.frame_start = FRAME_START
     scene.frame_end = FRAME_END
     scene.frame_current = FRAME_START
     scene.render.fps = FPS
-    scene.render.resolution_x = 768
-    scene.render.resolution_y = 576
+    scene.render.resolution_x = RESOLUTION_X
+    scene.render.resolution_y = RESOLUTION_Y
     scene.render.resolution_percentage = 100
     scene.render.ffmpeg.format = "MPEG4"
     scene.render.ffmpeg.codec = "H264"
@@ -260,6 +270,10 @@ def build_scene() -> None:
         "frame_start": FRAME_START,
         "frame_end": FRAME_END,
         "fps": FPS,
+        "resolution_x": RESOLUTION_X,
+        "resolution_y": RESOLUTION_Y,
+        "requested_render_samples": RENDER_SAMPLES,
+        "effective_render_samples": render_samples,
         "evaluated_vertices": vertices,
         "evaluated_edges": edges,
         "evaluated_polygons": polygons,
@@ -267,6 +281,18 @@ def build_scene() -> None:
     REPORT_PATH.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
     bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
+
+    print(f"BLENDER_ENGINE={engine}")
+    print(f"GN_NODE_COUNT={report['node_count']}")
+    print(f"GN_EVALUATED_VERTICES={vertices}")
+    print(f"GN_EVALUATED_POLYGONS={polygons}")
+    print(f"RENDER_RESOLUTION={RESOLUTION_X}x{RESOLUTION_Y}")
+    print(f"RENDER_SAMPLES={render_samples if render_samples is not None else 'default'}")
+    print(f"BLEND_PATH={BLEND_PATH}")
+
+    if PREPARE_ONLY:
+        print("BLENDER_PREPARE_ONLY=1")
+        return
 
     preview_frame = (FRAME_START + FRAME_END) // 2
     scene.frame_set(preview_frame)
@@ -281,13 +307,8 @@ def build_scene() -> None:
     scene.render.filepath = str(VIDEO_PATH)
     bpy.ops.render.render(animation=True)
 
-    print(f"BLENDER_ENGINE={engine}")
-    print(f"GN_NODE_COUNT={report['node_count']}")
-    print(f"GN_EVALUATED_VERTICES={vertices}")
-    print(f"GN_EVALUATED_POLYGONS={polygons}")
     print(f"PREVIEW_PATH={PREVIEW_PATH}")
     print(f"VIDEO_PATH={VIDEO_PATH}")
-    print(f"BLEND_PATH={BLEND_PATH}")
 
 
 if __name__ == "__main__":

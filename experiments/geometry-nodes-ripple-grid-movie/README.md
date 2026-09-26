@@ -1,42 +1,32 @@
 # Geometry Nodes Ripple Grid Movie
 
-Animated Blender 4.0.2 Geometry Nodes sample for the shared \`tmp-blender\` experiment pipeline.
+Low-cost Blender 4.0.2 pre-render sample for checking animation, camera, Geometry Nodes evaluation, and timing before a higher-quality Colab render.
 
-This movie version extends the still-image ripple-grid sample by introducing \`Scene Time\` into the node graph, rendering a short MP4 animation, and keeping a preview still plus an inspectable \`.blend\` file.
+## Pre-render profile
 
-## Geometry Nodes graph
+- 480 x 360
+- 24 fps
+- 96 frames / 4 seconds
+- requested EEVEE render samples: 16
+- 24 frames per chunk
+- PNG frame sequence
+- up to 4 render chunks in parallel
+- chunk PNGs cached for reuse
+- same-run chunk artifacts used for deterministic MP4 assembly
 
-\`\`\`text
-Grid
-  -> Set Position
-       ^ Position -> Length -> Multiply
-       ^ Scene Time -> Multiply
-       ^ (radial term + time term) -> Sine -> Multiply -> Combine XYZ
-  -> Mesh to Points
-  -> Instance on Points
-       ^ Ico Sphere -> Set Material
-  -> Realize Instances
-  -> Group Output
-\`\`\`
+The Geometry Nodes complexity stays representative of the source scene: a 31 x 31 grid is displaced by a radial time-varying sine wave, converted to points, populated with Icospheres, and realized.
 
-## Animation contract
+## Pipeline
 
-- \`scene.py\` builds the node group with Blender's Python API.
-- \`scene.py\` renders a mid-animation still as \`output/preview.png\`.
-- \`scene.py\` renders a short movie as \`output/ripple-grid.mp4\`.
-- \`scene.py\` saves the source scene as \`output/geometry-nodes-movie.blend\`.
-- \`scene.py\` writes \`output/geometry-nodes-report.json\` with node types and evaluated mesh counts.
-- \`validate.py\` checks the preview image, the MP4 metadata, and the evaluated Geometry Nodes result.
-- \`experiment.json\` publishes the \`.blend\` file to Git when it stays under the repository safety limit.
+1. build the scene and save `geometry-nodes-movie.blend`;
+2. commit the prepared Blend to `results/geometry-nodes-ripple-grid-movie/` before rendering;
+3. render PNG frame chunks;
+4. cache completed chunks and upload short-lived chunk artifacts;
+5. assemble the PNG sequence with ffmpeg;
+6. validate the preview, MP4 metadata, and evaluated Geometry Nodes mesh;
+7. publish the final lightweight result and Pages preview.
 
-Expected full outputs:
-
-- \`preview.png\`
-- \`ripple-grid.mp4\`
-- \`geometry-nodes-movie.blend\`
-- \`geometry-nodes-report.json\`
-- \`validation.json\`
-- \`blender-version.txt\`
+The pre-render Blend is intentionally usable as the handoff to a later Colab render even if the GitHub Actions preview render fails.
 
 ## License / ライセンス
 
