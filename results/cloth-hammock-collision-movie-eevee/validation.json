@@ -1,0 +1,41 @@
+{
+  "preview": {
+    "path": "output/preview.png",
+    "size_bytes": 222906,
+    "width": 480,
+    "height": 360,
+    "luminance_min": 0,
+    "luminance_max": 188,
+    "luminance_mean": 58.711,
+    "luminance_stddev": 62.431,
+    "sha256": "8f643aacb66ddf2859d31658b93d5f71cfcb59fa33b325988cabc33f847a2b89"
+  },
+  "movie": {
+    "path": "output/cloth-hammock-collision-movie-eevee.mp4",
+    "size_bytes": 174567,
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 8.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "192",
+    "sha256": "ac294c5744ed09f0ddf98b52bb00bdaf2caebf2d37bba5bfd4ecb6c7883989c0"
+  },
+  "report": {
+    "engine": "BLENDER_EEVEE",
+    "vertex_count": 1575,
+    "face_count": 1496,
+    "pinned_vertex_count": 36,
+    "baked_shape_keys": 192,
+    "shape_key_count": 193,
+    "simulation_seconds": 17.877,
+    "colliders": [
+      "BallAbove",
+      "BallBelow"
+    ],
+    "effectors": [
+      "CrossWind",
+      "Turbulence"
+    ],
+    "blend_size_bytes": 5123800
+  }
+}
