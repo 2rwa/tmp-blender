@@ -17,6 +17,12 @@ main { max-width:1200px; margin:auto; padding:22px; display:grid; grid-template-
 .card { overflow:hidden; border:1px solid #253244; border-radius:18px; background:#101722d9; box-shadow:0 18px 50px #0007; }
 .visual { aspect-ratio:16/9; background:#000; display:flex; align-items:center; justify-content:center; }
 .visual img,.visual video { width:100%; height:100%; object-fit:cover; display:block; }
+.media-toggle { position:relative; width:100%; height:100%; padding:0; border:0; background:#000; cursor:pointer; overflow:hidden; }
+.media-toggle img { transition:transform .18s ease, filter .18s ease; }
+.media-toggle:hover img,.media-toggle:focus-visible img { transform:scale(1.015); filter:brightness(.76); }
+.media-toggle:focus-visible { outline:3px solid #78c4ff; outline-offset:-3px; }
+.play-badge { position:absolute; left:50%; top:50%; width:58px; height:58px; transform:translate(-50%,-50%); display:grid; place-items:center; border:1px solid #ffffffaa; border-radius:50%; color:#fff; background:#07111dcc; box-shadow:0 8px 28px #000a; font-size:1.35rem; padding-left:4px; }
+.play-label { position:absolute; left:50%; top:calc(50% + 43px); transform:translateX(-50%); color:#fff; font:600 .72rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-shadow:0 2px 8px #000; }
 .body { padding:18px; }
 h2 { margin:0; font-size:1.35rem; }
 .id,.source { color:#8297aa; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem; }
@@ -33,7 +39,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
 <body>
 <header>
   <h1>tmp-blender</h1>
-  <p>GitHub Actionsで生成したBlender実験の公開ギャラリー。preview / validation / 短い動画を直接確認できます。</p>
+  <p>GitHub Actionsで生成したBlender実験の公開ギャラリー。スナップショットをクリックした時だけ動画を読み込んで再生します。</p>
 </header>
 <main>
 
@@ -50,7 +56,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/cloth-hammock-collision-movie-eevee/preview.jpg"><source src="assets/cloth-hammock-collision-movie-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/cloth-hammock-collision-movie-eevee/media.mp4" data-poster="assets/cloth-hammock-collision-movie-eevee/preview.jpg" aria-label="Cloth Hammock Collision Movie EEVEE の動画を再生"><img src="assets/cloth-hammock-collision-movie-eevee/preview.jpg" alt="Cloth Hammock Collision Movie EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Cloth Hammock Collision Movie EEVEE</h2>
             <p class="id">cloth-hammock-collision-movie-eevee</p>
@@ -62,7 +68,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg"><source src="assets/cloth-hammock-rigidbody-drop-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/cloth-hammock-rigidbody-drop-eevee/media.mp4" data-poster="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg" aria-label="Cloth Hammock Rigid Body Drop EEVEE の動画を再生"><img src="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg" alt="Cloth Hammock Rigid Body Drop EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Cloth Hammock Rigid Body Drop EEVEE</h2>
             <p class="id">cloth-hammock-rigidbody-drop-eevee</p>
@@ -74,7 +80,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/fire-column/preview.jpg"><source src="assets/fire-column/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/fire-column/media.mp4" data-poster="assets/fire-column/preview.jpg" aria-label="Fire Column の動画を再生"><img src="assets/fire-column/preview.jpg" alt="Fire Column preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Fire Column</h2>
             <p class="id">fire-column</p>
@@ -86,7 +92,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/fluid-dam-break/preview.jpg"><source src="assets/fluid-dam-break/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/fluid-dam-break/media.mp4" data-poster="assets/fluid-dam-break/preview.jpg" aria-label="Fluid Dam Break の動画を再生"><img src="assets/fluid-dam-break/preview.jpg" alt="Fluid Dam Break preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Fluid Dam Break</h2>
             <p class="id">fluid-dam-break</p>
@@ -110,7 +116,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/geometry-nodes-ripple-grid-movie/preview.jpg"><source src="assets/geometry-nodes-ripple-grid-movie/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-ripple-grid-movie/media.mp4" data-poster="assets/geometry-nodes-ripple-grid-movie/preview.jpg" aria-label="Geometry Nodes Ripple Grid Movie の動画を再生"><img src="assets/geometry-nodes-ripple-grid-movie/preview.jpg" alt="Geometry Nodes Ripple Grid Movie preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Geometry Nodes Ripple Grid Movie</h2>
             <p class="id">geometry-nodes-ripple-grid-movie</p>
@@ -122,7 +128,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/geometry-nodes-volume-flame/preview.jpg"><source src="assets/geometry-nodes-volume-flame/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame/media.mp4" data-poster="assets/geometry-nodes-volume-flame/preview.jpg" aria-label="Geometry Nodes Volume Flame の動画を再生"><img src="assets/geometry-nodes-volume-flame/preview.jpg" alt="Geometry Nodes Volume Flame preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Geometry Nodes Volume Flame</h2>
             <p class="id">geometry-nodes-volume-flame</p>
@@ -134,7 +140,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/geometry-nodes-volume-flame-v2/preview.jpg"><source src="assets/geometry-nodes-volume-flame-v2/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame-v2/media.mp4" data-poster="assets/geometry-nodes-volume-flame-v2/preview.jpg" aria-label="Geometry Nodes Volume Flame v2 の動画を再生"><img src="assets/geometry-nodes-volume-flame-v2/preview.jpg" alt="Geometry Nodes Volume Flame v2 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Geometry Nodes Volume Flame v2</h2>
             <p class="id">geometry-nodes-volume-flame-v2</p>
@@ -146,7 +152,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg"><source src="assets/geometry-nodes-volume-flame-v2-cycles/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame-v2-cycles/media.mp4" data-poster="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg" aria-label="Geometry Nodes Volume Flame v2 Cycles の動画を再生"><img src="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg" alt="Geometry Nodes Volume Flame v2 Cycles preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Geometry Nodes Volume Flame v2 Cycles</h2>
             <p class="id">geometry-nodes-volume-flame-v2-cycles</p>
@@ -158,7 +164,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/metaball-fountain-100-eevee/preview.jpg"><source src="assets/metaball-fountain-100-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-fountain-100-eevee/media.mp4" data-poster="assets/metaball-fountain-100-eevee/preview.jpg" aria-label="Metaball Fountain 100 EEVEE の動画を再生"><img src="assets/metaball-fountain-100-eevee/preview.jpg" alt="Metaball Fountain 100 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Metaball Fountain 100 EEVEE</h2>
             <p class="id">metaball-fountain-100-eevee</p>
@@ -170,7 +176,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/metaball-fountain-300-eevee/preview.jpg"><source src="assets/metaball-fountain-300-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-fountain-300-eevee/media.mp4" data-poster="assets/metaball-fountain-300-eevee/preview.jpg" aria-label="Metaball Fountain 300 EEVEE の動画を再生"><img src="assets/metaball-fountain-300-eevee/preview.jpg" alt="Metaball Fountain 300 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Metaball Fountain 300 EEVEE</h2>
             <p class="id">metaball-fountain-300-eevee</p>
@@ -182,7 +188,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/metaball-hidden-funnel-300-eevee/preview.jpg"><source src="assets/metaball-hidden-funnel-300-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-hidden-funnel-300-eevee/media.mp4" data-poster="assets/metaball-hidden-funnel-300-eevee/preview.jpg" aria-label="Metaball Hidden Funnel 300 EEVEE の動画を再生"><img src="assets/metaball-hidden-funnel-300-eevee/preview.jpg" alt="Metaball Hidden Funnel 300 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Metaball Hidden Funnel 300 EEVEE</h2>
             <p class="id">metaball-hidden-funnel-300-eevee</p>
@@ -199,14 +205,14 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
             <h2>Orbital Sculpture</h2>
             <p class="id">orbital-sculpture</p>
             <p>Procedural metallic sphere, tilted torus, and two colored orbital rings.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/1d5d314200a5b47270186a0430b62f1da8776ec7">1d5d314200</a></p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/2c9f1ebfae02db081057cf7d36fa09c5b6f55fdb">2c9f1ebfae</a></p>
             <table><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>640</td></tr></table>
-            <p class="links"><a href="assets/orbital-sculpture/preview.jpg">preview</a> · <a href="assets/orbital-sculpture/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/orbital-sculpture">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/orbital-sculpture">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36230411184">Actions #28</a></p>
+            <p class="links"><a href="assets/orbital-sculpture/preview.jpg">preview</a> · <a href="assets/orbital-sculpture/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/orbital-sculpture">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/orbital-sculpture">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36279210757">Actions #51</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/rigid-sphere-impact-1000/preview.jpg"><source src="assets/rigid-sphere-impact-1000/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rigid-sphere-impact-1000/media.mp4" data-poster="assets/rigid-sphere-impact-1000/preview.jpg" aria-label="Rigid Sphere Impact 1000 の動画を再生"><img src="assets/rigid-sphere-impact-1000/preview.jpg" alt="Rigid Sphere Impact 1000 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Rigid Sphere Impact 1000</h2>
             <p class="id">rigid-sphere-impact-1000</p>
@@ -218,7 +224,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg"><source src="assets/rigid-sphere-impact-1000-transparent-v2/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rigid-sphere-impact-1000-transparent-v2/media.mp4" data-poster="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg" aria-label="Rigid Sphere Impact 1000 Transparent V2 の動画を再生"><img src="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg" alt="Rigid Sphere Impact 1000 Transparent V2 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Rigid Sphere Impact 1000 Transparent V2</h2>
             <p class="id">rigid-sphere-impact-1000-transparent-v2</p>
@@ -230,7 +236,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/rpg-character-pack-smoke-test-eevee/preview.jpg"><source src="assets/rpg-character-pack-smoke-test-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rpg-character-pack-smoke-test-eevee/media.mp4" data-poster="assets/rpg-character-pack-smoke-test-eevee/preview.jpg" aria-label="Quaternius RPG Character Smoke Test EEVEE の動画を再生"><img src="assets/rpg-character-pack-smoke-test-eevee/preview.jpg" alt="Quaternius RPG Character Smoke Test EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Quaternius RPG Character Smoke Test EEVEE</h2>
             <p class="id">rpg-character-pack-smoke-test-eevee</p>
@@ -242,7 +248,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/softbody-jelly-cube-impact-eevee/preview.jpg"><source src="assets/softbody-jelly-cube-impact-eevee/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/softbody-jelly-cube-impact-eevee/media.mp4" data-poster="assets/softbody-jelly-cube-impact-eevee/preview.jpg" aria-label="Soft Body Jelly Cube Impact EEVEE の動画を再生"><img src="assets/softbody-jelly-cube-impact-eevee/preview.jpg" alt="Soft Body Jelly Cube Impact EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Soft Body Jelly Cube Impact EEVEE</h2>
             <p class="id">softbody-jelly-cube-impact-eevee</p>
@@ -254,7 +260,7 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><video controls autoplay muted loop playsinline poster="assets/water-dump/preview.jpg"><source src="assets/water-dump/media.mp4" type="video/mp4"></video></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/water-dump/media.mp4" data-poster="assets/water-dump/preview.jpg" aria-label="Water Dump の動画を再生"><img src="assets/water-dump/preview.jpg" alt="Water Dump preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Water Dump</h2>
             <p class="id">water-dump</p>
@@ -267,5 +273,21 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         
 </main>
 <footer>Generated from committed results. Code: MIT-0 · Generated assets: CC0-1.0 · Third-party source licenses/terms apply where applicable. / コード: MIT-0 · 生成物: CC0-1.0 · 第三者由来部分は利用元のライセンス・利用条件に従います。</footer>
+<script>
+document.addEventListener("click", (event) => {
+  const button = event.target.closest(".media-toggle");
+  if (!button) return;
+
+  const video = document.createElement("video");
+  video.controls = true;
+  video.autoplay = true;
+  video.playsInline = true;
+  video.preload = "metadata";
+  video.poster = button.dataset.poster;
+  video.src = button.dataset.video;
+  button.replaceWith(video);
+  video.play().catch(() => {});
+});
+</script>
 </body>
 </html>
