@@ -1,0 +1,15 @@
+{
+  "id": "geometry-nodes-ripple-grid-movie",
+  "title": "Geometry Nodes Ripple Grid Movie",
+  "description": "Animated Geometry Nodes ripple field using Scene Time, Grid displacement, point conversion, Icosphere instancing, and MP4 rendering.",
+  "preview_source": "preview.png",
+  "required_outputs": [
+    "preview.png",
+    "ripple-grid.mp4",
+    "geometry-nodes-movie.blend",
+    "geometry-nodes-report.json"
+  ],
+  "repo_blends": [
+    "geometry-nodes-movie.blend"
+  ]
+}
