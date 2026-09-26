@@ -1,0 +1,36 @@
+{
+  "video": "metaball-hidden-funnel-300-eevee.mp4",
+  "preview": {
+    "path": "output/preview.png",
+    "size_bytes": 223538,
+    "width": 480,
+    "height": 360,
+    "luminance_min": 0,
+    "luminance_max": 231,
+    "luminance_mean": 21.136,
+    "luminance_stddev": 28.701,
+    "sha256": "49bd0293c5fe753cd76a24d89f29f3b499cb3773622d0daf4a02bc30927987d2"
+  },
+  "movie": {
+    "path": "output/metaball-hidden-funnel-300-eevee.mp4",
+    "size_bytes": 252555,
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 8.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "192",
+    "sha256": "4d62f33f3a9254cd5db75186653f772c2a6bc84525d6d7893e144e938bf83645"
+  },
+  "report": {
+    "engine": "BLENDER_EEVEE",
+    "element_count": 300,
+    "keyframe_points": 138714,
+    "simulation_seconds": 2.799,
+    "exited_count": 300,
+    "first_exit_frame": 33,
+    "last_exit_frame": 137,
+    "in_dish_final": 180,
+    "leaked_below_world": 90,
+    "blend_size_bytes": 13151592
+  }
+}
