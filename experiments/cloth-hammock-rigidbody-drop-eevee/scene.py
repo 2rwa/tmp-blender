@@ -207,7 +207,7 @@ def ensure_rigidbody_world(scene):
     world = scene.rigidbody_world
     world.point_cache.frame_start = FRAME_START
     world.point_cache.frame_end = FRAME_END
-    world.steps_per_second = 120
+    world.substeps_per_frame = 5
     world.solver_iterations = 25
     return world
 
