@@ -12,7 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENTS_DIR = ROOT / "experiments"
 OUTPUT_DIR = ROOT / "output"
 RESULTS_DIR = ROOT / "results"
-SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")\nPAGE_MEDIA_MAX_BYTES = 5 * 1024 * 1024
+SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+PAGE_MEDIA_MAX_BYTES = 5 * 1024 * 1024
 
 
 def experiment_dir(experiment_id: str) -> Path:
