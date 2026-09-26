@@ -198,7 +198,7 @@ def build_scene() -> None:
     rbw = scene.rigidbody_world
     rbw.point_cache.frame_start = FRAME_START
     rbw.point_cache.frame_end = FRAME_END
-    rbw.steps_per_second = 240
+    rbw.substeps_per_frame = 10
     rbw.solver_iterations = 25
 
     size = 0.22
