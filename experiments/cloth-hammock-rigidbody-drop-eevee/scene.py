@@ -297,21 +297,6 @@ def make_rigid_bodies():
     return bodies
 
 
-def bake_rigid_bodies(scene, objects):
-    started = time.perf_counter()
-    bpy.ops.object.select_all(action="DESELECT")
-    for obj in objects:
-        obj.select_set(True)
-    bpy.context.view_layer.objects.active = objects[0]
-    scene.frame_set(FRAME_START)
-    bpy.ops.rigidbody.bake_to_keyframes(
-        frame_start=FRAME_START,
-        frame_end=FRAME_END,
-        step=1,
-    )
-    bpy.ops.object.select_all(action="DESELECT")
-    return time.perf_counter() - started
-
 def make_supports_and_ground():
     dark = make_material("Supports", (0.025, 0.028, 0.034), roughness=0.4, metallic=0.72)
     ground_mat = make_material("Ground", (0.018, 0.02, 0.026), roughness=0.88, metallic=0.02)
@@ -364,39 +349,60 @@ def make_effectors():
     return wind, turbulence
 
 
-def bake_cloth_to_shape_keys(scene, cloth, cloth_mod):
+def bake_simulation_to_keys(scene, cloth, cloth_mod, rigid_objects):
     depsgraph = bpy.context.evaluated_depsgraph_get()
-    frames = {}
+    cloth_frames = {}
+    rigid_frames = {obj.name: {} for obj in rigid_objects}
     started = time.perf_counter()
 
     scene.frame_set(FRAME_START)
     depsgraph.update()
+
+    # Run both solvers in one strictly sequential pass. This avoids
+    # context-sensitive rigid-body bake operators and guarantees the cloth
+    # samples the same rigid-body motion that we later persist.
     for frame in range(FRAME_START, FRAME_END + 1):
         scene.frame_set(frame)
         depsgraph.update()
-        eval_obj = cloth.evaluated_get(depsgraph)
-        eval_mesh = eval_obj.to_mesh()
-        frames[frame] = [tuple(v.co) for v in eval_mesh.vertices]
-        eval_obj.to_mesh_clear()
+
+        eval_cloth = cloth.evaluated_get(depsgraph)
+        eval_mesh = eval_cloth.to_mesh()
+        cloth_frames[frame] = [tuple(v.co) for v in eval_mesh.vertices]
+        eval_cloth.to_mesh_clear()
+
+        for obj in rigid_objects:
+            eval_obj = obj.evaluated_get(depsgraph)
+            loc, rot, scale = eval_obj.matrix_world.decompose()
+            rigid_frames[obj.name][frame] = (
+                tuple(loc),
+                tuple(rot),
+                tuple(scale),
+            )
+
         if frame % 12 == 0:
-            print(f"CLOTH_SIM_FRAME={frame}")
+            print(f"HYBRID_SIM_FRAME={frame}")
 
-    sim_seconds = time.perf_counter() - started
+    simulation_seconds = time.perf_counter() - started
 
+    # Persist cloth deformation as one shape key per frame.
     basis = cloth.shape_key_add(name="Basis", from_mix=False)
     assert len(basis.data) == len(cloth.data.vertices)
 
     for frame in range(FRAME_START, FRAME_END + 1):
         key = cloth.shape_key_add(name=f"Sim_{frame:03d}", from_mix=False)
-        coords = frames[frame]
+        coords = cloth_frames[frame]
         for idx, co in enumerate(coords):
             key.data[idx].co = co
 
-        for f, value in ((frame - 1, 0.0), (frame, 1.0), (frame + 1, 0.0)):
-            if f < FRAME_START:
+        for key_frame, value in (
+            (frame - 1, 0.0),
+            (frame, 1.0),
+            (frame + 1, 0.0),
+        ):
+            if key_frame < FRAME_START:
                 continue
             key.value = value
-            key.keyframe_insert(data_path="value", frame=f)
+            key.keyframe_insert(data_path="value", frame=key_frame)
 
     if cloth.data.shape_keys and cloth.data.shape_keys.animation_data:
         action = cloth.data.shape_keys.animation_data.action
@@ -406,9 +412,39 @@ def bake_cloth_to_shape_keys(scene, cloth, cloth_mod):
                     kp.interpolation = "LINEAR"
 
     cloth.modifiers.remove(cloth_mod)
-    scene.frame_set(FRAME_START)
-    return sim_seconds, len(frames)
 
+    # Persist evaluated rigid-body transforms without bpy.ops.rigidbody.
+    rigid_bake_started = time.perf_counter()
+    for obj in rigid_objects:
+        # Remove the release-time kinematic F-curves used during simulation.
+        if obj.animation_data and obj.animation_data.action:
+            action = obj.animation_data.action
+            for fc in list(action.fcurves):
+                if fc.data_path == "rigid_body.kinematic":
+                    action.fcurves.remove(fc)
+
+        obj.rotation_mode = "QUATERNION"
+        if obj.rigid_body:
+            obj.rigid_body.kinematic = True
+
+        for frame in range(FRAME_START, FRAME_END + 1):
+            loc, rot, scale = rigid_frames[obj.name][frame]
+            obj.location = loc
+            obj.rotation_quaternion = rot
+            obj.scale = scale
+            obj.keyframe_insert(data_path="location", frame=frame)
+            obj.keyframe_insert(data_path="rotation_quaternion", frame=frame)
+            obj.keyframe_insert(data_path="scale", frame=frame)
+
+        if obj.animation_data and obj.animation_data.action:
+            for fc in obj.animation_data.action.fcurves:
+                if fc.data_path in {"location", "rotation_quaternion", "scale"}:
+                    for kp in fc.keyframe_points:
+                        kp.interpolation = "LINEAR"
+
+    rigid_bake_seconds = time.perf_counter() - rigid_bake_started
+    scene.frame_set(FRAME_START)
+    return simulation_seconds, len(cloth_frames), rigid_bake_seconds
 
 def add_render_modifiers(cloth):
     solid = cloth.modifiers.new(name="FabricThickness", type="SOLIDIFY")
@@ -491,8 +527,12 @@ def build_scene() -> None:
     setup_camera_and_lights(scene)
 
     # Advancing the cloth simulation also advances the rigid-body world.
-    sim_seconds, baked_frames = bake_cloth_to_shape_keys(scene, cloth, cloth_mod)
-    rigid_seconds = bake_rigid_bodies(scene, rigid_bodies)
+    sim_seconds, baked_frames, rigid_seconds = bake_simulation_to_keys(
+        scene,
+        cloth,
+        cloth_mod,
+        rigid_bodies,
+    )
     add_render_modifiers(cloth)
 
     report = {
