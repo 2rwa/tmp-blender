@@ -1,0 +1,30 @@
+{
+  "video": "rpg-character-pack-smoke-test-eevee.mp4",
+  "preview": {
+    "size_bytes": 195395,
+    "luminance_min": 1,
+    "luminance_max": 224,
+    "luminance_mean": 60.827,
+    "luminance_stddev": 51.293,
+    "sha256": "0c487cc311ad6b3db2866c3d644071dd4b2966eca21806267c0e198635ca38c2"
+  },
+  "movie": {
+    "size_bytes": 21620,
+    "duration_seconds": 6.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "144",
+    "sha256": "c81b6f31dc9e0f042d613cd4254eece335282d6bdc5774949d0f3a016f07865d"
+  },
+  "report": {
+    "asset_file": "Warrior.glb",
+    "asset_format": ".glb",
+    "mesh_count": 6,
+    "armature_count": 1,
+    "action_count": 13,
+    "selected_action": "Idle_Attacking_CharacterArmature",
+    "material_count": 2,
+    "image_count": 3,
+    "preview_height": 2.63047,
+    "blend_size_bytes": 13727672
+  }
+}
