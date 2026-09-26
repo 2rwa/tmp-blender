@@ -121,6 +121,7 @@ def build_flame_group(host, material, *, name: str, height: float, rise: float, 
     m2p.mode = "VERTICES"
     set_pos = n.new("GeometryNodeSetPosition")
     p2v = n.new("GeometryNodePointsToVolume")
+    p2v.resolution_mode = "VOXEL_SIZE"
     p2v.inputs["Density"].default_value = density
     p2v.inputs["Voxel Size"].default_value = voxel
     p2v.inputs["Radius"].default_value = radius_max * 1.35
