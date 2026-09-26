@@ -7,8 +7,6 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from PIL import Image
-
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENTS_DIR = ROOT / "experiments"
@@ -140,6 +138,8 @@ def publish(args: argparse.Namespace) -> int:
     manifest = load_manifest(experiment_id)
     destination = RESULTS_DIR / experiment_id
     destination.mkdir(parents=True, exist_ok=True)
+
+    from PIL import Image
 
     preview_source = OUTPUT_DIR / manifest["preview_source"]
     with Image.open(preview_source) as image:
