@@ -2,8 +2,8 @@
 
 An 8-second presentation-oriented extension of the cloth hammock experiment with two-stage sphere impacts, moving wind/turbulence, and a slow animated camera. Cloth physics is baked to shape keys before parallel EEVEE rendering.
 
-- source commit: `828015e6f02f601722899cafb5e229b24ac00d8a`
-- Actions run: `33` (`36236405528`)
+- source commit: `632813ff48f45f92111f330386e2f10f72d4b454`
+- Actions run: `34` (`36236915724`)
 - full artifact: `blender-cloth-hammock-collision-movie-eevee`
 
 ## Blend files
@@ -16,26 +16,27 @@ An 8-second presentation-oriented extension of the cloth hammock experiment with
 
 ```json
 {
+  "video": "cloth-hammock-collision-movie-eevee.mp4",
   "preview": {
     "path": "output/preview.png",
-    "size_bytes": 222906,
+    "size_bytes": 222671,
     "width": 480,
     "height": 360,
     "luminance_min": 0,
-    "luminance_max": 188,
-    "luminance_mean": 58.711,
-    "luminance_stddev": 62.431,
-    "sha256": "8f643aacb66ddf2859d31658b93d5f71cfcb59fa33b325988cabc33f847a2b89"
+    "luminance_max": 190,
+    "luminance_mean": 58.456,
+    "luminance_stddev": 62.325,
+    "sha256": "b3e7cd154137f09ca790f3ec3ba0e4e17bf5a6724b453c7184ebb167efb73151"
   },
   "movie": {
     "path": "output/cloth-hammock-collision-movie-eevee.mp4",
-    "size_bytes": 174567,
+    "size_bytes": 176460,
     "width": 480,
     "height": 360,
     "duration_seconds": 8.0,
     "avg_frame_rate": "24/1",
     "nb_frames": "192",
-    "sha256": "ac294c5744ed09f0ddf98b52bb00bdaf2caebf2d37bba5bfd4ecb6c7883989c0"
+    "sha256": "9332817df9a873376d261e681595483ef41bfd1a465440fcfbf458fa3a68613f"
   },
   "report": {
     "engine": "BLENDER_EEVEE",
@@ -44,7 +45,7 @@ An 8-second presentation-oriented extension of the cloth hammock experiment with
     "pinned_vertex_count": 36,
     "baked_shape_keys": 192,
     "shape_key_count": 193,
-    "simulation_seconds": 17.877,
+    "simulation_seconds": 14.582,
     "colliders": [
       "BallAbove",
       "BallBelow"
