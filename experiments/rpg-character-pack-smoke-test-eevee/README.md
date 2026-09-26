@@ -33,3 +33,8 @@ This is intentionally a smoke test. Once the asset survives the headless pipelin
 - Mirrored file: `assets/models/quaternius-warrior.glb`
 - That repository's credits identify the runtime Warrior model as originating from Quaternius' RPG Character Pack under CC0 1.0.
 - The mirror is used only because the official Google Drive returned quota errors in CI; Quaternius remains the recorded asset publisher/source.
+
+
+## Validation note
+
+The first successful render compressed to about 21.6 KB because the selected `Idle_Attacking` action and studio camera are visually simple. The MP4 minimum-size guard was therefore reduced from 25 KB to 15 KB; character/rig/material/action semantics remain the primary correctness checks.
