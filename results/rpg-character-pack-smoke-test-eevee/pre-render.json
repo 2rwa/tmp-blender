@@ -1,0 +1,20 @@
+{
+  "experiment": "rpg-character-pack-smoke-test-eevee",
+  "source_sha": "30654ebe3f7e9daa34472fc343dd64bd4856c558",
+  "run_id": "36277220885",
+  "run_number": "48",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 144,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 96,
+    "blend": "rpg-character-pack-smoke-test-eevee.blend",
+    "video": "rpg-character-pack-smoke-test-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "rpg-character-pack-smoke-test-eevee.blend",
+    "rpg-character-pack-smoke-test-eevee-report.json"
+  ]
+}

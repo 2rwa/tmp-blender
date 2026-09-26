@@ -1,0 +1,34 @@
+{
+  "experiment": "rpg-character-pack-smoke-test-eevee",
+  "engine": "BLENDER_EEVEE",
+  "frame_start": 1,
+  "frame_end": 144,
+  "fps": 24,
+  "resolution_x": 480,
+  "resolution_y": 360,
+  "requested_render_samples": 24,
+  "effective_render_samples": 24,
+  "source": {
+    "publisher": "Quaternius",
+    "pack": "RPG Character Pack",
+    "license": "CC0 1.0",
+    "pack_page": "https://quaternius.com/packs/rpgcharacters.html",
+    "drive_folder": "https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing",
+    "asset_file": "Warrior.glb",
+    "asset_format": ".glb"
+  },
+  "character": {
+    "imported_object_count": 7,
+    "mesh_count": 6,
+    "armature_count": 1,
+    "action_count": 13,
+    "selected_action": "Idle_Attacking_CharacterArmature",
+    "selected_armature": "CharacterArmature",
+    "material_count": 2,
+    "image_count": 3,
+    "normalize_scale": 0.661821,
+    "preview_height": 2.63047,
+    "root": "CharacterRoot"
+  },
+  "blend": "rpg-character-pack-smoke-test-eevee.blend"
+}
