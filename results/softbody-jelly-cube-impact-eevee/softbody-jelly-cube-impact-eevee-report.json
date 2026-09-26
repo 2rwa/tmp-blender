@@ -1,0 +1,102 @@
+{
+  "experiment": "softbody-jelly-cube-impact-eevee",
+  "engine": "BLENDER_EEVEE",
+  "frame_start": 1,
+  "frame_end": 144,
+  "fps": 24,
+  "resolution_x": 480,
+  "resolution_y": 360,
+  "requested_render_samples": 24,
+  "effective_render_samples": 24,
+  "prepare_only": true,
+  "jelly": {
+    "vertex_count": 866,
+    "face_count": 864,
+    "baked_shape_keys": 144,
+    "shape_key_count": 145,
+    "simulation_seconds": 1090.507,
+    "max_displacement": 677581161179236.9,
+    "max_displacement_frame": 3,
+    "goal_default": 0.17,
+    "goal_spring": 0.34,
+    "goal_friction": 3.2,
+    "pull": 0.58,
+    "push": 0.58,
+    "bend": 2.2
+  },
+  "projectile": {
+    "name": "ImpactSphere",
+    "radius": 0.58,
+    "path": [
+      {
+        "frame": 1,
+        "location": [
+          -6.5,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 34,
+        "location": [
+          -4.8,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 48,
+        "location": [
+          -2.65,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 58,
+        "location": [
+          -1.25,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 68,
+        "location": [
+          0.55,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 82,
+        "location": [
+          3.25,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 110,
+        "location": [
+          5.4,
+          -0.16,
+          1.92
+        ]
+      },
+      {
+        "frame": 144,
+        "location": [
+          6.4,
+          -0.16,
+          1.92
+        ]
+      }
+    ],
+    "keyframes": 8
+  },
+  "render_modifiers": [
+    "SUBSURF"
+  ],
+  "blend": "softbody-jelly-cube-impact-eevee.blend"
+}

@@ -1,0 +1,20 @@
+{
+  "experiment": "softbody-jelly-cube-impact-eevee",
+  "source_sha": "b0980b8781a47461f8bb11faa9a75ef892c815c0",
+  "run_id": "36242225270",
+  "run_number": "39",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 144,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 78,
+    "blend": "softbody-jelly-cube-impact-eevee.blend",
+    "video": "softbody-jelly-cube-impact-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "softbody-jelly-cube-impact-eevee.blend",
+    "softbody-jelly-cube-impact-eevee-report.json"
+  ]
+}
