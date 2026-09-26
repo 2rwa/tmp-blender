@@ -1,8 +1,8 @@
 {
   "experiment": "cloth-hammock-collision-movie-eevee",
-  "source_sha": "828015e6f02f601722899cafb5e229b24ac00d8a",
-  "run_id": "36236405528",
-  "run_number": "33",
+  "source_sha": "632813ff48f45f92111f330386e2f10f72d4b454",
+  "run_id": "36236915724",
+  "run_number": "34",
   "render_mode": "frame-sequence",
   "frame_sequence": {
     "start": 1,

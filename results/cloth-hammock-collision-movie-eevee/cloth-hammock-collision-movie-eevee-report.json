@@ -19,7 +19,7 @@
     "self_collision": true,
     "baked_shape_keys": 192,
     "shape_key_count": 193,
-    "simulation_seconds": 17.877
+    "simulation_seconds": 14.582
   },
   "colliders": [
     "BallAbove",
