@@ -259,6 +259,9 @@ jobs:
             tools/experiment.py \
             "experiments/$EXPERIMENT/scene.py" \
             "experiments/$EXPERIMENT/validate.py"
+          if [ -f "experiments/$EXPERIMENT/prepare_assets.py" ]; then
+            python3 -m py_compile "experiments/$EXPERIMENT/prepare_assets.py"
+          fi
 
       - name: Restore shared Blender runtime cache
         id: blender-runtime-cache
@@ -296,6 +299,15 @@ jobs:
         with:
           path: .cache/blender-runtime
           key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Prepare optional experiment assets
+        run: |
+          if [ -f "experiments/$EXPERIMENT/prepare_assets.py" ]; then
+            python3 -m pip install --disable-pip-version-check --no-compile "gdown==5.2.0"
+            python3 "experiments/$EXPERIMENT/prepare_assets.py"
+          else
+            echo "No experiment-specific assets to prepare."
+          fi
 
       - name: Verify Blender headless runtime
         run: |

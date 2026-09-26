@@ -1,0 +1,29 @@
+{
+  "id": "rpg-character-pack-smoke-test-eevee",
+  "title": "Quaternius RPG Character Smoke Test EEVEE",
+  "description": "Downloads the official CC0 Quaternius RPG Character Pack during Actions, imports one rigged fantasy character, plays an existing animation, packs dependencies into a prepared Blend, and renders a six-second EEVEE smoke-test movie.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 144,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 96,
+    "blend": "rpg-character-pack-smoke-test-eevee.blend",
+    "video": "rpg-character-pack-smoke-test-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "rpg-character-pack-smoke-test-eevee.blend",
+    "rpg-character-pack-smoke-test-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "rpg-character-pack-smoke-test-eevee.mp4",
+    "rpg-character-pack-smoke-test-eevee.blend",
+    "rpg-character-pack-smoke-test-eevee-report.json"
+  ],
+  "repo_blends": [
+    "rpg-character-pack-smoke-test-eevee.blend"
+  ]
+}
