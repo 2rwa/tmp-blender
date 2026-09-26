@@ -1,0 +1,29 @@
+{
+  "id": "softbody-jelly-cube-impact-eevee",
+  "title": "Soft Body Jelly Cube Impact EEVEE",
+  "description": "A rounded translucent jelly cube is struck by a fast animated metal sphere. Blender Soft Body deformation is sampled sequentially into shape keys before parallel EEVEE frame rendering.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 144,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 78,
+    "blend": "softbody-jelly-cube-impact-eevee.blend",
+    "video": "softbody-jelly-cube-impact-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "softbody-jelly-cube-impact-eevee.blend",
+    "softbody-jelly-cube-impact-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "softbody-jelly-cube-impact-eevee.mp4",
+    "softbody-jelly-cube-impact-eevee.blend",
+    "softbody-jelly-cube-impact-eevee-report.json"
+  ],
+  "repo_blends": [
+    "softbody-jelly-cube-impact-eevee.blend"
+  ]
+}
