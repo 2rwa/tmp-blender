@@ -9,43 +9,48 @@ import gdown
 ROOT = Path.cwd()
 DEST = ROOT / ".cache" / "quaternius-rpg-character-pack"
 META = DEST / "_download.json"
-URL = "https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing"
+
+# Official Quaternius Google Drive file IDs discovered from the pack's public folder.
+FILES = {
+    "Warrior.fbx": "1mPcA-6gGZYLiwD9gle7E1bPckGEkoapx",
+    "Warrior_Texture.png": "1aCbtzIG86g5VJz63pAZ0a6_00e8nexyW",
+}
+PACK_PAGE = "https://quaternius.com/packs/rpgcharacters.html"
+DRIVE_FOLDER = "https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing"
 
 if DEST.exists():
     shutil.rmtree(DEST)
 DEST.mkdir(parents=True, exist_ok=True)
 
-gdown.download_folder(
-    url=URL,
-    output=str(DEST),
-    quiet=False,
-    use_cookies=False,
-    remaining_ok=True,
-)
-
-all_files = [p for p in DEST.rglob("*") if p.is_file()]
-character_files = [
-    p for p in all_files
-    if p.suffix.lower() in {".glb", ".gltf", ".fbx", ".blend"}
-]
-
-if not character_files:
-    raise SystemExit("Quaternius download completed but no character source files were found")
+downloaded = []
+for name, file_id in FILES.items():
+    target = DEST / name
+    result = gdown.download(id=file_id, output=str(target), quiet=False)
+    if not result or not target.is_file() or target.stat().st_size == 0:
+        raise SystemExit(f"failed to download {name} from official Quaternius Drive")
+    downloaded.append(
+        {
+            "name": name,
+            "google_drive_file_id": file_id,
+            "size_bytes": target.stat().st_size,
+        }
+    )
 
 META.write_text(
     json.dumps(
         {
-            "source": URL,
-            "downloaded_file_count": len(all_files),
-            "character_source_count": len(character_files),
-            "character_sources": [str(p.relative_to(DEST)) for p in sorted(character_files)],
+            "publisher": "Quaternius",
+            "pack": "RPG Character Pack",
+            "license": "CC0 1.0",
+            "pack_page": PACK_PAGE,
+            "official_drive_folder": DRIVE_FOLDER,
+            "downloaded": downloaded,
         },
         indent=2,
     ) + "\n",
     encoding="utf-8",
 )
 
-print(f"QUATERNIUS_DOWNLOADED_FILES={len(all_files)}")
-print(f"QUATERNIUS_CHARACTER_SOURCES={len(character_files)}")
-for path in sorted(character_files)[:30]:
-    print(f"QUATERNIUS_SOURCE={path.relative_to(DEST)}")
+print("QUATERNIUS_SELECTED_CHARACTER=Warrior")
+for item in downloaded:
+    print(f"QUATERNIUS_ASSET={item['name']}:{item['size_bytes']}")

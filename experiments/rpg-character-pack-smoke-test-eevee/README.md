@@ -10,12 +10,12 @@ Headless Blender/GitHub Actions import test for the **Quaternius RPG Character P
 - License shown on the pack page: CC0 1.0
 - Official download folder: https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing
 
-The upstream asset files are **not vendored into this repository**. The prepare job downloads the official public folder at run time.
+The upstream asset files are **not vendored into this repository**. The prepare job downloads only the official `Warrior.fbx` and `Warrior_Texture.png` files at run time. This avoids wasting bandwidth on unused characters and avoids a Drive quota failure seen when the whole folder was requested.
 
 ## Test
 
-1. Download the official pack with `gdown`.
-2. Prefer a Warrior/Knight-like GLB/glTF asset, then FBX as fallback.
+1. Download `Warrior.fbx` and `Warrior_Texture.png` directly from the official public Drive folder with `gdown`.
+2. Import the Warrior FBX.
 3. Import it in Blender 4.0.2.
 4. Require at least one mesh, armature, material, and animation action.
 5. Prefer an Idle action, falling back to Walk/Run or the richest imported action.
