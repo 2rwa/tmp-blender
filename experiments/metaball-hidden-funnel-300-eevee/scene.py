@@ -170,14 +170,17 @@ def make_receiver():
     bpy.ops.mesh.primitive_cube_add(size=2.0, location=(0.0, 0.0, 0.44))
     catcher = bpy.context.object
     catcher.name = "HiddenReceiverFloor"
-    catcher.scale = (2.8, 2.8, 0.06)
+    # Make the receiver collision floor deliberately thicker and slightly wider
+    # than the visible dish. The first run routed all 300 bodies through the
+    # hidden tube, but 243 tunneled or escaped below this receiver.
+    catcher.scale = (3.35, 3.35, 0.18)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     catcher.hide_render = True
-    add_passive_rigidbody(catcher, shape="BOX", friction=0.45, restitution=0.08)
+    add_passive_rigidbody(catcher, shape="BOX", friction=0.52, restitution=0.05)
 
     walls = []
-    segments = 20
-    radius = 2.92
+    segments = 24
+    radius = 3.12
     for i in range(segments):
         a = 2.0 * math.pi * i / segments
         bpy.ops.mesh.primitive_cube_add(
@@ -186,7 +189,7 @@ def make_receiver():
         )
         wall = bpy.context.object
         wall.name = f"HiddenReceiverWall_{i:02d}"
-        wall.dimensions = (0.28, 1.05, 1.05)
+        wall.dimensions = (0.40, 1.10, 1.70)
         wall.rotation_euler[2] = a + math.pi / 2.0
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         wall.hide_render = True
@@ -201,8 +204,8 @@ def ensure_rigidbody_world(scene):
     world = scene.rigidbody_world
     world.point_cache.frame_start = FRAME_START
     world.point_cache.frame_end = FRAME_END
-    world.substeps_per_frame = 8
-    world.solver_iterations = 24
+    world.substeps_per_frame = 16
+    world.solver_iterations = 32
     return world
 
 
@@ -465,8 +468,8 @@ def build_scene() -> None:
         "physics": {
             "proxy_count": BALL_COUNT,
             "proxy_radius": PROXY_RADIUS,
-            "rigid_substeps_per_frame": 8,
-            "solver_iterations": 24,
+            "rigid_substeps_per_frame": 16,
+            "solver_iterations": 32,
             "hidden_funnel": True,
             "hidden_tube": True,
             **physics,
