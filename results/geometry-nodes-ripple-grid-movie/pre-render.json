@@ -1,8 +1,8 @@
 {
   "experiment": "geometry-nodes-ripple-grid-movie",
-  "source_sha": "84a198b7da4d9026da607330823e49eedc33c2f7",
-  "run_id": "36226189839",
-  "run_number": "23",
+  "source_sha": "108b76d67569f42b26f589e69a109c9ddf958716",
+  "run_id": "36226476811",
+  "run_number": "24",
   "render_mode": "frame-sequence",
   "frame_sequence": {
     "start": 1,
