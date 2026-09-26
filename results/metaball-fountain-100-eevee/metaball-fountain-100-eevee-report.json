@@ -1,0 +1,32 @@
+{
+  "experiment": "metaball-fountain-100-eevee",
+  "engine": "BLENDER_EEVEE",
+  "frame_start": 1,
+  "frame_end": 144,
+  "fps": 24,
+  "resolution_x": 480,
+  "resolution_y": 360,
+  "requested_render_samples": 20,
+  "effective_render_samples": 20,
+  "metaball": {
+    "object": "MetaballFountain",
+    "element_count": 100,
+    "resolution": 0.11999999731779099,
+    "render_resolution": 0.07500000298023224,
+    "threshold": 0.6200000047683716,
+    "fcurve_count": 400,
+    "keyframe_points": 33658
+  },
+  "motion": {
+    "spawn_window": [
+      1,
+      72
+    ],
+    "max_height": 2.820052,
+    "total_bounces": 200,
+    "preview_frame": 108,
+    "active_at_preview": 100,
+    "close_pairs_at_preview": 401
+  },
+  "blend": "metaball-fountain-100-eevee.blend"
+}
