@@ -1,16 +1,19 @@
-# Latest Blender Render
+# Orbital Sculpture
 
-- source commit: `b296ceda1274ee2e407b4c3ded1a36efeae17396`
-- Actions run: `3` (`36209563314`)
+Procedural metallic sphere, tilted torus, and two colored orbital rings.
 
-![Latest Blender preview](./preview.jpg)
+- source commit: `a2bf4cc76a0a6de2184a7945c07a1dcb09cc3bbd`
+- Actions run: `2` (`36210349159`)
+- full artifact: `blender-orbital-sculpture`
+
+![Latest preview](./preview.jpg)
 
 ## Validation
 
 ```json
 {
   "path": "output/render.png",
-  "size_bytes": 493025,
+  "size_bytes": 493119,
   "width": 640,
   "height": 640,
   "luminance_min": 0,
@@ -18,6 +21,6 @@
   "luminance_mean": 47.771,
   "luminance_stddev": 42.641,
   "unique_colors_64x64": 2272,
-  "sha256": "a7956d1f7a2eeba959bf39c636494ae5612f9e72e66fae7898c0c26da41a20ab"
+  "sha256": "a072a5356f27f084cd1750c13b743b6a5f189e4ee1f1f5e322402800d49a92f5"
 }
 ```
