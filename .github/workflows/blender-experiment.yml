@@ -68,12 +68,28 @@ jobs:
             "experiments/$EXPERIMENT/scene.py" \
             "experiments/$EXPERIMENT/validate.py"
 
+      - name: Compute render cache key
+        id: render-key
+        run: |
+          content_hash="$(
+            find "experiments/$EXPERIMENT" -type f \
+              ! -name 'validate.py' \
+              ! -name 'README.md' \
+              ! -name 'experiment.json' \
+              -print0 \
+            | sort -z \
+            | xargs -0 sha256sum \
+            | sha256sum \
+            | cut -d' ' -f1
+          )"
+          echo "key=blender-render-${RUNNER_OS}-${BLENDER_VERSION}-${EXPERIMENT}-${content_hash}" >> "$GITHUB_OUTPUT"
+
       - name: Restore render checkpoint
         id: render-cache
         uses: actions/cache/restore@v6
         with:
           path: output
-          key: blender-render-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+          key: ${{ steps.render-key.outputs.key }}
 
       - name: Verify restored render checkpoint
         if: steps.render-cache.outputs.cache-hit == 'true'
@@ -166,7 +182,7 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: output
-          key: blender-render-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+          key: ${{ steps.render-key.outputs.key }}
 
       - name: Validate experiment output
         run: |
