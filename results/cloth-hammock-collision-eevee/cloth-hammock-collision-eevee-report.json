@@ -1,0 +1,37 @@
+{
+  "experiment": "cloth-hammock-collision-eevee",
+  "engine": "BLENDER_EEVEE",
+  "frame_start": 1,
+  "frame_end": 96,
+  "fps": 24,
+  "resolution_x": 480,
+  "resolution_y": 360,
+  "requested_render_samples": 16,
+  "effective_render_samples": 16,
+  "prepare_only": true,
+  "cloth": {
+    "grid_x": 45,
+    "grid_y": 35,
+    "vertex_count": 1575,
+    "face_count": 1496,
+    "pinned_vertex_count": 36,
+    "quality": 8,
+    "self_collision": true,
+    "baked_shape_keys": 96,
+    "shape_key_count": 97,
+    "simulation_seconds": 6.39
+  },
+  "colliders": [
+    "BallAbove",
+    "BallBelow"
+  ],
+  "effectors": [
+    "CrossWind",
+    "Turbulence"
+  ],
+  "render_modifiers": [
+    "SOLIDIFY",
+    "SUBSURF"
+  ],
+  "blend": "cloth-hammock-collision-eevee.blend"
+}
