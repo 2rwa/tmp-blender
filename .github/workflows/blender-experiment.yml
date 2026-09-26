@@ -35,6 +35,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Compile shared tools
+        run: python3 -m py_compile tools/experiment.py tools/build_pages.py
+
       - name: Select experiments
         id: select
         env:
