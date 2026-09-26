@@ -139,6 +139,7 @@ def main() -> None:
     preview = Path(sys.argv[1] if len(sys.argv) > 1 else "output/preview.png")
     base = preview.parent
     result = {
+        "video": "cloth-hammock-collision-movie-eevee.mp4",
         "preview": validate_preview(preview),
         "movie": validate_video(base / "cloth-hammock-collision-movie-eevee.mp4"),
         "report": validate_report(
