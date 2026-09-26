@@ -1,0 +1,29 @@
+{
+  "id": "cloth-hammock-rigidbody-drop-eevee",
+  "title": "Cloth Hammock Rigid Body Drop EEVEE",
+  "description": "Hybrid cloth + rigid-body experiment: 12 staggered rigid-body spheres fall into a four-corner-pinned cloth hammock. A hidden passive rigid proxy provides stable two-system coupling while the visible cloth reacts to the moving spheres. Physics is baked before parallel EEVEE rendering.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 192,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 116,
+    "blend": "cloth-hammock-rigidbody-drop-eevee.blend",
+    "video": "cloth-hammock-rigidbody-drop-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "cloth-hammock-rigidbody-drop-eevee.blend",
+    "cloth-hammock-rigidbody-drop-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "cloth-hammock-rigidbody-drop-eevee.mp4",
+    "cloth-hammock-rigidbody-drop-eevee.blend",
+    "cloth-hammock-rigidbody-drop-eevee-report.json"
+  ],
+  "repo_blends": [
+    "cloth-hammock-rigidbody-drop-eevee.blend"
+  ]
+}
