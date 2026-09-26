@@ -58,7 +58,8 @@ A push that changes `experiments/<id>/` automatically runs that experiment. Shar
 - [orbital-sculpture](experiments/orbital-sculpture/) — baseline still-image render
 - [water-dump](experiments/water-dump/) — short water-pour animation
 - [fire-column](experiments/fire-column/) — lightweight animated flame column
-- [fluid-dam-break](experiments/fluid-dam-break/) — Mantaflow liquid dam-break simulation\n- [rigid-sphere-impact-1000](experiments/rigid-sphere-impact-1000/) — heavy sphere impact into 1000 rigid bodies
+- [fluid-dam-break](experiments/fluid-dam-break/) — Mantaflow liquid dam-break simulation
+- [rigid-sphere-impact-1000](experiments/rigid-sphere-impact-1000/) — heavy sphere impact into 1000 rigid bodies
 
 
 ## GitHub Pages gallery
@@ -93,3 +94,10 @@ See [LICENSE](LICENSE) and [LICENSES/](LICENSES/).
 - 個別のファイルや実験に別のライセンス表記がある場合は、その表記が当該素材について優先されます。
 
 詳細は [LICENSE](LICENSE) および [LICENSES/](LICENSES/) を参照してください。
+
+
+## Engineering notes
+
+- [Architecture](docs/notes/architecture.md)
+- [Experiment and implementation history](docs/notes/experiment-history.md)
+- [Operating notes](docs/notes/operations.md)
