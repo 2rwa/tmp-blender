@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths-ignore:
       - 'results/**'
+      - 'docs/**'
+      - 'index.html'
+      - '.nojekyll'
   workflow_dispatch:
     inputs:
       experiment:
@@ -277,4 +280,55 @@ jobs:
           echo "Push raced with another writer; rebasing once and retrying."
           git fetch origin "${GITHUB_REF_NAME}"
           git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+  pages:
+    needs: publish
+    if: needs.publish.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Rebase onto published results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+
+      - name: Build Pages gallery
+        run: python3 tools/build_pages.py
+
+      - name: Commit Pages gallery
+        id: commit-pages
+        run: |
+          git add index.html .nojekyll docs/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            echo "Pages gallery is already current."
+            exit 0
+          fi
+          git commit -m "chore: publish Pages gallery [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push Pages gallery
+        if: steps.commit-pages.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            exit 0
+          fi
+          echo "Pages push raced with another writer; rebuilding from latest main."
+          git fetch origin "${GITHUB_REF_NAME}"
+          git reset --hard "origin/${GITHUB_REF_NAME}"
+          python3 tools/build_pages.py
+          git add index.html .nojekyll docs/
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: publish Pages gallery [skip ci]"
           git push origin "HEAD:${GITHUB_REF_NAME}"

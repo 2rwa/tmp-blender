@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENTS_DIR = ROOT / "experiments"
 OUTPUT_DIR = ROOT / "output"
 RESULTS_DIR = ROOT / "results"
-SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")\nPAGE_MEDIA_MAX_BYTES = 5 * 1024 * 1024
 
 
 def experiment_dir(experiment_id: str) -> Path:
@@ -180,6 +180,19 @@ def publish(args: argparse.Namespace) -> int:
     shutil.copy2(OUTPUT_DIR / "blender-version.txt", destination / "blender-version.txt")
 
     validation = json.loads((destination / "validation.json").read_text(encoding="utf-8"))
+
+    media_destination = destination / "media.mp4"
+    video_name = validation.get("video")
+    if video_name:
+        video_source = OUTPUT_DIR / str(video_name)
+        if video_source.is_file() and video_source.stat().st_size <= PAGE_MEDIA_MAX_BYTES:
+            shutil.copy2(video_source, media_destination)
+            print(f"published page media: {media_destination.relative_to(ROOT)}")
+        elif media_destination.exists():
+            media_destination.unlink()
+    elif media_destination.exists():
+        media_destination.unlink()
+
     title = manifest.get("title", experiment_id)
     description = manifest.get("description", "")
     artifact_name = f"blender-{experiment_id}"
