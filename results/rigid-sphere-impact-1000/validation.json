@@ -1,0 +1,22 @@
+{
+  "video": "rigid-sphere-impact-1000.mp4",
+  "video_size_bytes": 90435,
+  "container": "mp4",
+  "width": 640,
+  "height": 360,
+  "duration_seconds": 3.0,
+  "fps": 24,
+  "poster": "poster.png",
+  "poster_frame": 36,
+  "rigid_body_cubes": 1000,
+  "impact_spheres": 1,
+  "poster_luminance_min": 11,
+  "poster_luminance_max": 238,
+  "poster_luminance_stddev": 52.367,
+  "bright_pixel_ratio": 0.061033,
+  "warm_pixel_ratio": 0.014175,
+  "cool_pixel_ratio": 0.110755,
+  "rigid_sim_blend_bytes": 8844900,
+  "rigid_result_blend_bytes": 8844900,
+  "sha256": "7a8463d0829c5d087a831fde3d1e16509eccb7797851834949fbfc2c17f8ce88"
+}
