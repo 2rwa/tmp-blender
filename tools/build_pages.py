@@ -49,6 +49,8 @@ def load_entries() -> list[dict]:
             if m:
                 run_number, run_id = m.group(1), m.group(2)
 
+        blend_files = sorted(p.name for p in result_dir.glob("*.blend"))
+
         entries.append({
             "id": experiment_id,
             "title": manifest.get("title", experiment_id),
@@ -58,6 +60,7 @@ def load_entries() -> list[dict]:
             "run_number": run_number,
             "run_id": run_id,
             "has_media": (result_dir / "media.mp4").is_file(),
+            "blend_files": blend_files,
         })
     return entries
 
@@ -110,6 +113,10 @@ def render(entries: list[dict], docs_mode: bool) -> str:
         ]
         if entry["has_media"]:
             links.insert(1, f'<a href="{asset_root}/media.mp4">mp4</a>')
+        for blend_name in entry["blend_files"]:
+            links.append(
+                f'<a href="{GITHUB_BASE}/blob/main/results/{eid}/{blend_name}">{html.escape(blend_name)}</a>'
+            )
         if entry["run_id"]:
             links.append(
                 f'<a href="{GITHUB_BASE}/actions/runs/{entry["run_id"]}">Actions #{html.escape(entry["run_number"])}</a>'

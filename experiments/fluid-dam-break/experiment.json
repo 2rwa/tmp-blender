@@ -1,0 +1,16 @@
+{
+  "id": "fluid-dam-break",
+  "title": "Fluid Dam Break",
+  "description": "A low-resolution Mantaflow liquid dam-break simulation with a center obstacle and a low barrier.",
+  "preview_source": "poster.png",
+  "required_outputs": [
+    "fluid-dam-break.mp4",
+    "poster.png",
+    "fluid-sim.blend",
+    "fluid-result.blend"
+  ],
+  "repo_blends": [
+    "fluid-sim.blend",
+    "fluid-result.blend"
+  ]
+}

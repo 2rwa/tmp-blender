@@ -55,7 +55,10 @@ A push that changes `experiments/<id>/` automatically runs that experiment. Shar
 
 ## Current experiments
 
-- [orbital-sculpture](experiments/orbital-sculpture/) — baseline still-image render\n- [water-dump](experiments/water-dump/) — short water-pour animation\n- [fire-column](experiments/fire-column/) — lightweight animated flame column
+- [orbital-sculpture](experiments/orbital-sculpture/) — baseline still-image render
+- [water-dump](experiments/water-dump/) — short water-pour animation
+- [fire-column](experiments/fire-column/) — lightweight animated flame column
+- [fluid-dam-break](experiments/fluid-dam-break/) — Mantaflow liquid dam-break simulation
 
 
 ## GitHub Pages gallery
@@ -65,3 +68,8 @@ Public preview gallery:
 - https://2rwa.github.io/tmp-blender/
 
 The workflow regenerates both root index.html and docs/, so the gallery works with either common branch-based Pages source setting. Short MP4 outputs up to 5 MiB are copied into results/<experiment>/media.mp4; large media and .blend files stay in Actions artifacts.
+
+
+### Small .blend files in Git
+
+Experiments may opt in to publishing selected .blend files through the `repo_blends` manifest field. Files up to 10 MiB are committed under `results/<experiment>/`. Larger .blend files stay in the Actions artifact; if those become worth retaining long-term, Dropbox is the next storage option.

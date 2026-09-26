@@ -14,6 +14,7 @@ OUTPUT_DIR = ROOT / "output"
 RESULTS_DIR = ROOT / "results"
 SAFE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 PAGE_MEDIA_MAX_BYTES = 5 * 1024 * 1024
+REPO_BLEND_MAX_BYTES = 10 * 1024 * 1024
 
 
 def experiment_dir(experiment_id: str) -> Path:
@@ -194,6 +195,26 @@ def publish(args: argparse.Namespace) -> int:
     elif media_destination.exists():
         media_destination.unlink()
 
+    published_blends = []
+    skipped_blends = []
+    for blend_name in manifest.get("repo_blends", []):
+        blend_source = OUTPUT_DIR / str(blend_name)
+        blend_destination = destination / Path(str(blend_name)).name
+
+        if not blend_source.is_file():
+            raise SystemExit(f"repo blend missing: {blend_source}")
+
+        size = blend_source.stat().st_size
+        if size <= REPO_BLEND_MAX_BYTES:
+            shutil.copy2(blend_source, blend_destination)
+            published_blends.append((blend_destination.name, size))
+            print(f"published repo blend: {blend_destination.relative_to(ROOT)} ({size} bytes)")
+        else:
+            if blend_destination.exists():
+                blend_destination.unlink()
+            skipped_blends.append((blend_destination.name, size))
+            print(f"repo blend too large; artifact only: {blend_destination.name} ({size} bytes)")
+
     title = manifest.get("title", experiment_id)
     description = manifest.get("description", "")
     artifact_name = f"blender-{experiment_id}"
@@ -206,6 +227,16 @@ def publish(args: argparse.Namespace) -> int:
         f"- Actions run: `{args.run_number}` (`{args.run_id}`)",
         f"- full artifact: `{artifact_name}`",
         "",
+    ])
+    if published_blends or skipped_blends:
+        lines.extend(["## Blend files", ""])
+        for name, size in published_blends:
+            lines.append(f"- Git: [{name}](./{name}) ({size:,} bytes)")
+        for name, size in skipped_blends:
+            lines.append(f"- Artifact only: `{name}` ({size:,} bytes; exceeds {REPO_BLEND_MAX_BYTES:,}-byte Git threshold)")
+        lines.append("")
+
+    lines.extend([
         "![Latest preview](./preview.jpg)",
         "",
         "## Validation",
