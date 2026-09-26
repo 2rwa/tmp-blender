@@ -55,4 +55,4 @@ A push that changes `experiments/<id>/` automatically runs that experiment. Shar
 
 ## Current experiments
 
-- [orbital-sculpture](experiments/orbital-sculpture/) — baseline still-image render\n- [water-dump](experiments/water-dump/) — short water-pour animation
+- [orbital-sculpture](experiments/orbital-sculpture/) — baseline still-image render\n- [water-dump](experiments/water-dump/) — short water-pour animation\n- [fire-column](experiments/fire-column/) — lightweight animated flame column

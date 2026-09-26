@@ -1,0 +1,7 @@
+{
+  "id": "fire-column",
+  "title": "Fire Column",
+  "description": "A short stylized flame animation built from layered emissive flame tongues, flickering light, glow, and rising sparks.",
+  "preview_source": "poster.png",
+  "required_outputs": ["fire-column.mp4", "poster.png", "scene.blend"]
+}
