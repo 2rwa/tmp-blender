@@ -1,0 +1,20 @@
+{
+  "experiment": "metaball-fountain-300-eevee",
+  "source_sha": "cbd6614e238de4efe3e6c409eca7822b5574a814",
+  "run_id": "36245916623",
+  "run_number": "42",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 144,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 108,
+    "blend": "metaball-fountain-300-eevee.blend",
+    "video": "metaball-fountain-300-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "metaball-fountain-300-eevee.blend",
+    "metaball-fountain-300-eevee-report.json"
+  ]
+}
