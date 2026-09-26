@@ -1,0 +1,23 @@
+{
+  "render": {
+    "path": "output/render.png",
+    "size_bytes": 759589,
+    "width": 768,
+    "height": 576,
+    "luminance_min": 2,
+    "luminance_max": 230,
+    "luminance_mean": 43.018,
+    "luminance_stddev": 35.454,
+    "unique_colors_64x48": 2388,
+    "sha256": "0a5407789408af84194d9aeaa14215ad6d07dc1bd4cf2fddb32be4163ce36a22"
+  },
+  "geometry_nodes": {
+    "node_group": "GN_RippleGrid",
+    "node_count": 15,
+    "grid_point_count": 961,
+    "evaluated_vertices": 40362,
+    "evaluated_edges": 115320,
+    "evaluated_polygons": 76880,
+    "blend_size_bytes": 916526
+  }
+}
