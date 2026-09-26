@@ -1,0 +1,36 @@
+{
+  "experiment": "metaball-hidden-funnel-300-eevee",
+  "engine": "BLENDER_EEVEE",
+  "frame_start": 1,
+  "frame_end": 192,
+  "fps": 24,
+  "resolution_x": 480,
+  "resolution_y": 360,
+  "requested_render_samples": 20,
+  "effective_render_samples": 20,
+  "metaball": {
+    "object": "HiddenFunnelMetaballs",
+    "element_count": 300,
+    "resolution": 0.12999999523162842,
+    "render_resolution": 0.07999999821186066,
+    "threshold": 0.6200000047683716,
+    "fcurve_count": 1200,
+    "keyframe_points": 138714,
+    "radius": 0.19
+  },
+  "physics": {
+    "proxy_count": 300,
+    "proxy_radius": 0.095,
+    "rigid_substeps_per_frame": 8,
+    "solver_iterations": 24,
+    "hidden_funnel": true,
+    "hidden_tube": true,
+    "simulation_seconds": 1.328,
+    "exited_count": 300,
+    "first_exit_frame": 33,
+    "last_exit_frame": 130,
+    "in_dish_final": 39,
+    "leaked_below_world": 243
+  },
+  "blend": "metaball-hidden-funnel-300-eevee.blend"
+}

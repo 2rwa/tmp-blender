@@ -1,0 +1,20 @@
+{
+  "experiment": "metaball-hidden-funnel-300-eevee",
+  "source_sha": "c1563f4c3eb9ae1d10b3cefb04132f378b2ab1a0",
+  "run_id": "36249000711",
+  "run_number": "44",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 192,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 144,
+    "blend": "metaball-hidden-funnel-300-eevee.blend",
+    "video": "metaball-hidden-funnel-300-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "metaball-hidden-funnel-300-eevee.blend",
+    "metaball-hidden-funnel-300-eevee-report.json"
+  ]
+}
