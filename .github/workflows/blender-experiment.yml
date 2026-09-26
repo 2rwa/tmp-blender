@@ -203,6 +203,10 @@ jobs:
           path: output
           key: ${{ steps.render-key.outputs.key }}
 
+      - name: Ensure validation dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check --no-compile "Pillow==10.2.0"
+
       - name: Validate experiment output
         run: |
           python3 "experiments/$EXPERIMENT/validate.py"
