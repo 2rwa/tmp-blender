@@ -720,8 +720,8 @@ jobs:
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
   deploy_pages:
-    needs: pages
-    if: needs.pages.result == 'success'
+    needs: [pages]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -733,6 +733,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Verify Pages build succeeded
+        env:
+          PAGES_RESULT: ${{ needs.pages.result }}
+        run: |
+          test "$PAGES_RESULT" = "success"
+
       - name: Checkout latest Pages content
         uses: actions/checkout@v7
         with:
