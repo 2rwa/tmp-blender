@@ -1,0 +1,44 @@
+{
+  "video": "volume-flame.mp4",
+  "preview": {
+    "path": "output/preview.png",
+    "size_bytes": 129788,
+    "width": 480,
+    "height": 360,
+    "luminance_min": 0,
+    "luminance_max": 239,
+    "luminance_mean": 217.453,
+    "luminance_stddev": 45.371,
+    "unique_colors_64x48": 316,
+    "sha256": "6e085a5593ddd5055a5a94bf2872aeba2a68da9b406f45fd0fd8b985372b92a5"
+  },
+  "movie": {
+    "path": "output/volume-flame.mp4",
+    "size_bytes": 43428,
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 4.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "96",
+    "sha256": "2876f876787cc936f5a51235cf6e3c0a246f109657157b62e1a94ed1ba58d358"
+  },
+  "geometry_nodes": {
+    "node_group": "GN_VolumeFlame",
+    "node_count": 35,
+    "seed_point_count": 420,
+    "voxel_size": 0.11,
+    "frame_start": 1,
+    "frame_end": 96,
+    "fps": 24,
+    "material_inputs_applied": [
+      "Density",
+      "Density Attribute",
+      "Emission Strength",
+      "Emission Color",
+      "Blackbody Intensity",
+      "Temperature",
+      "Blackbody Tint"
+    ],
+    "blend_size_bytes": 1004510
+  }
+}
