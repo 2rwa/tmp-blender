@@ -1,0 +1,29 @@
+{
+  "id": "geometry-nodes-volume-flame",
+  "title": "Geometry Nodes Volume Flame",
+  "description": "Animated low-cost pre-render of a procedural flame built from moving seed points, Points to Volume, and Principled Volume emission.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 96,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 48,
+    "blend": "geometry-nodes-volume-flame.blend",
+    "video": "volume-flame.mp4"
+  },
+  "prepared_outputs": [
+    "geometry-nodes-volume-flame.blend",
+    "geometry-nodes-volume-flame-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "volume-flame.mp4",
+    "geometry-nodes-volume-flame.blend",
+    "geometry-nodes-volume-flame-report.json"
+  ],
+  "repo_blends": [
+    "geometry-nodes-volume-flame.blend"
+  ]
+}
