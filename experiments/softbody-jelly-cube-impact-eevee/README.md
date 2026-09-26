@@ -48,3 +48,7 @@ The validator checks the actual preview/movie dimensions, duration, prepared ble
 - a jelly block placed on Cloth;
 - a projectile trapped inside the gel;
 - parameter sweeps for Goal strength, spring stiffness, damping, and collision speed.
+
+## Actions timeout
+
+The shared `prepare_movie` job allows up to 30 minutes because Soft Body preparation and frame-by-frame deformation baking can exceed the earlier 10-minute limit on GitHub-hosted runners.

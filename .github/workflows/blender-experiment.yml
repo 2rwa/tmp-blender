@@ -238,7 +238,7 @@ jobs:
     needs: discover
     if: needs.discover.outputs.movie_experiments != '[]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
