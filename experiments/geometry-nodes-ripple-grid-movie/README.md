@@ -35,3 +35,5 @@ Code in this experiment is MIT-0. Generated Blender files, renders, videos, and 
 この実験のコードは MIT-0、生成された Blender ファイル・画像・動画・その他の生成アセットは、特記のない限り CC0-1.0 です。第三者由来のデータ・アセット・素材・ソースを利用している部分は、利用元のライセンスおよび利用条件に従います。
 
 See ../../LICENSE and ../../LICENSES/.
+
+Pipeline revision: frame-sequence pre-render v1
