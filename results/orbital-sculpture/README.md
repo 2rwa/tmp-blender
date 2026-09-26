@@ -2,8 +2,8 @@
 
 Procedural metallic sphere, tilted torus, and two colored orbital rings.
 
-- source commit: `bef876cbce75a3c7ca1ec8f1c73bb52987a6bfcc`
-- Actions run: `14` (`36214776978`)
+- source commit: `eb0296e5a28f69e6b2d316f7671b66dbffc732e9`
+- Actions run: `27` (`36230258277`)
 - full artifact: `blender-orbital-sculpture`
 
 ![Latest preview](./preview.jpg)
@@ -35,4 +35,4 @@ Third-party data, assets, or source material remain subject to their original li
 
 第三者のデータ・アセット・素材・ソースを利用している部分は、利用元のライセンスおよび利用条件に従います。このリポジトリのライセンスは、こちらが許諾できる権利にのみ適用されます。
 
-See ../../LICENSE and ../../LICENSES/.
+See ../../LICENSE and ../../LICENSES/ for details.
