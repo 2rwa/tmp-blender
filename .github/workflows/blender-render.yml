@@ -3,10 +3,16 @@ name: Blender headless render
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'results/**'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: tmp-blender-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   render:
@@ -18,33 +24,61 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cheap Python preflight
-        run: python3 -m py_compile scripts/create_scene.py scripts/validate_render.py
+        run: python3 -m py_compile scripts/create_scene.py scripts/validate_render.py scripts/make_preview.py
+
+      - name: Restore render cache
+        id: render-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output
+          key: blender-render-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Verify restored render cache
+        if: steps.render-cache.outputs.cache-hit == 'true'
+        run: |
+          test -s output/render.png
+          test -s output/scene.blend
+          test -s output/validation.json
+          test -s output/blender-version.txt
+          echo "Reusing validated render output from cache."
 
       - name: Install Blender, EGL runtime, and Pillow
+        if: steps.render-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y blender libegl1 python3-pil
 
       - name: Verify Blender headless runtime
+        if: steps.render-cache.outputs.cache-hit != 'true'
         run: |
           ldconfig -p | grep -F "libEGL.so.1"
           blender --version
 
       - name: Record Blender version
+        if: steps.render-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p output
           blender --version | tee output/blender-version.txt
 
       - name: Build and render scene
+        if: steps.render-cache.outputs.cache-hit != 'true'
         run: blender --background --python scripts/create_scene.py
 
       - name: Validate real render output
+        if: steps.render-cache.outputs.cache-hit != 'true'
         run: python3 scripts/validate_render.py output/render.png
 
       - name: Show outputs
         run: |
           ls -lh output
           cat output/validation.json
+
+      - name: Save validated render cache
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: output
+          key: blender-render-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload Blender experiment
         uses: actions/upload-artifact@v4
@@ -53,3 +87,96 @@ jobs:
           path: output/
           if-no-files-found: error
           retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: render
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cheap Python preflight
+        run: python3 -m py_compile scripts/make_preview.py
+
+      - name: Install Pillow
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pil
+
+      - name: Restore validated render cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output
+          key: blender-render-${{ runner.os }}-${{ github.run_id }}
+          fail-on-cache-miss: true
+
+      - name: Prepare git and rebase before generating results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+
+      - name: Generate publishable results
+        run: |
+          mkdir -p results
+          python3 scripts/make_preview.py output/render.png results/preview.jpg
+          cp output/validation.json results/validation.json
+          cp output/blender-version.txt results/blender-version.txt
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          validation = json.loads(Path("results/validation.json").read_text(encoding="utf-8"))
+          source_sha = os.environ.get("GITHUB_SHA", "")
+          run_id = os.environ.get("GITHUB_RUN_ID", "")
+          run_number = os.environ.get("GITHUB_RUN_NUMBER", "")
+
+          lines = [
+              "# Latest Blender Render",
+              "",
+              f"- source commit: `{source_sha}`",
+              f"- Actions run: `{run_number}` (`{run_id}`)",
+              "",
+              "![Latest Blender preview](./preview.jpg)",
+              "",
+              "## Validation",
+              "",
+              "```json",
+              json.dumps(validation, indent=2, ensure_ascii=False),
+              "```",
+              "",
+          ]
+          Path("results/README.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+
+      - name: Commit results
+        id: commit-results
+        run: |
+          git add results/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            echo "No result changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: publish Blender render results [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push results with one conflict retry
+        if: steps.commit-results.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            exit 0
+          fi
+
+          echo "Initial push raced with another writer; rebasing once and retrying."
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
