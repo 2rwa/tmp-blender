@@ -82,6 +82,8 @@ jobs:
               ! -name 'validate.py' \
               ! -name 'README.md' \
               ! -name 'experiment.json' \
+              ! -name '*.pyc' \
+              ! -path '*/__pycache__/*' \
               -print0 \
             | sort -z \
             | xargs -0 sha256sum \
@@ -335,3 +337,34 @@ jobs:
           fi
           git commit -m "chore: publish Pages gallery [skip ci]"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+  deploy_pages:
+    needs: pages
+    if: needs.pages.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout latest Pages content
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
