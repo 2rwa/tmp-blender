@@ -1,0 +1,36 @@
+{
+  "video": "softbody-jelly-cube-impact-eevee.mp4",
+  "preview": {
+    "path": "output/preview.png",
+    "size_bytes": 201026,
+    "width": 480,
+    "height": 360,
+    "luminance_min": 0,
+    "luminance_max": 223,
+    "luminance_mean": 58.164,
+    "luminance_stddev": 56.238,
+    "sha256": "9bf39ba92054b53582ea54c25412ba772034f6dfa5c9c7f1b9d2555b761909bc"
+  },
+  "movie": {
+    "path": "output/softbody-jelly-cube-impact-eevee.mp4",
+    "size_bytes": 31373,
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 6.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "144",
+    "sha256": "5ee5af18d76dfd0b4d6a7ba0bb5b1bdb098d39c72777541e46813f2f47d5394d"
+  },
+  "report": {
+    "engine": "BLENDER_EEVEE",
+    "vertex_count": 866,
+    "face_count": 864,
+    "baked_shape_keys": 144,
+    "shape_key_count": 145,
+    "simulation_seconds": 1.283,
+    "max_displacement": 0.8083,
+    "max_displacement_frame": 61,
+    "projectile_keyframes": 8,
+    "blend_size_bytes": 2754848
+  }
+}
