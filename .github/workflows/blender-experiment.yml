@@ -238,9 +238,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        item: \${{ fromJSON(needs.discover.outputs.movie_experiments) }}
+        item: ${{ fromJSON(needs.discover.outputs.movie_experiments) }}
     env:
-      EXPERIMENT: \${{ matrix.item.experiment }}
+      EXPERIMENT: ${{ matrix.item.experiment }}
       BLENDER_VERSION: "4.0.2"
 
     steps:
@@ -261,7 +261,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: .cache/blender-runtime
-          key: blender-runtime-\${{ runner.os }}-x64-\${{ env.BLENDER_VERSION }}-v1
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
 
       - name: Build shared Blender runtime cache
         if: steps.blender-runtime-cache.outputs.cache-hit != 'true'
@@ -291,7 +291,7 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: .cache/blender-runtime
-          key: blender-runtime-\${{ runner.os }}-x64-\${{ env.BLENDER_VERSION }}-v1
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
 
       - name: Verify Blender headless runtime
         run: |
@@ -353,7 +353,7 @@ jobs:
       - name: Upload prepared scene for render jobs
         uses: actions/upload-artifact@v4
         with:
-          name: blender-prepared-\${{ matrix.item.experiment }}
+          name: blender-prepared-${{ matrix.item.experiment }}
           path: |
             output/blender-version.txt
             output/*.blend
@@ -371,13 +371,13 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        chunk: \${{ fromJSON(needs.discover.outputs.movie_chunks) }}
+        chunk: ${{ fromJSON(needs.discover.outputs.movie_chunks) }}
     env:
-      EXPERIMENT: \${{ matrix.chunk.experiment }}
-      BLEND_NAME: \${{ matrix.chunk.blend }}
-      FRAME_START: \${{ matrix.chunk.start }}
-      FRAME_END: \${{ matrix.chunk.end }}
-      CHUNK_ID: \${{ matrix.chunk.chunk }}
+      EXPERIMENT: ${{ matrix.chunk.experiment }}
+      BLEND_NAME: ${{ matrix.chunk.blend }}
+      FRAME_START: ${{ matrix.chunk.start }}
+      FRAME_END: ${{ matrix.chunk.end }}
+      CHUNK_ID: ${{ matrix.chunk.chunk }}
       BLENDER_VERSION: "4.0.2"
 
     steps:
@@ -387,14 +387,14 @@ jobs:
       - name: Download prepared scene
         uses: actions/download-artifact@v4
         with:
-          name: blender-prepared-\${{ matrix.chunk.experiment }}
+          name: blender-prepared-${{ matrix.chunk.experiment }}
           path: output
 
       - name: Restore shared Blender runtime cache
         uses: actions/cache/restore@v6
         with:
           path: .cache/blender-runtime
-          key: blender-runtime-\${{ runner.os }}-x64-\${{ env.BLENDER_VERSION }}-v1
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
           fail-on-cache-miss: true
 
       - name: Configure shared Blender runtime
@@ -414,7 +414,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: output/frames
-          key: \${{ steps.frame-key.outputs.key }}
+          key: ${{ steps.frame-key.outputs.key }}
 
       - name: Verify restored PNG frame chunk
         if: steps.frame-cache.outputs.cache-hit == 'true'
@@ -440,12 +440,12 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: output/frames
-          key: \${{ steps.frame-key.outputs.key }}
+          key: ${{ steps.frame-key.outputs.key }}
 
       - name: Upload frame chunk for same-run assembly
         uses: actions/upload-artifact@v4
         with:
-          name: blender-frames-\${{ matrix.chunk.experiment }}-\${{ matrix.chunk.chunk }}
+          name: blender-frames-${{ matrix.chunk.experiment }}-${{ matrix.chunk.chunk }}
           path: output/frames/*.png
           if-no-files-found: error
           retention-days: 2
@@ -459,14 +459,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        item: \${{ fromJSON(needs.discover.outputs.movie_experiments) }}
+        item: ${{ fromJSON(needs.discover.outputs.movie_experiments) }}
     env:
-      EXPERIMENT: \${{ matrix.item.experiment }}
-      FRAME_START: \${{ matrix.item.frame_start }}
-      FRAME_END: \${{ matrix.item.frame_end }}
-      FPS: \${{ matrix.item.fps }}
-      PREVIEW_FRAME: \${{ matrix.item.preview_frame }}
-      VIDEO_NAME: \${{ matrix.item.video }}
+      EXPERIMENT: ${{ matrix.item.experiment }}
+      FRAME_START: ${{ matrix.item.frame_start }}
+      FRAME_END: ${{ matrix.item.frame_end }}
+      FPS: ${{ matrix.item.fps }}
+      PREVIEW_FRAME: ${{ matrix.item.preview_frame }}
+      VIDEO_NAME: ${{ matrix.item.video }}
 
     steps:
       - name: Checkout source
@@ -478,13 +478,13 @@ jobs:
       - name: Download prepared scene
         uses: actions/download-artifact@v4
         with:
-          name: blender-prepared-\${{ matrix.item.experiment }}
+          name: blender-prepared-${{ matrix.item.experiment }}
           path: output
 
       - name: Download all PNG chunks
         uses: actions/download-artifact@v4
         with:
-          pattern: blender-frames-\${{ matrix.item.experiment }}-*
+          pattern: blender-frames-${{ matrix.item.experiment }}-*
           path: output/frames
           merge-multiple: true
 
@@ -514,12 +514,12 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: output
-          key: blender-validated-\${{ matrix.item.experiment }}-\${{ runner.os }}-\${{ github.run_id }}
+          key: blender-validated-${{ matrix.item.experiment }}-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload assembled experiment artifact
         uses: actions/upload-artifact@v4
         with:
-          name: blender-\${{ matrix.item.experiment }}
+          name: blender-${{ matrix.item.experiment }}
           path: output/
           if-no-files-found: error
           retention-days: 7
@@ -603,9 +603,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        item: \${{ fromJSON(needs.discover.outputs.movie_experiments) }}
+        item: ${{ fromJSON(needs.discover.outputs.movie_experiments) }}
     env:
-      EXPERIMENT: \${{ matrix.item.experiment }}
+      EXPERIMENT: ${{ matrix.item.experiment }}
 
     steps:
       - name: Checkout
@@ -620,7 +620,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: output
-          key: blender-validated-\${{ matrix.item.experiment }}-\${{ runner.os }}-\${{ github.run_id }}
+          key: blender-validated-${{ matrix.item.experiment }}-${{ runner.os }}-${{ github.run_id }}
           fail-on-cache-miss: true
 
       - name: Verify cached output
