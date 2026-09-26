@@ -97,10 +97,16 @@ def render(entries: list[dict], docs_mode: bool) -> str:
         asset_root = f"assets/{eid}" if docs_mode else f"results/{eid}"
 
         if entry["has_media"]:
+            title = html.escape(entry["title"])
             visual = (
-                f'<video controls autoplay muted loop playsinline poster="{asset_root}/preview.jpg">'
-                f'<source src="{asset_root}/media.mp4" type="video/mp4">'
-                f'</video>'
+                f'<button class="media-toggle" type="button" '
+                f'data-video="{asset_root}/media.mp4" '
+                f'data-poster="{asset_root}/preview.jpg" '
+                f'aria-label="{title} の動画を再生">'
+                f'<img src="{asset_root}/preview.jpg" alt="{title} preview">'
+                f'<span class="play-badge" aria-hidden="true">▶</span>'
+                f'<span class="play-label" aria-hidden="true">PLAY</span>'
+                f'</button>'
             )
         else:
             visual = f'<img src="{asset_root}/preview.jpg" alt="{html.escape(entry["title"])} preview">'
@@ -163,6 +169,12 @@ main {{ max-width:1200px; margin:auto; padding:22px; display:grid; grid-template
 .card {{ overflow:hidden; border:1px solid #253244; border-radius:18px; background:#101722d9; box-shadow:0 18px 50px #0007; }}
 .visual {{ aspect-ratio:16/9; background:#000; display:flex; align-items:center; justify-content:center; }}
 .visual img,.visual video {{ width:100%; height:100%; object-fit:cover; display:block; }}
+.media-toggle {{ position:relative; width:100%; height:100%; padding:0; border:0; background:#000; cursor:pointer; overflow:hidden; }}
+.media-toggle img {{ transition:transform .18s ease, filter .18s ease; }}
+.media-toggle:hover img,.media-toggle:focus-visible img {{ transform:scale(1.015); filter:brightness(.76); }}
+.media-toggle:focus-visible {{ outline:3px solid #78c4ff; outline-offset:-3px; }}
+.play-badge {{ position:absolute; left:50%; top:50%; width:58px; height:58px; transform:translate(-50%,-50%); display:grid; place-items:center; border:1px solid #ffffffaa; border-radius:50%; color:#fff; background:#07111dcc; box-shadow:0 8px 28px #000a; font-size:1.35rem; padding-left:4px; }}
+.play-label {{ position:absolute; left:50%; top:calc(50% + 43px); transform:translateX(-50%); color:#fff; font:600 .72rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-shadow:0 2px 8px #000; }}
 .body {{ padding:18px; }}
 h2 {{ margin:0; font-size:1.35rem; }}
 .id,.source {{ color:#8297aa; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem; }}
@@ -179,12 +191,28 @@ footer {{ max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; 
 <body>
 <header>
   <h1>tmp-blender</h1>
-  <p>GitHub Actionsで生成したBlender実験の公開ギャラリー。preview / validation / 短い動画を直接確認できます。</p>
+  <p>GitHub Actionsで生成したBlender実験の公開ギャラリー。スナップショットをクリックした時だけ動画を読み込んで再生します。</p>
 </header>
 <main>
 {''.join(cards)}
 </main>
 <footer>Generated from committed results. Code: MIT-0 · Generated assets: CC0-1.0 · Third-party source licenses/terms apply where applicable. / コード: MIT-0 · 生成物: CC0-1.0 · 第三者由来部分は利用元のライセンス・利用条件に従います。</footer>
+<script>
+document.addEventListener("click", (event) => {{
+  const button = event.target.closest(".media-toggle");
+  if (!button) return;
+
+  const video = document.createElement("video");
+  video.controls = true;
+  video.autoplay = true;
+  video.playsInline = true;
+  video.preload = "metadata";
+  video.poster = button.dataset.poster;
+  video.src = button.dataset.video;
+  button.replaceWith(video);
+  video.play().catch(() => {{}});
+}});
+</script>
 </body>
 </html>
 """
