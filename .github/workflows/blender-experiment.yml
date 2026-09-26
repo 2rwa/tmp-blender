@@ -1,0 +1,199 @@
+name: Blender experiment
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'results/**'
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: Experiment folder name under experiments/
+        required: true
+        default: orbital-sculpture
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      experiments: ${{ steps.select.outputs.experiments }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Select experiments
+        id: select
+        env:
+          MANUAL_EXPERIMENT: ${{ github.event_name == 'workflow_dispatch' && inputs.experiment || '' }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          python3 tools/experiment.py discover \
+            --manual "$MANUAL_EXPERIMENT" \
+            --before "$BEFORE_SHA" \
+            --after "$AFTER_SHA" >> "$GITHUB_OUTPUT"
+
+  render:
+    needs: discover
+    if: needs.discover.outputs.experiments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        experiment: ${{ fromJSON(needs.discover.outputs.experiments) }}
+    env:
+      EXPERIMENT: ${{ matrix.experiment }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cheap Python preflight
+        run: |
+          python3 -m py_compile \
+            tools/experiment.py \
+            "experiments/$EXPERIMENT/scene.py" \
+            "experiments/$EXPERIMENT/validate.py"
+
+      - name: Restore validated render cache
+        id: render-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output
+          key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Verify restored cache
+        if: steps.render-cache.outputs.cache-hit == 'true'
+        run: python3 tools/experiment.py check "$EXPERIMENT"
+
+      - name: Install Blender runtime
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender libegl1 python3-pil ffmpeg
+
+      - name: Verify Blender headless runtime
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        run: |
+          ldconfig -p | grep -F "libEGL.so.1"
+          blender --version
+
+      - name: Record Blender version
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p output
+          blender --version | tee output/blender-version.txt
+
+      - name: Build scene
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        run: blender --background --python "experiments/$EXPERIMENT/scene.py"
+
+      - name: Validate experiment output
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        run: |
+          python3 "experiments/$EXPERIMENT/validate.py"
+          python3 tools/experiment.py check "$EXPERIMENT"
+
+      - name: Show outputs
+        run: |
+          echo "experiment=$EXPERIMENT"
+          ls -lh output
+          cat output/validation.json
+
+      - name: Save validated render cache
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: output
+          key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Upload full experiment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-${{ matrix.experiment }}
+          path: output/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: [discover, render]
+    if: needs.discover.outputs.experiments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        experiment: ${{ fromJSON(needs.discover.outputs.experiments) }}
+    env:
+      EXPERIMENT: ${{ matrix.experiment }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install publish dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pil
+
+      - name: Restore validated render cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output
+          key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+          fail-on-cache-miss: true
+
+      - name: Verify cached output
+        run: python3 tools/experiment.py check "$EXPERIMENT"
+
+      - name: Prepare git and rebase
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+
+      - name: Generate persistent result
+        run: |
+          python3 tools/experiment.py publish "$EXPERIMENT" \
+            --source-sha "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-number "$GITHUB_RUN_NUMBER"
+
+      - name: Commit result
+        id: commit-result
+        run: |
+          git add "results/$EXPERIMENT/"
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            echo "No result changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: publish $EXPERIMENT result [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push result with one conflict retry
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+            exit 0
+          fi
+          echo "Push raced with another writer; rebasing once and retrying."
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

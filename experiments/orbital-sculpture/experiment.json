@@ -1,0 +1,7 @@
+{
+  "id": "orbital-sculpture",
+  "title": "Orbital Sculpture",
+  "description": "Procedural metallic sphere, tilted torus, and two colored orbital rings.",
+  "preview_source": "render.png",
+  "required_outputs": ["render.png", "scene.blend"]
+}
