@@ -1,0 +1,29 @@
+{
+  "id": "rpg-character-motion-showreel-long-eevee",
+  "title": "Quaternius RPG Character Motion Showreel Long EEVEE",
+  "description": "Long-form character animation stress test: schedules all 13 imported Quaternius Warrior actions for six seconds each, producing a 78-second EEVEE movie through the parallel GitHub Actions frame pipeline.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 1872,
+    "fps": 24,
+    "chunk_size": 120,
+    "preview_frame": 936,
+    "blend": "rpg-character-motion-showreel-long-eevee.blend",
+    "video": "rpg-character-motion-showreel-long-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "rpg-character-motion-showreel-long-eevee.blend",
+    "rpg-character-motion-showreel-long-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "rpg-character-motion-showreel-long-eevee.mp4",
+    "rpg-character-motion-showreel-long-eevee.blend",
+    "rpg-character-motion-showreel-long-eevee-report.json"
+  ],
+  "repo_blends": [
+    "rpg-character-motion-showreel-long-eevee.blend"
+  ]
+}
