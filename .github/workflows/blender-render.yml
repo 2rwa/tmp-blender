@@ -1,0 +1,50 @@
+name: Blender headless render
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cheap Python preflight
+        run: python3 -m py_compile scripts/create_scene.py scripts/validate_render.py
+
+      - name: Install Blender and Pillow
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender python3-pil
+
+      - name: Record Blender version
+        run: |
+          mkdir -p output
+          blender --version | tee output/blender-version.txt
+
+      - name: Build and render scene
+        run: blender --background --python scripts/create_scene.py
+
+      - name: Validate real render output
+        run: python3 scripts/validate_render.py output/render.png
+
+      - name: Show outputs
+        run: |
+          ls -lh output
+          cat output/validation.json
+
+      - name: Upload Blender experiment
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-orbital-sculpture
+          path: output/
+          if-no-files-found: error
+          retention-days: 7
