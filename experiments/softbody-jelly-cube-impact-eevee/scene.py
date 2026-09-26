@@ -160,33 +160,39 @@ def make_rounded_jelly():
 def add_softbody(jelly):
     mod = jelly.modifiers.new(name="JellySoftBody", type="SOFT_BODY")
     settings = mod.settings
+    # Start from a deliberately conservative spring model. The first version
+    # numerically exploded before the projectile arrived, so stability wins
+    # over maximum squishiness here; later experiments can loosen this again.
     settings.use_edges = True
-    settings.use_stiff_quads = True
-    settings.pull = 0.58
-    settings.push = 0.58
-    settings.shear = 0.52
-    settings.bend = 2.2
-    settings.damping = 4.5
-    settings.friction = 1.8
-    settings.mass = 1.1
-    settings.speed = 1.0
-    settings.gravity = 0.30
+    settings.use_stiff_quads = False
+    settings.pull = 0.35
+    settings.push = 0.35
+    settings.shear = 0.20
+    settings.bend = 0.40
+    settings.damping = 8.0
+    settings.friction = 4.0
+    settings.mass = 1.0
+    settings.speed = 0.65
+    settings.gravity = 0.0
     settings.plastic = 0
 
     settings.use_goal = True
-    settings.goal_default = 0.17
-    settings.goal_spring = 0.34
-    settings.goal_friction = 3.2
+    settings.goal_default = 0.55
+    settings.goal_spring = 0.50
+    settings.goal_friction = 8.0
     settings.goal_min = 0.0
     settings.goal_max = 1.0
 
-    settings.use_edge_collision = True
-    settings.use_face_collision = True
+    # Point collisions are enough for this first isolated impact test.
+    # Edge/face collision adds substantial cost and was involved in the
+    # unstable initial-contact setup of v1.
+    settings.use_edge_collision = False
+    settings.use_face_collision = False
     settings.use_self_collision = False
     settings.use_auto_step = True
     settings.step_min = 2
-    settings.step_max = 18
-    settings.error_threshold = 0.02
+    settings.step_max = 12
+    settings.error_threshold = 0.05
 
     cache = mod.point_cache
     cache.frame_start = FRAME_START
@@ -254,7 +260,6 @@ def make_floor_and_stage():
     floor = bpy.context.object
     floor.name = "Ground"
     floor.data.materials.append(floor_mat)
-    add_collision(floor, thickness=0.04, damping=0.35)
 
     bpy.ops.mesh.primitive_cube_add(size=2.0, location=(0.0, 0.0, 0.11))
     plinth = bpy.context.object
@@ -262,7 +267,8 @@ def make_floor_and_stage():
     plinth.scale = (2.05, 1.80, 0.10)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     plinth.data.materials.append(rim_mat)
-    add_collision(plinth, thickness=0.025, damping=0.30)
+    # Stage geometry is visual-only in v2. With gravity disabled, removing
+    # initial floor/plinth contacts isolates projectile-vs-jelly stability.
     return floor, plinth
 
 
@@ -306,6 +312,14 @@ def bake_softbody_to_shape_keys(scene, jelly, soft_mod):
             max_displacement_frame = frame
 
         eval_obj.to_mesh_clear()
+
+        # Fail fast on solver blow-up. v1 reached ~6.8e14 units at frame 3
+        # and then wasted ~18 minutes finishing an unusable bake.
+        if not math.isfinite(frame_max) or frame_max > 12.0:
+            raise RuntimeError(
+                f"soft-body numerical instability at frame {frame}: "
+                f"max displacement={frame_max}"
+            )
 
         if frame % 12 == 0:
             print(f"SOFTBODY_SIM_FRAME={frame}")
@@ -448,12 +462,13 @@ def build_scene() -> None:
             "simulation_seconds": bake["simulation_seconds"],
             "max_displacement": bake["max_displacement"],
             "max_displacement_frame": bake["max_displacement_frame"],
-            "goal_default": 0.17,
-            "goal_spring": 0.34,
-            "goal_friction": 3.2,
-            "pull": 0.58,
-            "push": 0.58,
-            "bend": 2.2,
+            "goal_default": 0.55,
+            "goal_spring": 0.50,
+            "goal_friction": 8.0,
+            "pull": 0.35,
+            "push": 0.35,
+            "bend": 0.40,
+            "stability_limit": 12.0,
         },
         "projectile": {
             "name": projectile.name,

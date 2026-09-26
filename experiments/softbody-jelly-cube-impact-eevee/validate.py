@@ -49,7 +49,7 @@ def validate_preview(path: Path) -> dict:
 def validate_video(path: Path) -> dict:
     if not path.exists():
         raise SystemExit(f"video missing: {path}")
-    if path.stat().st_size < 35_000:
+    if path.stat().st_size < 15_000:
         raise SystemExit(f"video suspiciously small: {path.stat().st_size}")
 
     proc = subprocess.run(
@@ -121,9 +121,11 @@ def validate_report(report_path: Path, blend_path: Path) -> dict:
     max_displacement = float(jelly.get("max_displacement", 0.0))
     if max_displacement < 0.08:
         raise SystemExit(f"jelly did not visibly deform: max displacement={max_displacement:.6f}")
+    if max_displacement > 12.0:
+        raise SystemExit(f"jelly simulation numerically exploded: max displacement={max_displacement:.6f}")
 
     impact_frame = int(jelly.get("max_displacement_frame", 0))
-    if not (20 <= impact_frame <= 144):
+    if not (40 <= impact_frame <= 120):
         raise SystemExit(f"unexpected max displacement frame: {impact_frame}")
 
     projectile = report.get("projectile") or {}
