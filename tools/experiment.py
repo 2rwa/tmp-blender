@@ -109,6 +109,35 @@ def required_output_paths(experiment_id: str) -> list[Path]:
     return unique
 
 
+def check_render(experiment_id: str) -> int:
+    manifest = load_manifest(experiment_id)
+    names = ["blender-version.txt", manifest["preview_source"]]
+    names.extend(manifest.get("required_outputs", []))
+
+    missing = []
+    empty = []
+    seen = set()
+    for name in names:
+        if name in seen:
+            continue
+        seen.add(name)
+        path = OUTPUT_DIR / name
+        if not path.is_file():
+            missing.append(str(path.relative_to(ROOT)))
+        elif path.stat().st_size == 0:
+            empty.append(str(path.relative_to(ROOT)))
+
+    if missing or empty:
+        if missing:
+            print("missing render outputs:", ", ".join(missing))
+        if empty:
+            print("empty render outputs:", ", ".join(empty))
+        return 1
+
+    print(json.dumps({"experiment": experiment_id, "render_checkpoint": "ok"}, indent=2))
+    return 0
+
+
 def check(experiment_id: str) -> int:
     missing = []
     empty = []
@@ -186,6 +215,9 @@ def build_parser() -> argparse.ArgumentParser:
     discover_parser.add_argument("--before", default="")
     discover_parser.add_argument("--after", default="")
 
+    render_check_parser = sub.add_parser("check-render")
+    render_check_parser.add_argument("experiment")
+
     check_parser = sub.add_parser("check")
     check_parser.add_argument("experiment")
 
@@ -201,6 +233,8 @@ def main() -> int:
     args = build_parser().parse_args()
     if args.command == "discover":
         return discover(args)
+    if args.command == "check-render":
+        return check_render(args.experiment)
     if args.command == "check":
         return check(args.experiment)
     if args.command == "publish":

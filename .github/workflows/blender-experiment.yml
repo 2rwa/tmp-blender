@@ -68,16 +68,16 @@ jobs:
             "experiments/$EXPERIMENT/scene.py" \
             "experiments/$EXPERIMENT/validate.py"
 
-      - name: Restore validated render cache
+      - name: Restore render checkpoint
         id: render-cache
         uses: actions/cache/restore@v6
         with:
           path: output
-          key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+          key: blender-render-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
 
-      - name: Verify restored cache
+      - name: Verify restored render checkpoint
         if: steps.render-cache.outputs.cache-hit == 'true'
-        run: python3 tools/experiment.py check "$EXPERIMENT"
+        run: python3 tools/experiment.py check-render "$EXPERIMENT"
 
       - name: Restore shared Blender runtime cache
         id: blender-runtime-cache
@@ -161,24 +161,29 @@ jobs:
             exit 1
           fi
 
-      - name: Validate experiment output
+      - name: Save render checkpoint
         if: steps.render-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: output
+          key: blender-render-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Validate experiment output
         run: |
           python3 "experiments/$EXPERIMENT/validate.py"
           python3 tools/experiment.py check "$EXPERIMENT"
+
+      - name: Save validated output cache
+        uses: actions/cache/save@v6
+        with:
+          path: output
+          key: blender-validated-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
 
       - name: Show outputs
         run: |
           echo "experiment=$EXPERIMENT"
           ls -lh output
           cat output/validation.json
-
-      - name: Save validated render cache
-        if: steps.render-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v6
-        with:
-          path: output
-          key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload full experiment artifact
         uses: actions/upload-artifact@v4
@@ -211,11 +216,11 @@ jobs:
         run: |
           python3 -m pip install             --disable-pip-version-check             --no-compile             "Pillow==10.2.0"
 
-      - name: Restore validated render cache
+      - name: Restore validated output cache
         uses: actions/cache/restore@v6
         with:
           path: output
-          key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
+          key: blender-validated-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
           fail-on-cache-miss: true
 
       - name: Verify cached output

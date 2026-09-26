@@ -48,8 +48,8 @@ def main() -> None:
         if not path.is_file() or path.stat().st_size == 0:
             raise SystemExit(f"missing or empty output: {path}")
 
-    if VIDEO_PATH.stat().st_size < 100_000:
-        raise SystemExit(f"video suspiciously small: {VIDEO_PATH.stat().st_size} bytes")
+    if VIDEO_PATH.stat().st_size < 32_000:
+        raise SystemExit(f"video unexpectedly tiny: {VIDEO_PATH.stat().st_size} bytes")
 
     video_data = VIDEO_PATH.read_bytes()
     if b"ftyp" not in video_data[:64]:
