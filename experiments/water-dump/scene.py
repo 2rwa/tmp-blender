@@ -223,7 +223,7 @@ def build_scene() -> None:
     ocean = pool.modifiers.new(name="Ocean", type="OCEAN")
     ocean.geometry_mode = "GENERATE"
     ocean.resolution = 8
-    ocean.spatial_size = 7.5
+    ocean.spatial_size = 8
     ocean.wave_scale = 0.22
     ocean.choppiness = 0.75
     ocean.wind_velocity = 4.5

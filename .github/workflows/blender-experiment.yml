@@ -98,7 +98,13 @@ jobs:
 
       - name: Build scene
         if: steps.render-cache.outputs.cache-hit != 'true'
-        run: blender --background --python "experiments/$EXPERIMENT/scene.py"
+        run: |
+          set -o pipefail
+          blender --background --python "experiments/$EXPERIMENT/scene.py" 2>&1 | tee output/blender-scene.log
+          if grep -Fq "Traceback (most recent call last):" output/blender-scene.log; then
+            echo "Blender Python traceback detected."
+            exit 1
+          fi
 
       - name: Validate experiment output
         if: steps.render-cache.outputs.cache-hit != 'true'
