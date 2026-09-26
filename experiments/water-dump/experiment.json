@@ -1,0 +1,7 @@
+{
+  "id": "water-dump",
+  "title": "Water Dump",
+  "description": "A short water-like pour animation using an animated Ocean surface, a continuous stream, falling droplets, and a splash ring.",
+  "preview_source": "poster.png",
+  "required_outputs": ["water-dump.mp4", "poster.png", "scene.blend"]
+}
