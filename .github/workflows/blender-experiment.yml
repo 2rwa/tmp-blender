@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -55,10 +55,11 @@ jobs:
         experiment: ${{ fromJSON(needs.discover.outputs.experiments) }}
     env:
       EXPERIMENT: ${{ matrix.experiment }}
+      BLENDER_VERSION: "4.0.2"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Cheap Python preflight
         run: |
@@ -69,7 +70,7 @@ jobs:
 
       - name: Restore validated render cache
         id: render-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: output
           key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
@@ -78,17 +79,65 @@ jobs:
         if: steps.render-cache.outputs.cache-hit == 'true'
         run: python3 tools/experiment.py check "$EXPERIMENT"
 
-      - name: Install Blender runtime
+      - name: Restore shared Blender runtime cache
+        id: blender-runtime-cache
+        if: steps.render-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build shared Blender runtime cache
+        if: steps.render-cache.outputs.cache-hit != 'true' && steps.blender-runtime-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p             .cache/blender-runtime/blender             .cache/blender-runtime/python             .cache/blender-runtime/egl             .cache/blender-runtime/apt
+
+          archive="blender-${BLENDER_VERSION}-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-${BLENDER_VERSION}.sha256" -o /tmp/blender.sha256
+          (
+            cd /tmp
+            grep "  $archive$" blender.sha256 | sha256sum -c -
+          )
+
+          tar -xf "/tmp/$archive"             -C .cache/blender-runtime/blender             --strip-components=1
+
+          python3 -m pip install             --disable-pip-version-check             --no-compile             --target .cache/blender-runtime/python             "Pillow==10.2.0"
+
+          sudo apt-get update
+          (
+            cd .cache/blender-runtime/apt
+            apt-get download libegl1
+          )
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure shared Blender runtime
         if: steps.render-cache.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y blender libegl1 python3-pil ffmpeg
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "PYTHONPATH=$GITHUB_WORKSPACE/.cache/blender-runtime/python" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
 
       - name: Verify Blender headless runtime
         if: steps.render-cache.outputs.cache-hit != 'true'
         run: |
-          ldconfig -p | grep -F "libEGL.so.1"
           blender --version
+          python3 -c "from PIL import Image; print('Pillow OK')"
+          if ldd "$(command -v blender)" | grep -F "not found"; then
+            echo "Missing Blender shared library dependency."
+            exit 1
+          fi
+
+      - name: Save shared Blender runtime cache
+        if: steps.render-cache.outputs.cache-hit != 'true' && steps.blender-runtime-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
 
       - name: Record Blender version
         if: steps.render-cache.outputs.cache-hit != 'true'
@@ -120,7 +169,7 @@ jobs:
 
       - name: Save validated render cache
         if: steps.render-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: output
           key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}
@@ -148,17 +197,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Install publish dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pil
+          python3 -m pip install             --disable-pip-version-check             --no-compile             "Pillow==10.2.0"
 
       - name: Restore validated render cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: output
           key: blender-${{ matrix.experiment }}-${{ runner.os }}-${{ github.run_id }}

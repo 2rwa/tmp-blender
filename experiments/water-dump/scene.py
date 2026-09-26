@@ -227,7 +227,7 @@ def build_scene() -> None:
     ocean.wave_scale = 0.22
     ocean.choppiness = 0.75
     ocean.wind_velocity = 4.5
-    ocean.smallest_wave = 0.18
+    ocean.wave_scale_min = 0.18
     ocean.time = 0.0
     ocean.keyframe_insert(data_path="time", frame=1)
     ocean.time = 1.6
