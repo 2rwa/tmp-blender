@@ -58,7 +58,7 @@ A push that changes `experiments/<id>/` automatically runs that experiment. Shar
 - [orbital-sculpture](experiments/orbital-sculpture/) — baseline still-image render
 - [water-dump](experiments/water-dump/) — short water-pour animation
 - [fire-column](experiments/fire-column/) — lightweight animated flame column
-- [fluid-dam-break](experiments/fluid-dam-break/) — Mantaflow liquid dam-break simulation
+- [fluid-dam-break](experiments/fluid-dam-break/) — Mantaflow liquid dam-break simulation\n- [rigid-sphere-impact-1000](experiments/rigid-sphere-impact-1000/) — heavy sphere impact into 1000 rigid bodies
 
 
 ## GitHub Pages gallery

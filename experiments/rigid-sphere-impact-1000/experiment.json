@@ -1,0 +1,16 @@
+{
+  "id": "rigid-sphere-impact-1000",
+  "title": "Rigid Sphere Impact 1000",
+  "description": "A heavy sphere drops from above and blasts through a stack of 1000 rigid body cubes.",
+  "preview_source": "poster.png",
+  "required_outputs": [
+    "rigid-sphere-impact-1000.mp4",
+    "poster.png",
+    "rigid-sim.blend",
+    "rigid-result.blend"
+  ],
+  "repo_blends": [
+    "rigid-sim.blend",
+    "rigid-result.blend"
+  ]
+}
