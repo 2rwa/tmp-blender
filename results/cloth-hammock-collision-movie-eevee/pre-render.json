@@ -1,0 +1,20 @@
+{
+  "experiment": "cloth-hammock-collision-movie-eevee",
+  "source_sha": "828015e6f02f601722899cafb5e229b24ac00d8a",
+  "run_id": "36236405528",
+  "run_number": "33",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 192,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 108,
+    "blend": "cloth-hammock-collision-movie-eevee.blend",
+    "video": "cloth-hammock-collision-movie-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "cloth-hammock-collision-movie-eevee.blend",
+    "cloth-hammock-collision-movie-eevee-report.json"
+  ]
+}
