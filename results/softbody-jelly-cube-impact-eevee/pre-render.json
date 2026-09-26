@@ -1,8 +1,8 @@
 {
   "experiment": "softbody-jelly-cube-impact-eevee",
-  "source_sha": "b0980b8781a47461f8bb11faa9a75ef892c815c0",
-  "run_id": "36242225270",
-  "run_number": "39",
+  "source_sha": "4d19e8a3e65ff6009293851cd6bf5672cfec7deb",
+  "run_id": "36243606380",
+  "run_number": "40",
   "render_mode": "frame-sequence",
   "frame_sequence": {
     "start": 1,
