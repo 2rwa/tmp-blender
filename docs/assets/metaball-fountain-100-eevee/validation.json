@@ -1,0 +1,37 @@
+{
+  "video": "metaball-fountain-100-eevee.mp4",
+  "preview": {
+    "path": "output/preview.png",
+    "size_bytes": 225651,
+    "width": 480,
+    "height": 360,
+    "luminance_min": 0,
+    "luminance_max": 232,
+    "luminance_mean": 41.85,
+    "luminance_stddev": 36.661,
+    "sha256": "8e1b92480fd58502f3ab979bd949ecf9cce15168e836820d00720450d4022eed"
+  },
+  "movie": {
+    "path": "output/metaball-fountain-100-eevee.mp4",
+    "size_bytes": 140350,
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 6.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "144",
+    "sha256": "2720d00326bfb2d2a4a0bd9d4859b4fb177643029d22f7f3c081eefc8ab03098"
+  },
+  "report": {
+    "engine": "BLENDER_EEVEE",
+    "element_count": 100,
+    "resolution": 0.11999999731779099,
+    "render_resolution": 0.07500000298023224,
+    "fcurve_count": 400,
+    "keyframe_points": 33658,
+    "max_height": 2.820052,
+    "total_bounces": 200,
+    "active_at_preview": 100,
+    "close_pairs_at_preview": 401,
+    "blend_size_bytes": 3510956
+  }
+}
