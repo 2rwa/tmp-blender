@@ -1,40 +1,38 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
+import urllib.request
 from pathlib import Path
-
-import gdown
 
 ROOT = Path.cwd()
 DEST = ROOT / ".cache" / "quaternius-rpg-character-pack"
 META = DEST / "_download.json"
 
-# Official Quaternius Google Drive file IDs discovered from the pack's public folder.
-FILES = {
-    "Warrior.fbx": "1mPcA-6gGZYLiwD9gle7E1bPckGEkoapx",
-    "Warrior_Texture.png": "1aCbtzIG86g5VJz63pAZ0a6_00e8nexyW",
-}
 PACK_PAGE = "https://quaternius.com/packs/rpgcharacters.html"
-DRIVE_FOLDER = "https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing"
+OFFICIAL_DRIVE = "https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing"
+
+# Temporary public mirror of the CC0 Quaternius RPG Character Pack Warrior.
+# The official Google Drive was quota-limited during Actions runs #46/#47.
+MIRROR_URL = (
+    "https://raw.githubusercontent.com/Hakhyun-Kim/constellation-defense/main/"
+    "assets/models/quaternius-warrior.glb"
+)
+MIRROR_REPO = "https://github.com/Hakhyun-Kim/constellation-defense"
+TARGET = "Warrior.glb"
 
 if DEST.exists():
     shutil.rmtree(DEST)
 DEST.mkdir(parents=True, exist_ok=True)
 
-downloaded = []
-for name, file_id in FILES.items():
-    target = DEST / name
-    result = gdown.download(id=file_id, output=str(target), quiet=False)
-    if not result or not target.is_file() or target.stat().st_size == 0:
-        raise SystemExit(f"failed to download {name} from official Quaternius Drive")
-    downloaded.append(
-        {
-            "name": name,
-            "google_drive_file_id": file_id,
-            "size_bytes": target.stat().st_size,
-        }
-    )
+target = DEST / TARGET
+urllib.request.urlretrieve(MIRROR_URL, target)
+
+if not target.is_file() or target.stat().st_size < 100_000:
+    raise SystemExit(f"mirrored Warrior GLB missing or suspiciously small: {target}")
+
+sha256 = hashlib.sha256(target.read_bytes()).hexdigest()
 
 META.write_text(
     json.dumps(
@@ -43,8 +41,18 @@ META.write_text(
             "pack": "RPG Character Pack",
             "license": "CC0 1.0",
             "pack_page": PACK_PAGE,
-            "official_drive_folder": DRIVE_FOLDER,
-            "downloaded": downloaded,
+            "official_drive_folder": OFFICIAL_DRIVE,
+            "acquisition": {
+                "method": "public GitHub mirror",
+                "mirror_repository": MIRROR_REPO,
+                "mirror_url": MIRROR_URL,
+                "reason": "official Google Drive quota-limited during CI",
+            },
+            "downloaded": {
+                "name": TARGET,
+                "size_bytes": target.stat().st_size,
+                "sha256": sha256,
+            },
         },
         indent=2,
     ) + "\n",
@@ -52,5 +60,5 @@ META.write_text(
 )
 
 print("QUATERNIUS_SELECTED_CHARACTER=Warrior")
-for item in downloaded:
-    print(f"QUATERNIUS_ASSET={item['name']}:{item['size_bytes']}")
+print(f"QUATERNIUS_ASSET={TARGET}:{target.stat().st_size}")
+print(f"QUATERNIUS_ASSET_SHA256={sha256}")

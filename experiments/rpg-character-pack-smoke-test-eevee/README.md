@@ -10,12 +10,12 @@ Headless Blender/GitHub Actions import test for the **Quaternius RPG Character P
 - License shown on the pack page: CC0 1.0
 - Official download folder: https://drive.google.com/drive/folders/1MIRQXLfTd21HMI5rwOb6Xy0rv0xv1m8b?usp=sharing
 
-The upstream asset files are **not vendored into this repository**. The prepare job downloads only the official `Warrior.fbx` and `Warrior_Texture.png` files at run time. This avoids wasting bandwidth on unused characters and avoids a Drive quota failure seen when the whole folder was requested.
+The upstream asset files are **not vendored into this repository**. The official Google Drive hit its public download quota in Actions runs #46 and #47, even for a single Warrior FBX. The smoke test therefore uses a public GitHub mirror of the same CC0 Quaternius Warrior as a packed GLB, while preserving the original Quaternius pack page and license metadata.
 
 ## Test
 
-1. Download `Warrior.fbx` and `Warrior_Texture.png` directly from the official public Drive folder with `gdown`.
-2. Import the Warrior FBX.
+1. Download `assets/models/quaternius-warrior.glb` from the public `Hakhyun-Kim/constellation-defense` mirror.
+2. Import the packed Warrior GLB.
 3. Import it in Blender 4.0.2.
 4. Require at least one mesh, armature, material, and animation action.
 5. Prefer an Idle action, falling back to Walk/Run or the richest imported action.
@@ -25,3 +25,11 @@ The upstream asset files are **not vendored into this repository**. The prepare 
 9. Validate the prepared scene, preview, and MP4 rather than accepting process exit alone.
 
 This is intentionally a smoke test. Once the asset survives the headless pipeline reliably, later experiments can combine the character with rigid bodies, cloth, metaballs, and other physics.
+
+
+## Temporary mirror
+
+- Mirror repository: https://github.com/Hakhyun-Kim/constellation-defense
+- Mirrored file: `assets/models/quaternius-warrior.glb`
+- That repository's credits identify the runtime Warrior model as originating from Quaternius' RPG Character Pack under CC0 1.0.
+- The mirror is used only because the official Google Drive returned quota errors in CI; Quaternius remains the recorded asset publisher/source.
