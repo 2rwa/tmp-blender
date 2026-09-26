@@ -1,0 +1,14 @@
+{
+  "id": "geometry-nodes-ripple-grid",
+  "title": "Geometry Nodes Ripple Grid",
+  "description": "Procedural radial wave field built with Geometry Nodes: Grid, Set Position, Mesh to Points, Icosphere instancing, and Realize Instances.",
+  "preview_source": "render.png",
+  "required_outputs": [
+    "render.png",
+    "geometry-nodes.blend",
+    "geometry-nodes-report.json"
+  ],
+  "repo_blends": [
+    "geometry-nodes.blend"
+  ]
+}
