@@ -1,0 +1,29 @@
+{
+  "id": "cloth-hammock-collision-eevee",
+  "title": "Cloth Hammock Collision EEVEE",
+  "description": "A CPU-heavy cloth simulation test: a four-corner-pinned hammock cloth with self collision, wind/turbulence and two animated sphere colliders. Physics is baked into shape keys before parallel EEVEE rendering.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 96,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 58,
+    "blend": "cloth-hammock-collision-eevee.blend",
+    "video": "cloth-hammock-collision-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "cloth-hammock-collision-eevee.blend",
+    "cloth-hammock-collision-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "cloth-hammock-collision-eevee.mp4",
+    "cloth-hammock-collision-eevee.blend",
+    "cloth-hammock-collision-eevee-report.json"
+  ],
+  "repo_blends": [
+    "cloth-hammock-collision-eevee.blend"
+  ]
+}
