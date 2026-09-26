@@ -1,0 +1,20 @@
+{
+  "experiment": "cloth-hammock-rigidbody-drop-eevee",
+  "source_sha": "eb529cae9431fe5d0ee5092a240912c88d9ad2de",
+  "run_id": "36239159364",
+  "run_number": "37",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 192,
+    "fps": 24,
+    "chunk_size": 24,
+    "preview_frame": 116,
+    "blend": "cloth-hammock-rigidbody-drop-eevee.blend",
+    "video": "cloth-hammock-rigidbody-drop-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "cloth-hammock-rigidbody-drop-eevee.blend",
+    "cloth-hammock-rigidbody-drop-eevee-report.json"
+  ]
+}
