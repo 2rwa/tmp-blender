@@ -1,0 +1,29 @@
+{
+  "id": "geometry-nodes-volume-flame-v2-cycles",
+  "title": "Geometry Nodes Volume Flame v2 Cycles",
+  "description": "Diagnostic comparison render of the v2 procedural flame using Cycles CPU to isolate renderer-vs-node-setup differences.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 48,
+    "fps": 24,
+    "chunk_size": 12,
+    "preview_frame": 24,
+    "blend": "geometry-nodes-volume-flame-v2-cycles.blend",
+    "video": "volume-flame-v2-cycles.mp4"
+  },
+  "prepared_outputs": [
+    "geometry-nodes-volume-flame-v2-cycles.blend",
+    "geometry-nodes-volume-flame-v2-cycles-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "volume-flame-v2-cycles.mp4",
+    "geometry-nodes-volume-flame-v2-cycles.blend",
+    "geometry-nodes-volume-flame-v2-cycles-report.json"
+  ],
+  "repo_blends": [
+    "geometry-nodes-volume-flame-v2-cycles.blend"
+  ]
+}
