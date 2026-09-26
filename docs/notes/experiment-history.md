@@ -120,7 +120,35 @@ rigid_body_world.substeps_per_frame = 10
 rigid_body_world.solver_iterations = 25
 ```
 
-Actions run #17 was started with the corrected API. At the time this document was written, it had passed preflight/runtime verification and was still in the long `Build scene` stage. The workflow was intentionally left running without blocking the conversation.
+Actions run #17 completed successfully. The result was published to Git and Pages, including two approximately 8.84 MiB Blender files.
+
+### rigid-sphere-impact-1000-transparent-v2
+
+Follow-up created because the opaque containment walls in the first rigid-body version were visually distracting.
+
+Instead of removing containment entirely, v2 keeps three physical walls but renders them as transparent/glass-like surfaces. This preserves the collision behavior while making the scene feel open.
+
+Configuration:
+
+- 1000 active cubes
+- one 22 kg impact sphere
+- transparent left/right/rear passive walls
+- front/camera side open
+- 960 x 540
+- 96 frames at 24 fps
+- rigid-body substeps: 12
+- solver iterations: 30
+
+Actions run #18 completed successfully.
+
+Published outputs:
+
+- MP4: 459,528 bytes
+- duration: 4.0 seconds
+- `rigid-sim.blend`: 9,613,412 bytes
+- `rigid-result.blend`: 9,613,412 bytes
+
+The user described the result as "良い感じ".
 
 ## GitHub Pages
 

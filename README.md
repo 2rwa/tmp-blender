@@ -4,6 +4,10 @@ Temporary Blender experiment repository driven by GitHub Actions.
 
 This repository is structured for throwing many unrelated Blender experiments at the same reusable render/cache/publish pipeline.
 
+> **Resume / 再開:** [START HERE — handoff guide](docs/notes/START-HERE.md)
+>
+> 別の会話から再開するときは、まずこのファイルを読めば現在地と運用ルールを復元できます。
+
 ## Layout
 
 ```text
@@ -99,6 +103,7 @@ See [LICENSE](LICENSE) and [LICENSES/](LICENSES/).
 
 ## Engineering notes
 
+- [START HERE — handoff / resume guide](docs/notes/START-HERE.md)
 - [Architecture](docs/notes/architecture.md)
 - [Experiment and implementation history](docs/notes/experiment-history.md)
 - [Operating notes](docs/notes/operations.md)

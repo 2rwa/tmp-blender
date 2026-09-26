@@ -143,3 +143,18 @@ Persistent engineering notes therefore live under `docs/notes/`, which is not de
 The current public gallery is:
 
 https://2rwa.github.io/tmp-blender/
+
+
+## Resuming from another conversation
+
+Use `docs/notes/START-HERE.md` as the canonical handoff entrypoint.
+
+A new conversation should first read that file and then verify GitHub `main` and any referenced Actions run/result before modifying the repository.
+
+The shortest resume instruction is:
+
+```text
+2rwa/tmp-blender の docs/notes/START-HERE.md を読んで、GitHubの現在状態を確認して作業を再開して。
+```
+
+GitHub is the source of truth. Do not rely only on an old chat summary when repository state may have advanced via Actions bot commits.
