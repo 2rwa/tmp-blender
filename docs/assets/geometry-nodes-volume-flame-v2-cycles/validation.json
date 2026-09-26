@@ -1,0 +1,54 @@
+{
+  "video": "volume-flame-v2-cycles.mp4",
+  "preview": {
+    "path": "output/preview.png",
+    "width": 480,
+    "height": 360,
+    "luminance_min": 0,
+    "luminance_max": 239,
+    "luminance_mean": 65.781,
+    "luminance_stddev": 79.079,
+    "warm_ratio": 0.29593,
+    "white_ratio": 0.0,
+    "sha256": "6ed1b075f9391342309fac1b2ea7b11640e3bd7b92e1b0723470d478b52419d3"
+  },
+  "movie": {
+    "path": "output/volume-flame-v2-cycles.mp4",
+    "width": 480,
+    "height": 360,
+    "duration_seconds": 2.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "48",
+    "sha256": "dc0ed2c0ebbc1e5cc7a24432f31ba9b055d57a5e46130402558106c6869f866e"
+  },
+  "report": {
+    "frame_start": 1,
+    "frame_end": 48,
+    "fps": 24,
+    "resolution_x": 480,
+    "resolution_y": 360,
+    "requested_render_samples": 16,
+    "effective_render_samples": 12,
+    "seed_counts": [
+      520,
+      180
+    ],
+    "blend_size_bytes": 1161840,
+    "materials": {
+      "outer": {
+        "name": "OuterFlameMaterial",
+        "density": 0.2199999988079071,
+        "emission_strength": 1.100000023841858,
+        "blackbody_intensity": 0.2800000011920929,
+        "temperature": 1425.0
+      },
+      "core": {
+        "name": "CoreFlameMaterial",
+        "density": 0.10000000149011612,
+        "emission_strength": 1.5499999523162842,
+        "blackbody_intensity": 0.46000000834465027,
+        "temperature": 1980.0
+      }
+    }
+  }
+}
