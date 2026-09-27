@@ -54,8 +54,20 @@ def main() -> None:
 
     output = Path(sys.argv[1])
     vtk_dir = output / "vtk"
-    particle_files = sorted(vtk_dir.glob("ParticleData_Fluid_*.vtk"))
-    dynamic_files = sorted(vtk_dir.glob("rb_data_1_*.vtk"))
+    def frame_number(path: Path) -> int:
+        match = re.search(r"_(\\d+)\\.vtk$", path.name)
+        if not match:
+            raise SystemExit(f"cannot parse frame number: {path}")
+        return int(match.group(1))
+
+    particle_files = sorted(
+        vtk_dir.glob("ParticleData_Fluid_*.vtk"),
+        key=frame_number,
+    )
+    dynamic_files = sorted(
+        vtk_dir.glob("rb_data_1_*.vtk"),
+        key=frame_number,
+    )
     surface = output / "surface-final.obj"
     log = output / "splash.log"
 
