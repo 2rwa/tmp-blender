@@ -1,0 +1,124 @@
+{
+  "frames": 13,
+  "fluid_objects": 13,
+  "errors": [],
+  "observed": [
+    {
+      "frame": 1,
+      "object": "FluidFrame_0001",
+      "vertices": 54000,
+      "faces": 100800,
+      "visible": [
+        "FluidFrame_0001"
+      ]
+    },
+    {
+      "frame": 2,
+      "object": "FluidFrame_0002",
+      "vertices": 59258,
+      "faces": 111316,
+      "visible": [
+        "FluidFrame_0002"
+      ]
+    },
+    {
+      "frame": 3,
+      "object": "FluidFrame_0003",
+      "vertices": 50768,
+      "faces": 94336,
+      "visible": [
+        "FluidFrame_0003"
+      ]
+    },
+    {
+      "frame": 4,
+      "object": "FluidFrame_0004",
+      "vertices": 49778,
+      "faces": 92356,
+      "visible": [
+        "FluidFrame_0004"
+      ]
+    },
+    {
+      "frame": 5,
+      "object": "FluidFrame_0005",
+      "vertices": 49652,
+      "faces": 92104,
+      "visible": [
+        "FluidFrame_0005"
+      ]
+    },
+    {
+      "frame": 6,
+      "object": "FluidFrame_0006",
+      "vertices": 49628,
+      "faces": 92060,
+      "visible": [
+        "FluidFrame_0006"
+      ]
+    },
+    {
+      "frame": 7,
+      "object": "FluidFrame_0007",
+      "vertices": 49610,
+      "faces": 92024,
+      "visible": [
+        "FluidFrame_0007"
+      ]
+    },
+    {
+      "frame": 8,
+      "object": "FluidFrame_0008",
+      "vertices": 49614,
+      "faces": 92028,
+      "visible": [
+        "FluidFrame_0008"
+      ]
+    },
+    {
+      "frame": 9,
+      "object": "FluidFrame_0009",
+      "vertices": 49832,
+      "faces": 92464,
+      "visible": [
+        "FluidFrame_0009"
+      ]
+    },
+    {
+      "frame": 10,
+      "object": "FluidFrame_0010",
+      "vertices": 50154,
+      "faces": 93108,
+      "visible": [
+        "FluidFrame_0010"
+      ]
+    },
+    {
+      "frame": 11,
+      "object": "FluidFrame_0011",
+      "vertices": 49560,
+      "faces": 91920,
+      "visible": [
+        "FluidFrame_0011"
+      ]
+    },
+    {
+      "frame": 12,
+      "object": "FluidFrame_0012",
+      "vertices": 49690,
+      "faces": 92184,
+      "visible": [
+        "FluidFrame_0012"
+      ]
+    },
+    {
+      "frame": 13,
+      "object": "FluidFrame_0013",
+      "vertices": 49708,
+      "faces": 92220,
+      "visible": [
+        "FluidFrame_0013"
+      ]
+    }
+  ]
+}
