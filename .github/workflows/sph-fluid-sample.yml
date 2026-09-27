@@ -1,0 +1,117 @@
+name: SPH fluid sample
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/dam-break-cube/**'
+      - '.github/workflows/sph-fluid-sample.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Cheap preflight
+        run: |
+          python -m json.tool sph-experiments/dam-break-cube/scene.json >/dev/null
+          python -m py_compile             sph-experiments/dam-break-cube/reconstruct.py             sph-experiments/dam-break-cube/validate.py
+
+      - name: Install SPH runtime
+        run: |
+          python -m pip install --disable-pip-version-check             "pysplishsplash==2.18.1"             "pysplashsurf[meshio]"
+          command -v splash
+          splash --version
+          pysplashsurf --version || pysplashsurf --help | head -40
+
+      - name: Simulate SPH fluid and rigid body
+        run: |
+          set -euxo pipefail
+          rm -rf output/sph-dam-break-cube
+          mkdir -p output/sph-dam-break-cube
+          splash sph-experiments/dam-break-cube/scene.json             --no-gui             --stopAt 1.0             --output-dir output/sph-dam-break-cube             2>&1 | tee output/sph-dam-break-cube/splash.log
+
+      - name: Reconstruct final liquid surface
+        run: |
+          python sph-experiments/dam-break-cube/reconstruct.py             output/sph-dam-break-cube
+
+      - name: Validate real outputs
+        run: |
+          python sph-experiments/dam-break-cube/validate.py             output/sph-dam-break-cube
+          cat output/sph-dam-break-cube/summary.json
+          du -sh output/sph-dam-break-cube
+          find output/sph-dam-break-cube -maxdepth 2 -type f -printf '%p %k KiB\n' | sort | tail -80
+
+      - name: Upload full SPH cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-dam-break-cube
+          path: output/sph-dam-break-cube/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result generation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate lightweight persistent result
+        run: |
+          set -euxo pipefail
+          result_dir="results/sph-dam-break-cube"
+          rm -rf "$result_dir"
+          mkdir -p "$result_dir"
+          cp output/sph-dam-break-cube/summary.json "$result_dir/summary.json"
+          cp output/sph-dam-break-cube/surface-final.obj "$result_dir/surface-final.obj"
+          {
+            echo "# SPH dam-break + dynamic cube result"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- run: $GITHUB_RUN_ID"
+            echo "- full particle/rigid-body sequence: Actions artifact `sph-dam-break-cube`"
+            echo "- final reconstructed surface: `surface-final.obj`"
+          } > "$result_dir/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-dam-break-cube/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish SPH fluid sample [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push result with one conflict retry
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:$GITHUB_REF_NAME"; then
+            exit 0
+          fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
