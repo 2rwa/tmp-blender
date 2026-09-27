@@ -1,0 +1,178 @@
+name: SPH single topology cache
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/single-topology-cache/**'
+      - '.github/workflows/sph-single-topology-cache.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-single-topology-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BLENDER_VERSION: "4.0.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Cheap preflight
+        run: |
+          python3 -m py_compile \
+            sph-experiments/single-topology-cache/export_single.py \
+            sph-experiments/single-topology-cache/import_validate.py \
+            sph-experiments/single-topology-cache/compare.py
+          test -s results/sph-dam-break-blender-sequence/surface-sequence.blend
+          test -s results/sph-cache-format-compare/comparison.json
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Save Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Verify Blender
+        run: |
+          blender --version
+          command -v xvfb-run
+
+      - name: Export single-object Alembic and USD
+        run: |
+          mkdir -p output/sph-single-topology-cache
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background \
+              results/sph-dam-break-blender-sequence/surface-sequence.blend \
+              --python sph-experiments/single-topology-cache/export_single.py \
+              2>&1 | tee output/sph-single-topology-cache/export.log
+
+      - name: Validate single-object Alembic
+        run: |
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python sph-experiments/single-topology-cache/import_validate.py \
+              -- alembic output/sph-single-topology-cache/fluid-single.abc \
+              2>&1 | tee output/sph-single-topology-cache/alembic-import.log
+
+      - name: Validate single-object USD
+        run: |
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python sph-experiments/single-topology-cache/import_validate.py \
+              -- usd output/sph-single-topology-cache/fluid-single.usdc \
+              2>&1 | tee output/sph-single-topology-cache/usd-import.log
+
+      - name: Compare with 13-object baseline
+        run: |
+          python3 sph-experiments/single-topology-cache/compare.py
+          cat output/sph-single-topology-cache/comparison.json
+          du -sh output/sph-single-topology-cache
+          ls -lh output/sph-single-topology-cache
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-single-topology-cache
+          path: output/sph-single-topology-cache/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate persistent result
+        run: |
+          set -euxo pipefail
+          src="output/sph-single-topology-cache"
+          dst="results/sph-single-topology-cache"
+          rm -rf "$dst"
+          mkdir -p "$dst"
+          cp "$src/comparison.json" "$dst/comparison.json"
+          cp "$src/alembic-validation.json" "$dst/alembic-validation.json"
+          cp "$src/usd-validation.json" "$dst/usd-validation.json"
+
+          for file in fluid-single.abc fluid-single.usdc; do
+            bytes="$(stat -c%s "$src/$file")"
+            if [ "$bytes" -le 99614720 ]; then
+              cp "$src/$file" "$dst/$file"
+            fi
+          done
+
+          {
+            echo "# Single-object topology-changing SPH cache"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- run: $GITHUB_RUN_ID"
+            echo '- full output: Actions artifact `sph-single-topology-cache`'
+            echo
+            echo "Alembic/USD single-object varying-topology replay validation."
+          } > "$dst/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-single-topology-cache/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish single-topology cache result [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent result
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:$GITHUB_REF_NAME"; then
+            exit 0
+          fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
