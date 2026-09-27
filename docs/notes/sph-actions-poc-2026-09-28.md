@@ -500,3 +500,36 @@ Create a single Blender mesh object whose evaluated mesh topology changes per fr
 - vertex/face counts match the 13 source frames,
 - frame scrubbing works,
 - cache size/load behavior can be compared with the 13-object baseline.
+
+
+## 2026-09-28 direct USD topology test — important intermediate result
+
+The first direct-authoring run exposed a tooling bug in the test harness but also proved the core architecture.
+
+Actions run:
+
+- workflow: `SPH direct USD topology cache`
+- run #1: `36358215899`
+
+The direct USD file was successfully written before the metrics script hit an OpenUSD Python API compatibility error.
+
+Blender then re-imported that file successfully and observed:
+
+- imported mesh objects: **1**
+- modifier: **MESH_SEQUENCE_CACHE**
+- replay validation errors: **0**
+- all 13 frames reproduced the exact source vertex/face counts
+
+This proves that a single USD Mesh prim with time-sampled `points`,
+`faceVertexCounts`, and `faceVertexIndices` is a working compact
+representation for the topology-changing SPH surface in Blender 4.0.2.
+
+The run failed later only because OpenUSD 23.05 exposes
+`UsdAttribute.GetTimeSamples()` as a zero-argument function returning the
+sample list, while the first script used an output-list argument form.
+
+Additional CI lesson:
+
+Blender may exit with code 0 after a Python traceback unless
+`--python-exit-code 1` is supplied. Future Blender-based validation commands
+for this path use that option in addition to shell `pipefail`.

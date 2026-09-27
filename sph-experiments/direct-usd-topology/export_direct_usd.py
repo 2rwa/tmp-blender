@@ -86,12 +86,9 @@ if not USD_PATH.is_file() or USD_PATH.stat().st_size == 0:
 opened = Usd.Stage.Open(str(USD_PATH))
 usd_mesh = UsdGeom.Mesh(opened.GetPrimAtPath("/FluidSurface"))
 
-points_samples = []
-counts_samples = []
-indices_samples = []
-usd_mesh.GetPointsAttr().GetTimeSamples(points_samples)
-usd_mesh.GetFaceVertexCountsAttr().GetTimeSamples(counts_samples)
-usd_mesh.GetFaceVertexIndicesAttr().GetTimeSamples(indices_samples)
+points_samples = usd_mesh.GetPointsAttr().GetTimeSamples()
+counts_samples = usd_mesh.GetFaceVertexCountsAttr().GetTimeSamples()
+indices_samples = usd_mesh.GetFaceVertexIndicesAttr().GetTimeSamples()
 
 payload = {
     "path": USD_PATH.name,

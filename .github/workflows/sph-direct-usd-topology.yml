@@ -83,6 +83,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
             xvfb-run -a -s "-screen 0 1280x720x24" \
             blender --background \
+              --python-exit-code 1 \
               results/sph-dam-break-blender-sequence/surface-sequence.blend \
               --python sph-experiments/direct-usd-topology/export_direct_usd.py \
               2>&1 | tee output/sph-single-topology-cache/direct-usd-export.log
@@ -93,6 +94,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
             xvfb-run -a -s "-screen 0 1280x720x24" \
             blender --background --factory-startup \
+              --python-exit-code 1 \
               --python sph-experiments/direct-usd-topology/validate_direct_usd.py \
               -- output/sph-single-topology-cache/fluid-direct-single.usdc \
               2>&1 | tee output/sph-single-topology-cache/direct-usd-import.log
