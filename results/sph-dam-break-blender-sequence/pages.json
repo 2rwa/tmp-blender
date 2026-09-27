@@ -1,0 +1,11 @@
+{
+  "title": "SPH Dam Break — Blender Surface Replay",
+  "description": "SPlisHSPlasHで外部計算した流体を13フレームのsurface meshへ再構成し、Blender 4.0.2で時系列再生したPoC。スナップショットをクリックするとレンダリング動画を再生します。",
+  "source_path": "sph-experiments/dam-break-blender-sequence",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "de73c54a996384de23cddebff903c95929649be7",
+  "run_number": "1",
+  "run_id": "36329404518"
+}

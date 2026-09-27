@@ -1,0 +1,102 @@
+name: Pages gallery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'results/**'
+      - 'tools/build_pages.py'
+      - '.github/workflows/pages-gallery.yml'
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'SPH Blender surface sequence'
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Build Pages gallery
+        run: |
+          python3 -m py_compile tools/build_pages.py
+          python3 tools/build_pages.py
+          test -s docs/index.html
+          test -s docs/assets/sph-dam-break-blender-sequence/preview.png
+          test -s docs/assets/sph-dam-break-blender-sequence/media.mp4
+
+      - name: Commit generated Pages content
+        id: commit-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .nojekyll docs/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish Pages gallery [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push Pages content
+        if: steps.commit-pages.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          git fetch origin main
+          git reset --hard origin/main
+          python3 tools/build_pages.py
+          git add index.html .nojekyll docs/
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: publish Pages gallery [skip ci]"
+          git push origin HEAD:main
+
+  deploy:
+    needs: build
+    if: ${{ needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout latest Pages content
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

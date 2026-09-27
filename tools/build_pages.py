@@ -23,47 +23,87 @@ def load_entries() -> list[dict]:
     for result_dir in sorted(p for p in RESULTS.iterdir() if p.is_dir()):
         experiment_id = result_dir.name
         manifest_path = EXPERIMENTS / experiment_id / "experiment.json"
-        validation_path = result_dir / "validation.json"
-        preview_path = result_dir / "preview.jpg"
-        readme_path = result_dir / "README.md"
+        pages_path = result_dir / "pages.json"
 
-        if not (manifest_path.is_file() and validation_path.is_file() and preview_path.is_file()):
+        manifest = None
+        pages = {}
+        if manifest_path.is_file():
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        elif pages_path.is_file():
+            pages = json.loads(pages_path.read_text(encoding="utf-8"))
+        else:
             continue
 
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        validation = json.loads(validation_path.read_text(encoding="utf-8"))
+        validation_name = str(pages.get("validation", "validation.json"))
+        validation_path = result_dir / validation_name
+        if not validation_path.is_file():
+            continue
 
-        source_commit = ""
-        run_number = ""
-        run_id = ""
+        preview_name = str(pages.get("preview", ""))
+        if not preview_name:
+            if (result_dir / "preview.jpg").is_file():
+                preview_name = "preview.jpg"
+            elif (result_dir / "preview.png").is_file():
+                preview_name = "preview.png"
+        preview_path = result_dir / preview_name if preview_name else None
+        if preview_path is None or not preview_path.is_file():
+            continue
+
+        media_name = str(pages.get("media", "media.mp4"))
+        media_path = result_dir / media_name
+        readme_path = result_dir / "README.md"
+
+        validation = json.loads(validation_path.read_text(encoding="utf-8"))
+        title = pages.get("title") or (manifest or {}).get("title", experiment_id)
+        description = pages.get("description") or (manifest or {}).get("description", "")
+        source_path = pages.get("source_path") or f"experiments/{experiment_id}"
+
+        source_commit = str(pages.get("source_commit", ""))
+        run_number = str(pages.get("run_number", ""))
+        run_id = str(pages.get("run_id", ""))
         if readme_path.is_file():
             text = readme_path.read_text(encoding="utf-8")
-            m = re.search(r"- source commit: " + re.escape(tick) + r"([0-9a-f]+)" + re.escape(tick), text)
-            if m:
-                source_commit = m.group(1)
-            m = re.search(
-                r"- Actions run: " + re.escape(tick) + r"([^" + tick + r"]+)" + re.escape(tick)
-                + r" \(" + re.escape(tick) + r"([^" + tick + r"]+)" + re.escape(tick) + r"\)",
-                text,
-            )
-            if m:
-                run_number, run_id = m.group(1), m.group(2)
+            if not source_commit:
+                for pattern in (
+                    r"- source commit: " + re.escape(tick) + r"([0-9a-f]+)" + re.escape(tick),
+                    r"- source: " + re.escape(tick) + r"([0-9a-f]+)" + re.escape(tick),
+                    r"- source: ([0-9a-f]+)",
+                ):
+                    m = re.search(pattern, text)
+                    if m:
+                        source_commit = m.group(1)
+                        break
+            if not run_id:
+                m = re.search(
+                    r"- Actions run: " + re.escape(tick) + r"([^" + tick + r"]+)" + re.escape(tick)
+                    + r" \(" + re.escape(tick) + r"([^" + tick + r"]+)" + re.escape(tick) + r"\)",
+                    text,
+                )
+                if m:
+                    run_number, run_id = m.group(1), m.group(2)
+                else:
+                    m = re.search(r"- run: ([0-9]+)", text)
+                    if m:
+                        run_id = m.group(1)
 
         blend_files = sorted(p.name for p in result_dir.glob("*.blend"))
 
         entries.append({
             "id": experiment_id,
-            "title": manifest.get("title", experiment_id),
-            "description": manifest.get("description", ""),
+            "title": title,
+            "description": description,
             "validation": validation,
+            "validation_name": validation_name,
+            "preview_name": preview_name,
+            "media_name": media_name,
+            "source_path": source_path,
             "source_commit": source_commit,
             "run_number": run_number,
             "run_id": run_id,
-            "has_media": (result_dir / "media.mp4").is_file(),
+            "has_media": media_path.is_file(),
             "blend_files": blend_files,
         })
     return entries
-
 
 def stat_rows(validation: dict) -> str:
     preferred = [
@@ -72,6 +112,14 @@ def stat_rows(validation: dict) -> str:
         "width",
         "height",
         "video_size_bytes",
+        "surface_frames",
+        "vertices_min",
+        "vertices_max",
+        "faces_min",
+        "faces_max",
+        "surface_bytes_total",
+        "blend_bytes",
+        "video_bytes",
         "poster_luminance_stddev",
         "bright_pixel_ratio",
         "warm_pixel_ratio",
@@ -95,30 +143,33 @@ def render(entries: list[dict], docs_mode: bool) -> str:
     for entry in entries:
         eid = entry["id"]
         asset_root = f"assets/{eid}" if docs_mode else f"results/{eid}"
+        preview_url = f'{asset_root}/{entry["preview_name"]}'
+        validation_url = f'{asset_root}/{entry["validation_name"]}'
+        media_url = f'{asset_root}/{entry["media_name"]}'
 
         if entry["has_media"]:
             title = html.escape(entry["title"])
             visual = (
                 f'<button class="media-toggle" type="button" '
-                f'data-video="{asset_root}/media.mp4" '
-                f'data-poster="{asset_root}/preview.jpg" '
+                f'data-video="{media_url}" '
+                f'data-poster="{preview_url}" '
                 f'aria-label="{title} の動画を再生">'
-                f'<img src="{asset_root}/preview.jpg" alt="{title} preview">'
+                f'<img src="{preview_url}" alt="{title} preview">'
                 f'<span class="play-badge" aria-hidden="true">▶</span>'
                 f'<span class="play-label" aria-hidden="true">PLAY</span>'
                 f'</button>'
             )
         else:
-            visual = f'<img src="{asset_root}/preview.jpg" alt="{html.escape(entry["title"])} preview">'
+            visual = f'<img src="{preview_url}" alt="{html.escape(entry["title"])} preview">'
 
         links = [
-            f'<a href="{asset_root}/preview.jpg">preview</a>',
-            f'<a href="{asset_root}/validation.json">validation</a>',
-            f'<a href="{GITHUB_BASE}/tree/main/experiments/{eid}">source</a>',
+            f'<a href="{preview_url}">preview</a>',
+            f'<a href="{validation_url}">validation</a>',
+            f'<a href="{GITHUB_BASE}/tree/main/{entry["source_path"]}">source</a>',
             f'<a href="{GITHUB_BASE}/tree/main/results/{eid}">result</a>',
         ]
         if entry["has_media"]:
-            links.insert(1, f'<a href="{asset_root}/media.mp4">mp4</a>')
+            links.insert(1, f'<a href="{media_url}">mp4</a>')
         for blend_name in entry["blend_files"]:
             links.append(
                 f'<a href="{GITHUB_BASE}/blob/main/results/{eid}/{blend_name}">{html.escape(blend_name)}</a>'
@@ -229,7 +280,13 @@ def copy_docs_assets(entries: list[dict]) -> None:
         src = RESULTS / eid
         dst = assets / eid
         dst.mkdir(parents=True, exist_ok=True)
-        for name in ("preview.jpg", "validation.json", "media.mp4"):
+        names = {
+            entry["preview_name"],
+            entry["validation_name"],
+        }
+        if entry["has_media"]:
+            names.add(entry["media_name"])
+        for name in sorted(names):
             source = src / name
             if source.is_file():
                 shutil.copy2(source, dst / name)
