@@ -47,6 +47,32 @@ Critical points:
 - explicitly request `file_format="obj"` from pySplashSurf,
 - preserve run #10 as the regression baseline.
 
+### Latest completed SPH -> Blender sequence replay
+
+The external-fluid-to-Blender path is now proven end-to-end.
+
+Successful workflow:
+
+- `SPH Blender surface sequence`
+- run #1 / id `36329404518`
+- 13 surface frames reconstructed from SPH VTK
+- 49,560 .. 59,258 vertices per frame
+- 91,920 .. 111,316 faces per frame
+- saved `surface-sequence.blend`: 59,273,460 bytes
+- saved Blend reopened and validated in a fresh Blender process
+- exactly one expected fluid mesh visible on every one of the 13 frames
+- validation errors: 0
+
+Persistent result:
+
+`results/sph-dam-break-blender-sequence/`
+
+Detailed history:
+
+`docs/notes/sph-actions-poc-2026-09-28.md`
+
+The next natural step is to compare the current 13-object baseline against Alembic/USD or another compact topology-changing animation cache.
+
 ### Latest completed Blender visual experiment
 
 

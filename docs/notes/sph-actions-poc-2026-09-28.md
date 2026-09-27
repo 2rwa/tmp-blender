@@ -322,3 +322,117 @@ Do not overwrite the successful one-frame PoC. Keep run #10 as the baseline regr
 A new conversation should be able to resume with:
 
 > Read `2rwa/tmp-blender/docs/notes/sph-actions-poc-2026-09-28.md` and continue the SPlisHSPlasH -> Blender cache experiment from the successful run #10.
+
+
+## 2026-09-28 follow-up — full surface sequence replay in Blender
+
+The next-stage experiment also completed successfully.
+
+Workflow:
+
+- `SPH Blender surface sequence`
+- run: **#1**
+- Actions run id: **36329404518**
+- source commit: `de73c54a996384de23cddebff903c95929649be7`
+- persistent result commit: `52f4f6cb0338fd1a1914ceb56b6ea5bef36cf472`
+
+Pipeline:
+
+```text
+SPlisHSPlasH
+  -> 13 fluid VTK particle frames
+  -> pySplashSurf reconstructs every frame
+  -> 13 topology-changing OBJ surfaces
+  -> Blender 4.0.2 imports all 13 meshes
+  -> CONSTANT timeline switching, one fluid mesh visible per frame
+  -> saved surface-sequence.blend
+  -> reopen the saved Blend in a fresh Blender process
+  -> validate all 13 timeline frames
+  -> preview + MP4 + artifact + Git result
+```
+
+Verified sequence result:
+
+- surface frames: **13**
+- source frames: **1..13**
+- vertices per frame: **49,560 .. 59,258**
+- faces per frame: **91,920 .. 111,316**
+- total OBJ sequence size: **62,451,074 bytes**
+- saved Blender file: **59,273,460 bytes**
+- preview PNG: **246,083 bytes**
+- MP4: **31,499 bytes**
+
+The saved Blend was reopened in a new Blender invocation and validated frame-by-frame.
+
+Validation result:
+
+- fluid objects in the Blend: **13**
+- expected visible fluid objects per frame: **1**
+- observed visible fluid objects per frame: **1**
+- frame replay errors: **0**
+
+This is important because it proves the Blender file itself contains a reusable topology-changing animation representation. The replay does not depend on the original SPH solver or on the OBJ files after the Blend has been saved.
+
+### Blender representation used for the PoC
+
+Each reconstructed surface is imported as an ordinary mesh object:
+
+```text
+FluidFrame_0001
+FluidFrame_0002
+...
+FluidFrame_0013
+```
+
+Each object receives CONSTANT keyframes so that exactly one object has unit scale on its corresponding timeline frame while the others have zero scale.
+
+This is intentionally simple rather than storage-efficient. It was chosen to prove persistence and replay before introducing a more compact cache format.
+
+### Current proven separation
+
+```text
+physics stage:
+  SPlisHSPlasH
+
+surface stage:
+  pySplashSurf
+
+presentation stage:
+  Blender
+    - material
+    - camera
+    - lighting
+    - rendering
+```
+
+Blender no longer needs to run Mantaflow or any fluid solver for this animation.
+
+### Next natural step
+
+The next useful experiment is no longer "can Blender replay the sequence?" — that is proven.
+
+The next comparison should be:
+
+```text
+current baseline:
+  13 independent Blender mesh objects
+  59.3 MB Blend
+
+vs.
+
+candidate cache:
+  Alembic and/or USD
+```
+
+Measure:
+
+- cache size,
+- Blender load time,
+- timeline scrub behavior,
+- render behavior,
+- topology-changing mesh support,
+- whether velocity attributes survive,
+- whether rigid-body animation can be packaged beside the fluid,
+- portability outside Blender.
+
+Keep the current `surface-sequence.blend` result as the regression/reference case.

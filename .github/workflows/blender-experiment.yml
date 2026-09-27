@@ -6,6 +6,8 @@ on:
     paths-ignore:
       - 'results/**'
       - 'docs/**'
+      - 'sph-experiments/**'
+      - '.github/workflows/sph-*.yml'
       - 'index.html'
       - '.nojekyll'
   workflow_dispatch:
