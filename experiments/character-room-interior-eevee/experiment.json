@@ -1,0 +1,29 @@
+{
+  "id": "character-room-interior-eevee",
+  "title": "Character Room Interior EEVEE",
+  "description": "A reusable 7.2m x 5.4m x 3.0m open-front living/study room built from Blender primitives, furnished and lit at room scale, with the Quaternius Warrior idling as a human-scale reference during a 15-second camera tour.",
+  "preview_source": "preview.png",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 360,
+    "fps": 24,
+    "chunk_size": 60,
+    "preview_frame": 180,
+    "blend": "character-room-interior-eevee.blend",
+    "video": "character-room-interior-eevee.mp4"
+  },
+  "prepared_outputs": [
+    "character-room-interior-eevee.blend",
+    "character-room-interior-eevee-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "character-room-interior-eevee.mp4",
+    "character-room-interior-eevee.blend",
+    "character-room-interior-eevee-report.json"
+  ],
+  "repo_blends": [
+    "character-room-interior-eevee.blend"
+  ]
+}
