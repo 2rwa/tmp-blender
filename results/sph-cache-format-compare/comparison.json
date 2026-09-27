@@ -1,0 +1,94 @@
+{
+  "baseline": {
+    "source_blend": "results/sph-dam-break-blender-sequence/surface-sequence.blend",
+    "source_blend_bytes": 59273460,
+    "fluid_objects": 13,
+    "mesh_vertices_sum": 661252,
+    "mesh_faces_sum": 1228920,
+    "frame_start": 1,
+    "frame_end": 13,
+    "fps": 12
+  },
+  "formats": {
+    "alembic": {
+      "cache_bytes": 27612083,
+      "vs_source_blend_ratio": 0.46584226734865825,
+      "export_seconds": 0.023515012000004276,
+      "import_seconds": 0.1360470330000041,
+      "scrub_13_frames_seconds": 0.01652918900000344,
+      "imported_blend_bytes": 62930336,
+      "mesh_objects": 13,
+      "replay_errors": 0,
+      "vertex_counts": [
+        54000,
+        59258,
+        50768,
+        49778,
+        49652,
+        49628,
+        49610,
+        49614,
+        49832,
+        50154,
+        49560,
+        49690,
+        49708
+      ],
+      "face_counts": [
+        100800,
+        111316,
+        94336,
+        92356,
+        92104,
+        92060,
+        92024,
+        92028,
+        92464,
+        93108,
+        91920,
+        92184,
+        92220
+      ]
+    },
+    "usd": {
+      "cache_bytes": 16529185,
+      "vs_source_blend_ratio": 0.278863170801907,
+      "export_seconds": 0.10618836199999748,
+      "import_seconds": 0.19567739499999703,
+      "scrub_13_frames_seconds": 0.0015505109999978117,
+      "imported_blend_bytes": 59243576,
+      "mesh_objects": 13,
+      "replay_errors": 0,
+      "vertex_counts": [
+        54000,
+        59258,
+        50768,
+        49778,
+        49652,
+        49628,
+        49610,
+        49614,
+        49832,
+        50154,
+        49560,
+        49690,
+        49708
+      ],
+      "face_counts": [
+        100800,
+        111316,
+        94336,
+        92356,
+        92104,
+        92060,
+        92024,
+        92028,
+        92464,
+        93108,
+        91920,
+        92184,
+        92220
+      ]
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "format": "usd",
+  "cache_path": "fluid-sequence.usdc",
+  "cache_bytes": 16529185,
+  "import_seconds": 0.19567739499999703,
+  "scrub_13_frames_seconds": 0.0015505109999978117,
+  "mesh_objects": 13,
+  "constraints": {
+    "FluidMesh_0001": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0002": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0003": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0004": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0005": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0006": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0007": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0008": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0009": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0010": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0011": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0012": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidMesh_0013": [
+      "TRANSFORM_CACHE"
+    ]
+  },
+  "modifiers": {
+    "FluidMesh_0001": [],
+    "FluidMesh_0002": [],
+    "FluidMesh_0003": [],
+    "FluidMesh_0004": [],
+    "FluidMesh_0005": [],
+    "FluidMesh_0006": [],
+    "FluidMesh_0007": [],
+    "FluidMesh_0008": [],
+    "FluidMesh_0009": [],
+    "FluidMesh_0010": [],
+    "FluidMesh_0011": [],
+    "FluidMesh_0012": [],
+    "FluidMesh_0013": []
+  },
+  "errors": [],
+  "observed": [
+    {
+      "frame": 1,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0001"
+      ],
+      "vertices": 54000,
+      "faces": 100800
+    },
+    {
+      "frame": 2,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0002"
+      ],
+      "vertices": 59258,
+      "faces": 111316
+    },
+    {
+      "frame": 3,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0003"
+      ],
+      "vertices": 50768,
+      "faces": 94336
+    },
+    {
+      "frame": 4,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0004"
+      ],
+      "vertices": 49778,
+      "faces": 92356
+    },
+    {
+      "frame": 5,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0005"
+      ],
+      "vertices": 49652,
+      "faces": 92104
+    },
+    {
+      "frame": 6,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0006"
+      ],
+      "vertices": 49628,
+      "faces": 92060
+    },
+    {
+      "frame": 7,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0007"
+      ],
+      "vertices": 49610,
+      "faces": 92024
+    },
+    {
+      "frame": 8,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0008"
+      ],
+      "vertices": 49614,
+      "faces": 92028
+    },
+    {
+      "frame": 9,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0009"
+      ],
+      "vertices": 49832,
+      "faces": 92464
+    },
+    {
+      "frame": 10,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0010"
+      ],
+      "vertices": 50154,
+      "faces": 93108
+    },
+    {
+      "frame": 11,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0011"
+      ],
+      "vertices": 49560,
+      "faces": 91920
+    },
+    {
+      "frame": 12,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0012"
+      ],
+      "vertices": 49690,
+      "faces": 92184
+    },
+    {
+      "frame": 13,
+      "visible_count": 1,
+      "visible": [
+        "FluidMesh_0013"
+      ],
+      "vertices": 49708,
+      "faces": 92220
+    }
+  ],
+  "imported_blend": "usd-import.blend",
+  "imported_blend_bytes": 59243576
+}

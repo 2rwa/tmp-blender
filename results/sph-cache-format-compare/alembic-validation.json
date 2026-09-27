@@ -1,0 +1,186 @@
+{
+  "format": "alembic",
+  "cache_path": "fluid-sequence.abc",
+  "cache_bytes": 27612083,
+  "import_seconds": 0.1360470330000041,
+  "scrub_13_frames_seconds": 0.01652918900000344,
+  "mesh_objects": 13,
+  "constraints": {
+    "FluidFrame_0001": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0002": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0003": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0004": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0005": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0006": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0007": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0008": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0009": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0010": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0011": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0012": [
+      "TRANSFORM_CACHE"
+    ],
+    "FluidFrame_0013": [
+      "TRANSFORM_CACHE"
+    ]
+  },
+  "modifiers": {
+    "FluidFrame_0001": [],
+    "FluidFrame_0002": [],
+    "FluidFrame_0003": [],
+    "FluidFrame_0004": [],
+    "FluidFrame_0005": [],
+    "FluidFrame_0006": [],
+    "FluidFrame_0007": [],
+    "FluidFrame_0008": [],
+    "FluidFrame_0009": [],
+    "FluidFrame_0010": [],
+    "FluidFrame_0011": [],
+    "FluidFrame_0012": [],
+    "FluidFrame_0013": []
+  },
+  "errors": [],
+  "observed": [
+    {
+      "frame": 1,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0001"
+      ],
+      "vertices": 54000,
+      "faces": 100800
+    },
+    {
+      "frame": 2,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0002"
+      ],
+      "vertices": 59258,
+      "faces": 111316
+    },
+    {
+      "frame": 3,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0003"
+      ],
+      "vertices": 50768,
+      "faces": 94336
+    },
+    {
+      "frame": 4,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0004"
+      ],
+      "vertices": 49778,
+      "faces": 92356
+    },
+    {
+      "frame": 5,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0005"
+      ],
+      "vertices": 49652,
+      "faces": 92104
+    },
+    {
+      "frame": 6,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0006"
+      ],
+      "vertices": 49628,
+      "faces": 92060
+    },
+    {
+      "frame": 7,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0007"
+      ],
+      "vertices": 49610,
+      "faces": 92024
+    },
+    {
+      "frame": 8,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0008"
+      ],
+      "vertices": 49614,
+      "faces": 92028
+    },
+    {
+      "frame": 9,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0009"
+      ],
+      "vertices": 49832,
+      "faces": 92464
+    },
+    {
+      "frame": 10,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0010"
+      ],
+      "vertices": 50154,
+      "faces": 93108
+    },
+    {
+      "frame": 11,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0011"
+      ],
+      "vertices": 49560,
+      "faces": 91920
+    },
+    {
+      "frame": 12,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0012"
+      ],
+      "vertices": 49690,
+      "faces": 92184
+    },
+    {
+      "frame": 13,
+      "visible_count": 1,
+      "visible": [
+        "FluidFrame_0013"
+      ],
+      "vertices": 49708,
+      "faces": 92220
+    }
+  ],
+  "imported_blend": "alembic-import.blend",
+  "imported_blend_bytes": 62930336
+}
