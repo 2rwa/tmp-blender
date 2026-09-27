@@ -94,10 +94,8 @@ fluid.data.materials.append(water)
 cube.data.materials.clear()
 cube.data.materials.append(cube_mat)
 
-# Keep the cache portable beside the saved Blend.
-for cache in bpy.data.cache_files:
-    cache.filepath = "//fluid-cube.usdc"
-
+# Keep absolute cache paths while validating and rendering. Blender resolves
+# // relative paths against the saved .blend location, which does not exist yet.
 bpy.ops.mesh.primitive_plane_add(size=8.0, location=(0.0, 0.0, 0.0))
 floor = bpy.context.object
 floor.name = "Floor"
@@ -212,6 +210,13 @@ scene.render.filepath = str(VIDEO_PATH)
 bpy.ops.render.render(animation=True)
 
 scene.frame_set(1)
+
+# First save establishes the .blend directory while the live readers still use
+# the absolute USD path. Then convert the CacheFile path to a portable sibling
+# reference and save again.
+bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
+for cache in bpy.data.cache_files:
+    cache.filepath = "//fluid-cube.usdc"
 bpy.ops.wm.save_as_mainfile(filepath=str(BLEND_PATH))
 
 metrics = json.loads(METRICS_PATH.read_text(encoding="utf-8"))
