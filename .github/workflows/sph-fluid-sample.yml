@@ -152,8 +152,8 @@ jobs:
             echo
             echo "- source: $GITHUB_SHA"
             echo "- run: $GITHUB_RUN_ID"
-            echo "- full particle/rigid-body sequence: Actions artifact `sph-dam-break-cube`"
-            echo "- final reconstructed surface: `surface-final.obj`"
+            printf '%s\n' '- full particle/rigid-body sequence: Actions artifact `sph-dam-break-cube`'
+            printf '%s\n' '- final reconstructed surface: `surface-final.obj`'
           } > "$result_dir/README.md"
 
       - name: Commit persistent result
