@@ -1,0 +1,11 @@
+{
+  "title": "SPH Fluid + Dynamic Cube — USD Cache Replay",
+  "description": "SPlisHSPlasHで計算した流体と動的Cubeを1つのUSDへまとめ、Blenderで13フレーム同期再生した結果。",
+  "source_path": "sph-experiments/fluid-cube-usd-render",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "020368bac5ed2a3d1d4a2817bea014a27b64c042",
+  "run_number": "2",
+  "run_id": "36359942969"
+}

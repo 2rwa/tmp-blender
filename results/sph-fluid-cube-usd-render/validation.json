@@ -1,0 +1,364 @@
+{
+  "frames": 13,
+  "fluid_mesh_objects": 1,
+  "dynamic_cube_mesh_objects": 1,
+  "imported_mesh_objects": 2,
+  "fluid_modifier": [
+    "MESH_SEQUENCE_CACHE"
+  ],
+  "cube_modifier": [
+    "MESH_SEQUENCE_CACHE"
+  ],
+  "cube_first_centroid_blender": [
+    -0.1,
+    0.0,
+    0.519852
+  ],
+  "cube_last_centroid_blender": [
+    1.873282,
+    0.024456,
+    0.153315
+  ],
+  "cube_displacement_m": 2.007184425963145,
+  "combined_usd_bytes": 15298504,
+  "blend_bytes": 5610696,
+  "preview_bytes": 241653,
+  "video_bytes": 22971,
+  "errors": [],
+  "observed": [
+    {
+      "frame": 1,
+      "fluid_vertices": 54000,
+      "fluid_faces": 100800,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        -0.1,
+        0.0,
+        0.519852
+      ]
+    },
+    {
+      "frame": 2,
+      "fluid_vertices": 59258,
+      "fluid_faces": 111316,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        -0.1,
+        0.0,
+        0.479738
+      ]
+    },
+    {
+      "frame": 3,
+      "fluid_vertices": 50768,
+      "fluid_faces": 94336,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        -0.1,
+        0.0,
+        0.368733
+      ]
+    },
+    {
+      "frame": 4,
+      "fluid_vertices": 49778,
+      "fluid_faces": 92356,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        -0.087032,
+        0.000207,
+        0.2004
+      ]
+    },
+    {
+      "frame": 5,
+      "fluid_vertices": 49652,
+      "fluid_faces": 92104,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        0.074643,
+        -0.001531,
+        0.158215
+      ]
+    },
+    {
+      "frame": 6,
+      "fluid_vertices": 49628,
+      "fluid_faces": 92060,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        0.325427,
+        0.00161,
+        0.157027
+      ]
+    },
+    {
+      "frame": 7,
+      "fluid_vertices": 49610,
+      "fluid_faces": 92024,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        0.611354,
+        0.005573,
+        0.155604
+      ]
+    },
+    {
+      "frame": 8,
+      "fluid_vertices": 49614,
+      "fluid_faces": 92028,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        0.907542,
+        0.009807,
+        0.154162
+      ]
+    },
+    {
+      "frame": 9,
+      "fluid_vertices": 49832,
+      "fluid_faces": 92464,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        1.216418,
+        0.014484,
+        0.153072
+      ]
+    },
+    {
+      "frame": 10,
+      "fluid_vertices": 50154,
+      "fluid_faces": 93108,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        1.552932,
+        0.019559,
+        0.152124
+      ]
+    },
+    {
+      "frame": 11,
+      "fluid_vertices": 49560,
+      "fluid_faces": 91920,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        1.85152,
+        0.019761,
+        0.151879
+      ]
+    },
+    {
+      "frame": 12,
+      "fluid_vertices": 49690,
+      "fluid_faces": 92184,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        1.864946,
+        0.019954,
+        0.152395
+      ]
+    },
+    {
+      "frame": 13,
+      "fluid_vertices": 49708,
+      "fluid_faces": 92220,
+      "cube_vertices": 8,
+      "cube_faces": 12,
+      "cube_centroid": [
+        1.873282,
+        0.024456,
+        0.153315
+      ]
+    }
+  ],
+  "source_metrics": {
+    "combined_usd": "fluid-cube.usdc",
+    "bytes": 15298504,
+    "author_seconds": 0.0010970719999932044,
+    "fluid_time_samples": [
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      9.0,
+      10.0,
+      11.0,
+      12.0,
+      13.0
+    ],
+    "cube_time_samples": [
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      9.0,
+      10.0,
+      11.0,
+      12.0,
+      13.0
+    ],
+    "cube_frames": [
+      {
+        "frame": 1,
+        "centroid": [
+          -0.099999998,
+          -0.0,
+          0.519852445
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 2,
+        "centroid": [
+          -0.099999998,
+          -0.0,
+          0.479737863
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 3,
+        "centroid": [
+          -0.099999998,
+          -0.0,
+          0.368733153
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 4,
+        "centroid": [
+          -0.087032188,
+          0.000207394,
+          0.200399652
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 5,
+        "centroid": [
+          0.074642718,
+          -0.00153102,
+          0.158215135
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 6,
+        "centroid": [
+          0.32542723,
+          0.001610279,
+          0.157026991
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 7,
+        "centroid": [
+          0.611354418,
+          0.005572677,
+          0.155603781
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 8,
+        "centroid": [
+          0.907542109,
+          0.009806871,
+          0.154161796
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 9,
+        "centroid": [
+          1.216418385,
+          0.014484465,
+          0.153072297
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 10,
+        "centroid": [
+          1.552931905,
+          0.019559202,
+          0.152123988
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 11,
+        "centroid": [
+          1.851519585,
+          0.019760669,
+          0.151878565
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 12,
+        "centroid": [
+          1.864946097,
+          0.019954324,
+          0.152394816
+        ],
+        "vertices": 8,
+        "faces": 12
+      },
+      {
+        "frame": 13,
+        "centroid": [
+          1.873282403,
+          0.024456203,
+          0.153314516
+        ],
+        "vertices": 8,
+        "faces": 12
+      }
+    ],
+    "cube_first_centroid_blender": [
+      -0.099999998,
+      -0.0,
+      0.519852445
+    ],
+    "cube_last_centroid_blender": [
+      1.873282403,
+      0.024456203,
+      0.153314516
+    ],
+    "cube_displacement_m": 2.0071849923106515
+  }
+}
