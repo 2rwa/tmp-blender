@@ -1,0 +1,131 @@
+{
+  "path": "fluid-direct-single.usdc",
+  "bytes": 15296671,
+  "export_seconds": 3.6578091650000033,
+  "prim_path": "/FluidSurface",
+  "points_time_samples": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    8.0,
+    9.0,
+    10.0,
+    11.0,
+    12.0,
+    13.0
+  ],
+  "face_counts_time_samples": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    8.0,
+    9.0,
+    10.0,
+    11.0,
+    12.0,
+    13.0
+  ],
+  "face_indices_time_samples": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    8.0,
+    9.0,
+    10.0,
+    11.0,
+    12.0,
+    13.0
+  ],
+  "frames": [
+    {
+      "frame": 1,
+      "vertices": 54000,
+      "faces": 100800,
+      "face_vertex_indices": 302400
+    },
+    {
+      "frame": 2,
+      "vertices": 59258,
+      "faces": 111316,
+      "face_vertex_indices": 333948
+    },
+    {
+      "frame": 3,
+      "vertices": 50768,
+      "faces": 94336,
+      "face_vertex_indices": 283008
+    },
+    {
+      "frame": 4,
+      "vertices": 49778,
+      "faces": 92356,
+      "face_vertex_indices": 277068
+    },
+    {
+      "frame": 5,
+      "vertices": 49652,
+      "faces": 92104,
+      "face_vertex_indices": 276312
+    },
+    {
+      "frame": 6,
+      "vertices": 49628,
+      "faces": 92060,
+      "face_vertex_indices": 276180
+    },
+    {
+      "frame": 7,
+      "vertices": 49610,
+      "faces": 92024,
+      "face_vertex_indices": 276072
+    },
+    {
+      "frame": 8,
+      "vertices": 49614,
+      "faces": 92028,
+      "face_vertex_indices": 276084
+    },
+    {
+      "frame": 9,
+      "vertices": 49832,
+      "faces": 92464,
+      "face_vertex_indices": 277392
+    },
+    {
+      "frame": 10,
+      "vertices": 50154,
+      "faces": 93108,
+      "face_vertex_indices": 279324
+    },
+    {
+      "frame": 11,
+      "vertices": 49560,
+      "faces": 91920,
+      "face_vertex_indices": 275760
+    },
+    {
+      "frame": 12,
+      "vertices": 49690,
+      "faces": 92184,
+      "face_vertex_indices": 276552
+    },
+    {
+      "frame": 13,
+      "vertices": 49708,
+      "faces": 92220,
+      "face_vertex_indices": 276660
+    }
+  ]
+}

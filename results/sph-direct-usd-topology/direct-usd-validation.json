@@ -1,0 +1,81 @@
+{
+  "cache": "fluid-direct-single.usdc",
+  "cache_bytes": 15296671,
+  "import_seconds": 0.04975944600000304,
+  "scrub_13_frames_seconds": 0.1966164839999962,
+  "mesh_objects": 1,
+  "modifiers": [
+    "MESH_SEQUENCE_CACHE"
+  ],
+  "constraints": [],
+  "errors": [],
+  "observed": [
+    {
+      "frame": 1,
+      "vertices": 54000,
+      "faces": 100800
+    },
+    {
+      "frame": 2,
+      "vertices": 59258,
+      "faces": 111316
+    },
+    {
+      "frame": 3,
+      "vertices": 50768,
+      "faces": 94336
+    },
+    {
+      "frame": 4,
+      "vertices": 49778,
+      "faces": 92356
+    },
+    {
+      "frame": 5,
+      "vertices": 49652,
+      "faces": 92104
+    },
+    {
+      "frame": 6,
+      "vertices": 49628,
+      "faces": 92060
+    },
+    {
+      "frame": 7,
+      "vertices": 49610,
+      "faces": 92024
+    },
+    {
+      "frame": 8,
+      "vertices": 49614,
+      "faces": 92028
+    },
+    {
+      "frame": 9,
+      "vertices": 49832,
+      "faces": 92464
+    },
+    {
+      "frame": 10,
+      "vertices": 50154,
+      "faces": 93108
+    },
+    {
+      "frame": 11,
+      "vertices": 49560,
+      "faces": 91920
+    },
+    {
+      "frame": 12,
+      "vertices": 49690,
+      "faces": 92184
+    },
+    {
+      "frame": 13,
+      "vertices": 49708,
+      "faces": 92220
+    }
+  ],
+  "imported_blend": "direct-usd-import.blend",
+  "imported_blend_bytes": 5523896
+}

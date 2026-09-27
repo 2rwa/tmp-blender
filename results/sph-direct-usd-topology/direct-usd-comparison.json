@@ -1,0 +1,56 @@
+{
+  "direct_single_mesh_usd": {
+    "cache_bytes": 15296671,
+    "export_seconds": 3.6578091650000033,
+    "import_seconds": 0.04975944600000304,
+    "scrub_13_frames_seconds": 0.1966164839999962,
+    "mesh_objects": 1,
+    "modifiers": [
+      "MESH_SEQUENCE_CACHE"
+    ],
+    "replay_errors": 0,
+    "imported_blend_bytes": 5523896,
+    "time_sample_count": 13,
+    "size_vs_13_object_usd_ratio": 0.9254340731258075
+  },
+  "thirteen_object_usd_baseline": {
+    "cache_bytes": 16529185,
+    "vs_source_blend_ratio": 0.278863170801907,
+    "export_seconds": 0.10618836199999748,
+    "import_seconds": 0.19567739499999703,
+    "scrub_13_frames_seconds": 0.0015505109999978117,
+    "imported_blend_bytes": 59243576,
+    "mesh_objects": 13,
+    "replay_errors": 0,
+    "vertex_counts": [
+      54000,
+      59258,
+      50768,
+      49778,
+      49652,
+      49628,
+      49610,
+      49614,
+      49832,
+      50154,
+      49560,
+      49690,
+      49708
+    ],
+    "face_counts": [
+      100800,
+      111316,
+      94336,
+      92356,
+      92104,
+      92060,
+      92024,
+      92028,
+      92464,
+      93108,
+      91920,
+      92184,
+      92220
+    ]
+  }
+}
