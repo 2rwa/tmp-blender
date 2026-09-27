@@ -621,3 +621,63 @@ Natural next test:
 - add the dynamic rigid-body cube animation beside the fluid cache,
 - verify both stay synchronized over all 13 frames,
 - publish that rendered result to Pages.
+
+
+## 2026-09-28 synchronized fluid + dynamic cube USD render — success
+
+Workflow:
+
+- `SPH fluid cube USD render`
+- run: **#2**
+- Actions run id: **36359942969**
+- source commit: `020368bac5ed2a3d1d4a2817bea014a27b64c042`
+
+The final cache contains two animated mesh prims:
+
+- `/FluidSurface`
+- `/DynamicCube`
+
+Blender imported them as exactly two mesh objects. Both use
+`MESH_SEQUENCE_CACHE`.
+
+Validation:
+
+- frames: **13**
+- fluid mesh objects: **1**
+- dynamic cube mesh objects: **1**
+- replay errors: **0**
+- fluid topology matched all 13 source frames
+- cube topology stayed at **8 vertices / 12 faces**
+- cube first centroid in Blender coordinates: **[-0.1, 0.0, 0.519852]**
+- cube last centroid: **[1.873282, 0.024456, 0.153315]**
+- actual frame 1 -> frame 13 displacement: **2.007184 m**
+
+Artifacts:
+
+- combined USD: **15,298,504 bytes**
+- portable Blend: **5,610,696 bytes**
+- preview PNG: **241,653 bytes**
+- MP4: **22,971 bytes**
+
+The result is stored under:
+
+`results/sph-fluid-cube-usd-render/`
+
+and is configured for the Pages gallery.
+
+### Numeric frame sorting bug discovered
+
+The original `dam-break-cube/validate.py` used ordinary lexicographic sorting
+for files named `rb_data_1_1.vtk ... rb_data_1_13.vtk`.
+
+That order ends with frame 9 rather than frame 13:
+
+```text
+1, 10, 11, 12, 13, 2, ... 9
+```
+
+Therefore the earlier reported displacement **1.366636 m** was actually the
+frame 1 -> frame 9 displacement.
+
+The validator now parses and sorts numeric frame suffixes. The corrected
+frame 1 -> frame 13 displacement is about **2.007184 m**.

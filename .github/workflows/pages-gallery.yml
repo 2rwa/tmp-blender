@@ -11,6 +11,7 @@ on:
   workflow_run:
     workflows:
       - 'SPH Blender surface sequence'
+      - 'SPH fluid cube USD render'
     types: [completed]
 
 permissions:
