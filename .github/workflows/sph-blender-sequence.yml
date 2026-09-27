@@ -1,0 +1,260 @@
+name: SPH Blender surface sequence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/dam-break-blender-sequence/**'
+      - 'sph-experiments/dam-break-cube/scene.json'
+      - 'sph-experiments/dam-break-cube/models/UnitBox.obj'
+      - '.github/workflows/sph-blender-sequence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-sequence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sequence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BLENDER_VERSION: "4.0.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cheap preflight
+        run: |
+          python -m json.tool sph-experiments/dam-break-cube/scene.json >/dev/null
+          python -m py_compile \
+            sph-experiments/dam-break-blender-sequence/reconstruct_sequence.py \
+            sph-experiments/dam-break-blender-sequence/blender_scene.py \
+            sph-experiments/dam-break-blender-sequence/validate_blend.py \
+            sph-experiments/dam-break-blender-sequence/validate.py
+
+      - name: Install native SPH runtime dependencies
+        run: |
+          sudo apt-get update --fix-missing
+          sudo apt-get -y install xorg-dev freeglut3-dev
+
+      - name: Restore SPlisHSPlasH build cache
+        id: sph-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Build SPlisHSPlasH if cache is missing
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/splishsplash-2.18.1
+          mkdir -p .cache
+          git clone --depth 1 --branch 2.18.1 \
+            https://github.com/InteractiveComputerGraphics/SPlisHSPlasH.git \
+            .cache/splishsplash-2.18.1
+          cmake \
+            -S .cache/splishsplash-2.18.1 \
+            -B .cache/splishsplash-2.18.1/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUSE_PYTHON_BINDINGS=OFF \
+            -DUSE_AVX=OFF \
+            -DCI_BUILD=ON \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.10
+          cmake --build .cache/splishsplash-2.18.1/build \
+            --target SPHSimulator --parallel 4
+
+      - name: Save SPlisHSPlasH cache
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Install pySplashSurf runtime
+        run: |
+          python -m pip install --disable-pip-version-check "pysplashsurf[meshio]"
+          python -c "import pysplashsurf, meshio, numpy; print('SplashSurf imports OK')"
+
+      - name: Run SPH simulation
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/sph-blender-sequence"
+          sph_output="$base/sph"
+          rm -rf "$base"
+          mkdir -p "$sph_output"
+          scene_file="$(realpath sph-experiments/dam-break-cube/scene.json)"
+          .cache/splishsplash-2.18.1/bin/SPHSimulator \
+            "$scene_file" \
+            --no-gui \
+            --no-cache \
+            --no-initial-pause \
+            --stopAt 1.0 \
+            --output-dir "$sph_output" \
+            2>&1 | tee "$sph_output/splash.log"
+
+      - name: Reconstruct all surface frames
+        run: |
+          python sph-experiments/dam-break-blender-sequence/reconstruct_sequence.py \
+            output/sph-blender-sequence/sph \
+            output/sph-blender-sequence/sequence
+          cat output/sph-blender-sequence/sequence/surface-sequence.json
+
+      - name: Restore shared Blender runtime cache
+        id: blender-runtime-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build shared Blender runtime cache
+        if: steps.blender-runtime-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/python .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Save shared Blender runtime cache
+        if: steps.blender-runtime-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Verify Blender runtime
+        run: |
+          blender --version
+          command -v xvfb-run
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --python-expr "print('BLENDER_XVFB_OK')"
+
+      - name: Build and render Blender sequence
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background \
+              --python sph-experiments/dam-break-blender-sequence/blender_scene.py \
+              2>&1 | tee output/sph-blender-sequence/blender-scene.log
+          if grep -Fq "Traceback (most recent call last):" output/sph-blender-sequence/blender-scene.log; then
+            echo "Blender Python traceback detected."
+            exit 1
+          fi
+
+      - name: Reopen saved Blend and validate timeline replay
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background \
+              output/sph-blender-sequence/blender/surface-sequence.blend \
+              --python sph-experiments/dam-break-blender-sequence/validate_blend.py \
+              2>&1 | tee output/sph-blender-sequence/blend-validation.log
+          if grep -Fq "Traceback (most recent call last):" output/sph-blender-sequence/blend-validation.log; then
+            echo "Blender validation traceback detected."
+            exit 1
+          fi
+
+      - name: Validate real sequence outputs
+        run: |
+          python sph-experiments/dam-break-blender-sequence/validate.py
+          cat output/sph-blender-sequence/validation.json
+          du -sh output/sph-blender-sequence
+
+      - name: Upload complete sequence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-blender-surface-sequence
+          path: output/sph-blender-sequence/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate lightweight persistent result
+        run: |
+          set -euxo pipefail
+          src="output/sph-blender-sequence"
+          dst="results/sph-dam-break-blender-sequence"
+          rm -rf "$dst"
+          mkdir -p "$dst"
+          cp "$src/validation.json" "$dst/validation.json"
+          cp "$src/blender/blend-validation.json" "$dst/blend-validation.json"
+          cp "$src/blender/preview.png" "$dst/preview.png"
+
+          if [ "$(stat -c%s "$src/blender/surface-sequence.mp4")" -le 5242880 ]; then
+            cp "$src/blender/surface-sequence.mp4" "$dst/media.mp4"
+          fi
+
+          blend_bytes="$(stat -c%s "$src/blender/surface-sequence.blend")"
+          if [ "$blend_bytes" -le 99614720 ]; then
+            cp "$src/blender/surface-sequence.blend" "$dst/surface-sequence.blend"
+            blend_note='- saved Blend: `surface-sequence.blend`'
+          else
+            blend_note="- saved Blend: artifact only ($blend_bytes bytes)"
+          fi
+
+          {
+            echo "# SPH dam-break Blender surface sequence"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- run: $GITHUB_RUN_ID"
+            echo '- full output: Actions artifact `sph-blender-surface-sequence`'
+            echo "$blend_note"
+            echo
+            echo "The fluid was simulated outside Blender with SPlisHSPlasH, reconstructed frame-by-frame with pySplashSurf, then replayed in Blender as topology-changing mesh objects."
+          } > "$dst/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-dam-break-blender-sequence/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish SPH Blender surface sequence [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent result
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin "HEAD:$GITHUB_REF_NAME"; then
+            exit 0
+          fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
