@@ -97,7 +97,7 @@ def main() -> None:
 
     threshold, raw_mesh = chosen
     out = args.output_dir / "surface-final.obj"
-    raw_mesh.write_to_file(str(out))
+    raw_mesh.write_to_file(str(out), file_format="obj")
     print(f"RECONSTRUCT_THRESHOLD={threshold}")
     print(f"RECONSTRUCT_VERTICES={len(raw_mesh.vertices)}")
     print(f"RECONSTRUCT_TRIANGLES={len(raw_mesh.triangles)}")
