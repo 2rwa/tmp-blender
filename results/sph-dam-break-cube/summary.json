@@ -1,0 +1,20 @@
+{
+  "particle_frames": 13,
+  "dynamic_rigid_body_frames": 13,
+  "first_particle_count": 1800,
+  "last_particle_count": 1800,
+  "dynamic_cube_first_centroid": [
+    -0.1,
+    0.519852,
+    0.0
+  ],
+  "dynamic_cube_last_centroid": [
+    1.216418,
+    0.153072,
+    -0.014484
+  ],
+  "dynamic_cube_displacement_m": 1.366636,
+  "surface_obj_vertices": 207174,
+  "surface_obj_faces": 407148,
+  "surface_obj_bytes": 20688757
+}
