@@ -38,6 +38,7 @@ jobs:
 
       - name: Install SPH runtime
         run: |
+          python -m pip install --disable-pip-version-check "numpy==1.26.4"
           python -m pip install --disable-pip-version-check             "pysplishsplash==2.18.1"             "pysplashsurf[meshio]"
           python -c "import pysplishsplash, pysplashsurf, meshio; print('SPH Python imports OK')"
 
