@@ -1,6 +1,6 @@
 # START HERE — tmp-blender handoff / 再開ガイド
 
-Updated: 2026-09-26
+Updated: 2026-09-28
 
 This is the first file to read when resuming work on `2rwa/tmp-blender`.
 
@@ -19,6 +19,36 @@ This repository is intentionally allowed to grow during experiments. Useful work
 このrepoは一時的な公開テスト用です。通常の実験では容量最適化を優先せず、必要な成果物の整理やrepo掃除は別作業として扱います。
 
 ## Current state
+
+### Latest completed infrastructure / fluid PoC
+
+A SPlisHSPlasH-based non-Blender fluid pipeline now runs successfully on GitHub Actions.
+
+Successful baseline:
+
+- workflow: `SPH fluid sample`
+- Actions run: #10 / id `36328372215`
+- 1800 SPH fluid particles
+- 13 fluid VTK frames
+- 13 dynamic rigid-body frames
+- dynamic cube displacement: 1.366636 m
+- final pySplashSurf surface: 207,174 vertices / 407,148 faces
+- final OBJ: 20,688,757 bytes
+- native SPlisHSPlasH 2.18.1 build is cached for later runs
+
+Read first for this branch of work:
+
+`docs/notes/sph-actions-poc-2026-09-28.md`
+
+Critical points:
+
+- use the native C++ `SPHSimulator`, not the PyPI `pysplishsplash` wheel on the current Actions runner,
+- pass the scene path as an absolute path,
+- explicitly request `file_format="obj"` from pySplashSurf,
+- preserve run #10 as the regression baseline.
+
+### Latest completed Blender visual experiment
+
 
 The most recent completed experiment is:
 
@@ -193,6 +223,7 @@ Do not relicense third-party material that the repository authors do not control
 - Architecture: `docs/notes/architecture.md`
 - Experiment/history log: `docs/notes/experiment-history.md`
 - Operational rules: `docs/notes/operations.md`
+- SPH / Actions PoC: `docs/notes/sph-actions-poc-2026-09-28.md`
 
 ## Suggested next directions
 

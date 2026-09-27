@@ -1,6 +1,6 @@
 # Experiment and Implementation History
 
-Updated: 2026-09-26
+Updated: 2026-09-28
 
 This file is a dated engineering log rather than a stable specification.
 
@@ -164,3 +164,32 @@ The first `.blend` Git publication limit was 10 MiB. That was intentionally cons
 The repository was later explicitly classified as a disposable public test repository, so the threshold was raised to 95 MiB per file. Storage growth is currently acceptable; useful content can be copied out and the repository can be cleaned or discarded later.
 
 Repository cleanup is intentionally treated as a separate maintenance task rather than constraining experiments.
+
+
+## 2026-09-28 — SPlisHSPlasH GitHub Actions PoC
+
+A non-Blender SPH fluid pipeline was added under `sph-experiments/dam-break-cube/`.
+
+After several deliberate failures, Actions run #10 completed the full path:
+
+`SPlisHSPlasH C++ SPHSimulator -> fluid + dynamic cube -> VTK time series -> pySplashSurf -> OBJ -> validation`.
+
+Verified result:
+
+- 13 fluid frames
+- 13 dynamic rigid-body frames
+- 1800 fluid particles
+- dynamic cube displacement: 1.366636 m
+- final surface: 207,174 vertices / 407,148 faces
+- final OBJ: 20,688,757 bytes
+
+Key engineering findings:
+
+- the PyPI `pysplishsplash` wheel segfaulted on GitHub-hosted Ubuntu 24.04 across multiple Python/NumPy/Xvfb combinations,
+- the native C++ simulator builds successfully and is now cached,
+- CLI relative scene paths are resolved from the executable directory, so the workflow passes absolute scene/output paths,
+- pySplashSurf `write_to_file()` defaults to VTK42 even if the filename ends in `.obj`; `file_format="obj"` must be explicit.
+
+Full notes:
+
+`docs/notes/sph-actions-poc-2026-09-28.md`
