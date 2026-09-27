@@ -1,0 +1,60 @@
+{
+  "experiment": "character-room-interior-eevee",
+  "engine": "BLENDER_EEVEE",
+  "frame_start": 1,
+  "frame_end": 360,
+  "fps": 24,
+  "duration_seconds": 15.0,
+  "resolution_x": 480,
+  "resolution_y": 360,
+  "requested_render_samples": 24,
+  "effective_render_samples": 24,
+  "room": {
+    "width_m": 7.2,
+    "depth_m": 5.4,
+    "height_m": 3.0,
+    "open_front": true,
+    "room_mesh_count": 8,
+    "furniture_object_count": 37,
+    "decor_object_count": 12,
+    "furniture_groups": [
+      "rug",
+      "sofa",
+      "coffee_table",
+      "desk",
+      "chair",
+      "bookshelf",
+      "floor_lamp"
+    ],
+    "window_opening": {
+      "width": 2.2,
+      "height": 1.4,
+      "sill_z": 0.9
+    },
+    "light_count": 4,
+    "camera_keyframes": 4,
+    "total_scene_mesh_count": 63
+  },
+  "source": {
+    "publisher": "Quaternius",
+    "pack": "RPG Character Pack",
+    "license": "CC0 1.0",
+    "asset_file": "Warrior.glb",
+    "asset_format": ".glb"
+  },
+  "character": {
+    "target_height_m": 1.78,
+    "preview_height_m": 1.80086,
+    "normalize_scale": 0.453093,
+    "mesh_count": 6,
+    "armature_count": 1,
+    "action_count": 13,
+    "selected_action": "Idle_Attacking_CharacterArmature",
+    "selected_armature": "CharacterArmature",
+    "material_count": 2,
+    "image_count": 3,
+    "root": "CharacterRoot"
+  },
+  "camera": "Camera",
+  "blend": "character-room-interior-eevee.blend"
+}

@@ -1,0 +1,20 @@
+{
+  "experiment": "character-room-interior-eevee",
+  "source_sha": "c849e43fca049e20f43ed5098492e1492296e502",
+  "run_id": "36322787601",
+  "run_number": "53",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 360,
+    "fps": 24,
+    "chunk_size": 60,
+    "preview_frame": 180,
+    "blend": "character-room-interior-eevee.blend",
+    "video": "character-room-interior-eevee.mp4"
+  },
+  "published_prepared_outputs": [
+    "character-room-interior-eevee.blend",
+    "character-room-interior-eevee-report.json"
+  ]
+}
