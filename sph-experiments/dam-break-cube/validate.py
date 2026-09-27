@@ -55,7 +55,7 @@ def main() -> None:
     output = Path(sys.argv[1])
     vtk_dir = output / "vtk"
     def frame_number(path: Path) -> int:
-        match = re.search(r"_(\\d+)\\.vtk$", path.name)
+        match = re.search(r"_(\d+)\.vtk$", path.name)
         if not match:
             raise SystemExit(f"cannot parse frame number: {path}")
         return int(match.group(1))
