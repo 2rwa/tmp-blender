@@ -436,3 +436,67 @@ Measure:
 - portability outside Blender.
 
 Keep the current `surface-sequence.blend` result as the regression/reference case.
+
+
+## 2026-09-28 follow-up — Alembic vs USD cache container comparison
+
+Workflow:
+
+- `SPH Blender cache format compare`
+- run: **#1**
+- Actions run id: **36330257527**
+- source commit: `db3eeaba800e559a6115a6069b1ff286accd5aeb`
+
+Input baseline:
+
+- `surface-sequence.blend`
+- size: **59,273,460 bytes**
+- 13 independent fluid mesh objects
+- 661,252 total stored vertices
+- 1,228,920 total stored faces
+
+### Alembic
+
+- cache: **27,612,083 bytes**
+- size vs source Blend: **46.6%**
+- export: **0.0235 s**
+- import: **0.1360 s**
+- headless scrub through 13 frames: **0.0165 s**
+- imported Blend: **62,930,336 bytes**
+- imported mesh objects: **13**
+- replay errors: **0**
+
+### USD Crate
+
+- cache: **16,529,185 bytes**
+- size vs source Blend: **27.9%**
+- export: **0.1062 s**
+- import: **0.1957 s**
+- headless scrub through 13 frames: **0.00155 s**
+- imported Blend: **59,243,576 bytes**
+- imported mesh objects: **13**
+- replay errors: **0**
+
+Both formats preserved all per-frame vertex/face counts exactly.
+
+Observed conclusion for this specific 13-object representation:
+
+- USD Crate is substantially smaller than Alembic.
+- Alembic exported and imported somewhat faster in this tiny test.
+- USD's measured headless 13-frame scrub loop was much faster, though this is a short synthetic benchmark and should not be over-generalized.
+- Importing either cache back into Blender produced 13 mesh objects with cache-driven transform behavior; neither test collapsed the representation to one topology-changing mesh.
+
+This comparison is therefore a **container baseline**, not yet the final topology-changing cache architecture.
+
+Persistent result:
+
+`results/sph-cache-format-compare/`
+
+Next experiment:
+
+Create a single Blender mesh object whose evaluated mesh topology changes per frame, export that animation to Alembic and USD, then verify after re-import that:
+
+- exactly one mesh object exists,
+- vertex/face counts match the 13 source frames,
+- frame scrubbing works,
+- cache size/load behavior can be compared with the 13-object baseline.
