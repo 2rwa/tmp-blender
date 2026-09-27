@@ -1,0 +1,163 @@
+name: SPH direct USD topology cache
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/direct-usd-topology/**'
+      - '.github/workflows/sph-direct-usd-topology.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-direct-usd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BLENDER_VERSION: "4.0.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Cheap preflight
+        run: |
+          python3 -m py_compile \
+            sph-experiments/direct-usd-topology/export_direct_usd.py \
+            sph-experiments/direct-usd-topology/validate_direct_usd.py \
+            sph-experiments/direct-usd-topology/compare.py
+          test -s results/sph-dam-break-blender-sequence/surface-sequence.blend
+          test -s results/sph-cache-format-compare/comparison.json
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Save Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Verify Blender OpenUSD Python bindings
+        run: |
+          blender --background --python-expr "from pxr import Usd, UsdGeom; print('PXR_OK', Usd.GetVersion())"
+
+      - name: Author direct topology-varying USD
+        run: |
+          set -o pipefail
+          mkdir -p output/sph-single-topology-cache
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background \
+              results/sph-dam-break-blender-sequence/surface-sequence.blend \
+              --python sph-experiments/direct-usd-topology/export_direct_usd.py \
+              2>&1 | tee output/sph-single-topology-cache/direct-usd-export.log
+
+      - name: Re-import direct USD and validate 13 topologies
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python sph-experiments/direct-usd-topology/validate_direct_usd.py \
+              -- output/sph-single-topology-cache/fluid-direct-single.usdc \
+              2>&1 | tee output/sph-single-topology-cache/direct-usd-import.log
+
+      - name: Compare with 13-object USD baseline
+        run: |
+          python3 sph-experiments/direct-usd-topology/compare.py
+          cat output/sph-single-topology-cache/direct-usd-comparison.json
+          ls -lh output/sph-single-topology-cache
+
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-direct-usd-topology-cache
+          path: output/sph-single-topology-cache/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate persistent result
+        run: |
+          set -euxo pipefail
+          src="output/sph-single-topology-cache"
+          dst="results/sph-direct-usd-topology"
+          rm -rf "$dst"
+          mkdir -p "$dst"
+          cp "$src/direct-usd-export.json" "$dst/direct-usd-export.json"
+          cp "$src/direct-usd-validation.json" "$dst/direct-usd-validation.json"
+          cp "$src/direct-usd-comparison.json" "$dst/direct-usd-comparison.json"
+          cp "$src/fluid-direct-single.usdc" "$dst/fluid-direct-single.usdc"
+          {
+            echo "# Direct topology-varying USD SPH cache"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- run: $GITHUB_RUN_ID"
+            echo '- full output: Actions artifact `sph-direct-usd-topology-cache`'
+            echo
+            echo "One USD Mesh prim with time-sampled points, faceVertexCounts and faceVertexIndices."
+          } > "$dst/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-direct-usd-topology/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish direct topology-varying USD [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent result
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:$GITHUB_REF_NAME; then
+            exit 0
+          fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin HEAD:$GITHUB_REF_NAME
