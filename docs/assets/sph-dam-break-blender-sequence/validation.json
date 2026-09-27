@@ -1,0 +1,29 @@
+{
+  "surface_frames": 13,
+  "source_frames": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "vertices_min": 49560,
+  "vertices_max": 59258,
+  "faces_min": 91920,
+  "faces_max": 111316,
+  "surface_bytes_total": 62451074,
+  "blend_bytes": 59273460,
+  "preview_bytes": 246083,
+  "video_bytes": 31499,
+  "video_probe": {
+    "warning": "ffprobe unavailable or failed"
+  }
+}
