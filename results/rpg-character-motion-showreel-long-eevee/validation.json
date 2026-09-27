@@ -1,0 +1,43 @@
+{
+  "video": "rpg-character-motion-showreel-long-eevee.mp4",
+  "preview": {
+    "size_bytes": 193749,
+    "luminance_min": 1,
+    "luminance_max": 222,
+    "luminance_stddev": 52.556,
+    "sha256": "f10dbad4500e24e48505cd8b9108c33330ddc6162d001e6bff039c1d927ad70b"
+  },
+  "movie": {
+    "size_bytes": 334566,
+    "duration_seconds": 78.0,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "1872",
+    "sha256": "0634e93611b96fddd967929407e8e197bfdc349e928c79abd7c2fae93c3ef565"
+  },
+  "report": {
+    "asset_file": "Warrior.glb",
+    "mesh_count": 6,
+    "armature_count": 1,
+    "action_count": 13,
+    "scheduled_action_count": 13,
+    "scheduled_action_names": [
+      "Idle_Attacking_CharacterArmature",
+      "Idle_CharacterArmature",
+      "Idle_Weapon_CharacterArmature",
+      "Walk_CharacterArmature",
+      "Run_CharacterArmature",
+      "Run_Weapon_CharacterArmature",
+      "Sword_Attack2_CharacterArmature",
+      "Sword_Attack_CharacterArmature",
+      "RecieveHit_CharacterArmature",
+      "Death_CharacterArmature",
+      "PickUp_CharacterArmature",
+      "Punch_CharacterArmature",
+      "Roll_CharacterArmature"
+    ],
+    "material_count": 2,
+    "image_count": 3,
+    "preview_height": 2.63047,
+    "blend_size_bytes": 13663428
+  }
+}
