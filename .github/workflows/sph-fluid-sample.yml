@@ -40,14 +40,15 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check "numpy==1.26.4"
           python -m pip install --disable-pip-version-check             "pysplishsplash==2.18.1"             "pysplashsurf[meshio]"
-          python -c "import pysplishsplash, pysplashsurf, meshio; print('SPH Python imports OK')"
+          command -v xvfb-run
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy             xvfb-run -a -s "-screen 0 1280x720x24"             python -c "import pysplishsplash, pysplashsurf, meshio; print('SPH Python imports OK')"
 
       - name: Simulate SPH fluid and rigid body
         run: |
           set -euxo pipefail
           rm -rf output/sph-dam-break-cube
           mkdir -p output/sph-dam-break-cube
-          python sph-experiments/dam-break-cube/run_sph.py             sph-experiments/dam-break-cube/scene.json             output/sph-dam-break-cube             --stop-at 1.0             2>&1 | tee output/sph-dam-break-cube/splash.log
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy             xvfb-run -a -s "-screen 0 1280x720x24"             python sph-experiments/dam-break-cube/run_sph.py             sph-experiments/dam-break-cube/scene.json             output/sph-dam-break-cube             --stop-at 1.0             2>&1 | tee output/sph-dam-break-cube/splash.log
 
       - name: Reconstruct final liquid surface
         run: |
