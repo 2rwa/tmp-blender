@@ -8,6 +8,8 @@ on:
       - 'docs/**'
       - 'sph-experiments/**'
       - '.github/workflows/sph-*.yml'
+      - '.github/workflows/pages-gallery.yml'
+      - 'tools/build_pages.py'
       - 'index.html'
       - '.nojekyll'
   workflow_dispatch:

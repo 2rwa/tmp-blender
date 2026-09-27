@@ -54,40 +54,60 @@ source_objects = sorted(
 if len(source_objects) != 13:
     raise RuntimeError(f"expected 13 source meshes, got {len(source_objects)}")
 
-source_meshes = []
+frame_geometry = []
 for idx, obj in enumerate(source_objects, start=1):
-    mesh = obj.data.copy()
-    mesh.name = f"FluidTopo_{idx:04d}"
+    mesh = obj.data
     got = (len(mesh.vertices), len(mesh.polygons))
     if got != EXPECTED[idx - 1]:
-        raise RuntimeError(f"source frame {idx} topology mismatch: {got} != {EXPECTED[idx - 1]}")
-    source_meshes.append(mesh)
+        raise RuntimeError(
+            f"source frame {idx} topology mismatch: {got} != {EXPECTED[idx - 1]}"
+        )
 
-# Remove all objects from the scene. The copied mesh datablocks remain available.
+    vertices = [tuple(v.co) for v in mesh.vertices]
+    faces = [tuple(poly.vertices) for poly in mesh.polygons]
+    frame_geometry.append((vertices, faces))
+
+# Remove every original fluid object and create one object backed by one persistent
+# Mesh datablock. The exporter must see the same object AND the same datablock
+# identity on every frame; only the geometry contents are rebuilt.
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.object.delete(use_global=False)
 
-target = bpy.data.objects.new("FluidSurface", source_meshes[0])
+target_mesh = bpy.data.meshes.new("FluidSurfaceMesh")
+target = bpy.data.objects.new("FluidSurface", target_mesh)
 bpy.context.collection.objects.link(target)
 target.select_set(True)
 bpy.context.view_layer.objects.active = target
 
-
-def swap_mesh(scene_arg):
-    frame = max(1, min(13, int(scene_arg.frame_current)))
-    target.data = source_meshes[frame - 1]
+last_frame = {"value": None}
 
 
-bpy.app.handlers.frame_change_pre.append(swap_mesh)
+def rebuild_mesh_for_frame(frame: int) -> None:
+    frame = max(1, min(13, int(frame)))
+    if last_frame["value"] == frame:
+        return
+
+    vertices, faces = frame_geometry[frame - 1]
+    target_mesh.clear_geometry()
+    target_mesh.from_pydata(vertices, [], faces)
+    target_mesh.update(calc_edges=False, calc_edges_loose=False)
+    last_frame["value"] = frame
+
+
+def update_geometry(scene_arg):
+    rebuild_mesh_for_frame(scene_arg.frame_current)
+
+
+bpy.app.handlers.frame_change_pre.append(update_geometry)
 scene.frame_set(1)
-swap_mesh(scene)
+rebuild_mesh_for_frame(1)
 
 # Prove that the handler exposes the expected varying topology before export.
 preflight = []
 for frame in range(1, 14):
     scene.frame_set(frame)
     bpy.context.view_layer.update()
-    got = (len(target.data.vertices), len(target.data.polygons))
+    got = (len(target_mesh.vertices), len(target_mesh.polygons))
     preflight.append({"frame": frame, "vertices": got[0], "faces": got[1]})
     if got != EXPECTED[frame - 1]:
         raise RuntimeError(f"handler topology mismatch at frame {frame}: {got}")
@@ -144,12 +164,16 @@ usd_seconds = time.perf_counter() - t0
 if "FINISHED" not in result_usd or not USDC.is_file() or USDC.stat().st_size == 0:
     raise RuntimeError(f"USD export failed: {result_usd}")
 
-bpy.app.handlers.frame_change_pre.remove(swap_mesh)
+bpy.app.handlers.frame_change_pre.remove(update_geometry)
 
 payload = {
     "source_blend_bytes": SOURCE.stat().st_size,
     "source_objects": 13,
     "target_objects": 1,
+    "scene_mesh_objects_before_export": [
+        obj.name for obj in scene.objects if obj.type == "MESH"
+    ],
+    "target_mesh_datablock": target.data.name,
     "preflight": preflight,
     "alembic": {
         "path": ABC.name,

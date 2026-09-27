@@ -89,6 +89,7 @@ jobs:
 
       - name: Validate single-object Alembic
         run: |
+          set -o pipefail
           LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
             xvfb-run -a -s "-screen 0 1280x720x24" \
             blender --background --factory-startup \
@@ -98,6 +99,7 @@ jobs:
 
       - name: Validate single-object USD
         run: |
+          set -o pipefail
           LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
             xvfb-run -a -s "-screen 0 1280x720x24" \
             blender --background --factory-startup \
@@ -113,6 +115,7 @@ jobs:
           ls -lh output/sph-single-topology-cache
 
       - name: Upload artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sph-single-topology-cache
