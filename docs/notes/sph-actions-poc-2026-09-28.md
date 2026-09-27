@@ -533,3 +533,91 @@ Additional CI lesson:
 Blender may exit with code 0 after a Python traceback unless
 `--python-exit-code 1` is supplied. Future Blender-based validation commands
 for this path use that option in addition to shell `pipefail`.
+
+
+## 2026-09-28 direct topology-varying USD — success
+
+Workflow:
+
+- `SPH direct USD topology cache`
+- run: **#2**
+- Actions run id: **36358344451**
+- source commit: `ec9ca0d634c7ef48e1d298489a969696db95a293`
+
+This run completed successfully and establishes a compact single-object topology-changing cache for the SPH surface.
+
+### Direct USD structure
+
+The cache contains one USD mesh prim:
+
+`/FluidSurface`
+
+with 13 time samples each for:
+
+- `points`
+- `faceVertexCounts`
+- `faceVertexIndices`
+
+Time samples are exactly frames 1 through 13.
+
+### Blender re-import validation
+
+Blender 4.0.2 imported the cache as:
+
+- mesh objects: **1**
+- modifier: **MESH_SEQUENCE_CACHE**
+- replay errors: **0**
+
+All 13 frames reproduced the exact original topology counts.
+
+Examples:
+
+- frame 1: 54,000 vertices / 100,800 faces
+- frame 2: 59,258 vertices / 111,316 faces
+- frame 13: 49,708 vertices / 92,220 faces
+
+### Size / timing
+
+Direct single-mesh USD:
+
+- cache size: **15,296,671 bytes**
+- direct authoring time: **3.658 s**
+- Blender import time: **0.0498 s**
+- 13-frame headless scrub: **0.1966 s**
+- imported Blend size: **5,523,896 bytes**
+
+13-object USD baseline:
+
+- cache size: **16,529,185 bytes**
+- imported Blend size: **59,243,576 bytes**
+
+Direct single-mesh USD is about **92.5%** of the 13-object USD cache size, but the imported Blend drops from about **59.2 MB to 5.52 MB** because Blender references one topology-changing cache instead of storing 13 independent mesh objects.
+
+### Architectural conclusion
+
+The preferred presentation/cache architecture is now:
+
+```text
+SPlisHSPlasH
+  -> VTK particle sequence
+  -> pySplashSurf surface meshes
+  -> direct OpenUSD authoring
+       one UsdGeom.Mesh
+       time-sampled points
+       time-sampled faceVertexCounts
+       time-sampled faceVertexIndices
+  -> Blender
+       one mesh object
+       Mesh Sequence Cache modifier
+```
+
+This is currently the strongest reusable cache representation tested in this repo.
+
+Keep the 13-object Blend as a regression/reference implementation, but use direct topology-varying USD as the preferred path for future SPH-to-Blender work.
+
+Natural next test:
+
+- render the direct-USD-backed Blender scene,
+- add the dynamic rigid-body cube animation beside the fluid cache,
+- verify both stay synchronized over all 13 frames,
+- publish that rendered result to Pages.
