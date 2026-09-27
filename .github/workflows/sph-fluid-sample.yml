@@ -18,7 +18,7 @@ concurrency:
 jobs:
   simulate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -29,34 +29,88 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Cheap preflight
         run: |
           python -m json.tool sph-experiments/dam-break-cube/scene.json >/dev/null
-          python -m py_compile             sph-experiments/dam-break-cube/reconstruct.py             sph-experiments/dam-break-cube/validate.py
+          python -m py_compile \
+            sph-experiments/dam-break-cube/reconstruct.py \
+            sph-experiments/dam-break-cube/validate.py
 
-      - name: Install SPH runtime
+      - name: Install SPlisHSPlasH build dependencies
         run: |
-          python -m pip install --disable-pip-version-check "numpy==1.26.4"
-          python -m pip install --disable-pip-version-check             "pysplishsplash==2.18.1"             "pysplashsurf[meshio]"
-          command -v xvfb-run
-          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy             xvfb-run -a -s "-screen 0 1280x720x24"             python -c "import pysplishsplash, pysplashsurf, meshio; print('SPH Python imports OK')"
+          sudo apt-get update --fix-missing
+          sudo apt-get -y install xorg-dev freeglut3-dev
+
+      - name: Restore SPlisHSPlasH build cache
+        id: sph-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Build SPlisHSPlasH 2.18.1
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/splishsplash-2.18.1
+          mkdir -p .cache
+          git clone --depth 1 --branch 2.18.1 \
+            https://github.com/InteractiveComputerGraphics/SPlisHSPlasH.git \
+            .cache/splishsplash-2.18.1
+          cmake \
+            -S .cache/splishsplash-2.18.1 \
+            -B .cache/splishsplash-2.18.1/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUSE_PYTHON_BINDINGS=OFF \
+            -DUSE_AVX=OFF \
+            -DCI_BUILD=ON \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.10
+          cmake --build .cache/splishsplash-2.18.1/build \
+            --target SPHSimulator \
+            --parallel 4
+
+      - name: Verify SPlisHSPlasH executable
+        run: |
+          test -x .cache/splishsplash-2.18.1/bin/SPHSimulator
+          ls -lh .cache/splishsplash-2.18.1/bin/SPHSimulator
+
+      - name: Save SPlisHSPlasH build cache
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Install surface reconstruction runtime
+        run: |
+          python -m pip install --disable-pip-version-check "pysplashsurf[meshio]"
+          python -c "import pysplashsurf, meshio, numpy; print('surface reconstruction imports OK')"
 
       - name: Simulate SPH fluid and rigid body
         run: |
           set -euxo pipefail
           rm -rf output/sph-dam-break-cube
           mkdir -p output/sph-dam-break-cube
-          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy             xvfb-run -a -s "-screen 0 1280x720x24"             python sph-experiments/dam-break-cube/run_sph.py             sph-experiments/dam-break-cube/scene.json             output/sph-dam-break-cube             --stop-at 1.0             2>&1 | tee output/sph-dam-break-cube/splash.log
+          .cache/splishsplash-2.18.1/bin/SPHSimulator \
+            sph-experiments/dam-break-cube/scene.json \
+            --no-gui \
+            --no-cache \
+            --no-initial-pause \
+            --stopAt 1.0 \
+            --output-dir output/sph-dam-break-cube \
+            2>&1 | tee output/sph-dam-break-cube/splash.log
 
       - name: Reconstruct final liquid surface
         run: |
-          python sph-experiments/dam-break-cube/reconstruct.py             output/sph-dam-break-cube
+          python sph-experiments/dam-break-cube/reconstruct.py \
+            output/sph-dam-break-cube
 
       - name: Validate real outputs
         run: |
-          python sph-experiments/dam-break-cube/validate.py             output/sph-dam-break-cube
+          python sph-experiments/dam-break-cube/validate.py \
+            output/sph-dam-break-cube
           cat output/sph-dam-break-cube/summary.json
           du -sh output/sph-dam-break-cube
           find output/sph-dam-break-cube -maxdepth 2 -type f -printf '%p %k KiB\n' | sort | tail -80
