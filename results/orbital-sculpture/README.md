@@ -2,8 +2,8 @@
 
 Procedural metallic sphere, tilted torus, and two colored orbital rings.
 
-- source commit: `f34a87fe4e51f8a5965af1ababedaed809891882`
-- Actions run: `65` (`36356260103`)
+- source commit: `e79ea47d74bc3ff5093d38108859829d868f38b7`
+- Actions run: `67` (`36358025894`)
 - full artifact: `blender-orbital-sculpture`
 
 ![Latest preview](./preview.jpg)
