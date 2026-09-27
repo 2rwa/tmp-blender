@@ -93,14 +93,22 @@ jobs:
           set -euxo pipefail
           rm -rf output/sph-dam-break-cube
           mkdir -p output/sph-dam-break-cube
+
+          # SPlisHSPlasH resolves relative scene paths against the executable
+          # directory, not the shell working directory. Always pass absolute paths.
+          scene_file="$(realpath sph-experiments/dam-break-cube/scene.json)"
+          output_dir="$(realpath output/sph-dam-break-cube)"
+          test -f "$scene_file"
+          test -f "$(dirname "$scene_file")/models/UnitBox.obj"
+
           .cache/splishsplash-2.18.1/bin/SPHSimulator \
-            sph-experiments/dam-break-cube/scene.json \
+            "$scene_file" \
             --no-gui \
             --no-cache \
             --no-initial-pause \
             --stopAt 1.0 \
-            --output-dir output/sph-dam-break-cube \
-            2>&1 | tee output/sph-dam-break-cube/splash.log
+            --output-dir "$output_dir" \
+            2>&1 | tee "$output_dir/splash.log"
 
       - name: Reconstruct final liquid surface
         run: |
