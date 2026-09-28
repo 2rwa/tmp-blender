@@ -45,19 +45,28 @@ jobs:
           mkdir -p .cache
           git clone --depth 1 https://github.com/naqibr/SoliDualSPHysics.git .cache/SoliDualSPHysics
 
+      - name: Build CPU solver and Linux postprocessor
+        if: steps.solid-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          make -C "$up/src/source" -f Makefile_cpu -j2 \
+            COMPILE_CHRONO=NO COMPILE_MOORDYN=NO COMPILE_WAVEGEN=NO
+          make -C "$up/DSPartVTK/source" -j2
+
       - name: Verify upstream CPU runtime
         run: |
           set -euxo pipefail
           up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
           chmod +x "$up/bin/linux/"* "$up/DSPartVTK/bin/"* || true
           test -x "$up/bin/linux/GenCase_linux64"
-          test -x "$up/bin/linux/SoliDualSPHysics_linux64"
+          test -x "$up/bin/linux/SoliDualSPHysicsCPU_linux64"
           test -x "$up/DSPartVTK/bin/DSPartVTK_linux64"
           test -s "$up/SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml"
           export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
-          "$up/bin/linux/SoliDualSPHysics_linux64" -h >/tmp/solid-help.txt 2>&1 || {
+          "$up/bin/linux/SoliDualSPHysicsCPU_linux64" -h >/tmp/solid-help.txt 2>&1 || {
             cat /tmp/solid-help.txt
-            ldd "$up/bin/linux/SoliDualSPHysics_linux64" || true
+            ldd "$up/bin/linux/SoliDualSPHysicsCPU_linux64" || true
             exit 1
           }
           head -80 /tmp/solid-help.txt
@@ -146,7 +155,7 @@ jobs:
             "$work/Solid_Case_Def" "$work/Solid_Case" -save:all \
             2>&1 | tee "$base/gencase.log"
 
-          "$up/bin/linux/SoliDualSPHysics_linux64" -cpu \
+          "$up/bin/linux/SoliDualSPHysicsCPU_linux64" \
             "$work/Solid_Case" "$work/solver-out" \
             -dirdataout bindata -svres \
             2>&1 | tee "$base/solver.log"
