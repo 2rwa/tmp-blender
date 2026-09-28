@@ -1,0 +1,228 @@
+name: SPH large droplets 075 smooth
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/large-droplets-075-smooth/**'
+      - '.github/workflows/sph-large-droplets-075-smooth.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-large-droplets-075-smooth-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      BLENDER_VERSION: "4.0.2"
+      SOURCE_RUN_ID: "36362387414"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cheap preflight
+        run: |
+          python3 -m py_compile \
+            sph-experiments/large-droplets-075-smooth/smooth_cache.py \
+            sph-experiments/large-droplets-075-smooth/build_and_render.py \
+            sph-experiments/large-droplets-075-smooth/compare.py
+          test -s results/sph-large-droplets-075/validation.json
+          test -s results/sph-long-duration-5s/validation.json
+
+      - name: Download proven large-droplet artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-large-droplets-075
+          path: input/large-droplets
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Locate NPZ cache
+        id: source
+        run: |
+          set -euxo pipefail
+          manifest="$(find input/large-droplets -type f -name manifest.json -path '*/cache/*' -print -quit)"
+          if [ -z "$manifest" ]; then
+            manifest="$(find input/large-droplets -type f -name manifest.json -print -quit)"
+          fi
+          test -n "$manifest"
+          cache_dir="$(dirname "$manifest")"
+          test -s "$cache_dir/surfaces/surface_0001.npz"
+          echo "cache_dir=$cache_dir" >> "$GITHUB_OUTPUT"
+          echo "Using source cache: $cache_dir"
+          echo "Surface frames: $(find "$cache_dir/surfaces" -maxdepth 1 -name 'surface_*.npz' | wc -l)"
+
+      - name: Smooth all 61 meshes
+        run: |
+          rm -rf output/sph-large-droplets-075-smooth
+          mkdir -p output/sph-large-droplets-075-smooth
+          python sph-experiments/large-droplets-075-smooth/smooth_cache.py \
+            "${{ steps.source.outputs.cache_dir }}" \
+            output/sph-large-droplets-075-smooth/cache
+          python - <<'PY'
+          import json
+          p="output/sph-large-droplets-075-smooth/cache/manifest.json"
+          d=json.load(open(p))
+          assert d["frames"] == 61
+          assert d["particle_radius"] == 0.075
+          assert d["smoothing"]["method"] == "taubin"
+          assert d["smoothing"]["iterations"] == 5
+          print(json.dumps({
+              "frames": d["frames"],
+              "smoothing": d["smoothing"],
+              "seconds": d["mesh_smoothing_total_seconds"],
+              "metrics": d["mesh_smoothing_metrics"],
+          }, indent=2))
+          PY
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Save Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build USD, validate and render smoothed variant
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python-exit-code 1 \
+              --python sph-experiments/large-droplets-075-smooth/build_and_render.py \
+              2>&1 | tee output/sph-large-droplets-075-smooth/blender.log
+          test -s output/sph-large-droplets-075-smooth/validation.json
+          test -s output/sph-large-droplets-075-smooth/preview.png
+          test -s output/sph-large-droplets-075-smooth/media.mp4
+          test -s output/sph-large-droplets-075-smooth/fluid-cube-large-droplets-075-smooth.blend
+
+      - name: Compare baseline, large and smoothed
+        run: |
+          python sph-experiments/large-droplets-075-smooth/compare.py
+          cat output/sph-large-droplets-075-smooth/comparison.json
+
+      - name: Upload full smoothed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-large-droplets-075-smooth
+          path: output/sph-large-droplets-075-smooth/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate persistent result
+        run: |
+          set -euxo pipefail
+          src="output/sph-large-droplets-075-smooth"
+          dst="results/sph-large-droplets-075-smooth"
+          rm -rf "$dst"
+          mkdir -p "$dst"
+          cp "$src/validation.json" "$dst/validation.json"
+          cp "$src/comparison.json" "$dst/comparison.json"
+          cp "$src/preview.png" "$dst/preview.png"
+          cp "$src/media.mp4" "$dst/media.mp4"
+          cp "$src/fluid-cube-large-droplets-075-smooth.blend" "$dst/fluid-cube-large-droplets-075-smooth.blend"
+          cp "$src/cache/manifest.json" "$dst/manifest.json"
+
+          usd_bytes="$(stat -c%s "$src/fluid-cube-large-droplets-075-smooth.usdc")"
+          if [ "$usd_bytes" -le 99614720 ]; then
+            cp "$src/fluid-cube-large-droplets-075-smooth.usdc" "$dst/fluid-cube-large-droplets-075-smooth.usdc"
+            usd_note='- USD cache: `fluid-cube-large-droplets-075-smooth.usdc`'
+          else
+            usd_note="- USD cache: Actions artifact only ($usd_bytes bytes)"
+          fi
+
+          cat > "$dst/pages.json" <<JSON
+          {
+            "title": "SPH Fluid — Larger Droplets + Taubin Smooth",
+            "description": "radius 0.075の大粒版surfaceをそのまま使い、5回のTaubin smoothingで細かな凹凸だけを抑えた比較版。物理計算とtopologyは同一。",
+            "source_path": "sph-experiments/large-droplets-075-smooth",
+            "preview": "preview.png",
+            "media": "media.mp4",
+            "validation": "validation.json",
+            "source_commit": "$GITHUB_SHA",
+            "run_number": "$GITHUB_RUN_NUMBER",
+            "run_id": "$GITHUB_RUN_ID"
+          }
+          JSON
+
+          {
+            echo "# SPH larger droplets + Taubin smoothing"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- source large-droplet artifact run: $SOURCE_RUN_ID"
+            echo '- full output: Actions artifact `sph-large-droplets-075-smooth`'
+            echo "$usd_note"
+            echo
+            echo "Pure mesh-postprocess comparison: radius 0.075 + Taubin 5 iterations."
+          } > "$dst/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-large-droplets-075-smooth/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish SPH smoothed large-droplet render [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent result
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:$GITHUB_REF_NAME; then exit 0; fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin HEAD:$GITHUB_REF_NAME
