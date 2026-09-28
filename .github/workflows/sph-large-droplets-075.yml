@@ -1,0 +1,234 @@
+name: SPH large droplets 075
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/large-droplets-075/**'
+      - '.github/workflows/sph-large-droplets-075.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-large-droplets-075-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      BLENDER_VERSION: "4.0.2"
+      BASELINE_RUN_ID: "36360959609"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cheap preflight
+        run: |
+          python3 -m py_compile \
+            sph-experiments/large-droplets-075/prepare_cache.py \
+            sph-experiments/large-droplets-075/build_and_render.py \
+            sph-experiments/large-droplets-075/compare.py
+          test -s results/sph-long-duration-5s/validation.json
+
+      - name: Download proven 5-second SPH artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-long-duration-5s
+          path: input/baseline
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.BASELINE_RUN_ID }}
+
+      - name: Locate source VTK cache
+        id: source
+        run: |
+          set -euxo pipefail
+          particle="$(find input/baseline -type f -name 'ParticleData_Fluid_1.vtk' -print -quit)"
+          test -n "$particle"
+          vtk_dir="$(dirname "$particle")"
+          sph_dir="$(dirname "$vtk_dir")"
+          test -s "$vtk_dir/rb_data_1_1.vtk"
+          echo "sph_dir=$sph_dir" >> "$GITHUB_OUTPUT"
+          echo "Reusing SPH cache: $sph_dir"
+          echo "Particle frames: $(find "$vtk_dir" -maxdepth 1 -name 'ParticleData_Fluid_*.vtk' | wc -l)"
+          echo "Rigid frames: $(find "$vtk_dir" -maxdepth 1 -name 'rb_data_1_*.vtk' | wc -l)"
+
+      - name: Install surface reconstruction runtime
+        run: |
+          python -m pip install --disable-pip-version-check "pysplashsurf[meshio]"
+          python -c "import pysplashsurf, meshio, numpy; print('surface runtime OK')"
+
+      - name: Reconstruct 1.5x-radius surface sequence
+        run: |
+          rm -rf output/sph-large-droplets-075
+          mkdir -p output/sph-large-droplets-075
+          python sph-experiments/large-droplets-075/prepare_cache.py \
+            "${{ steps.source.outputs.sph_dir }}" \
+            output/sph-large-droplets-075/cache
+          python - <<'PY'
+          import json
+          p="output/sph-large-droplets-075/cache/manifest.json"
+          d=json.load(open(p))
+          assert d["particle_radius"] == 0.075
+          assert d["smoothing_length"] == 0.15
+          assert d["cube_size"] == 0.05
+          assert d["frames"] == 61
+          print({
+              "frames": d["frames"],
+              "particle_radius": d["particle_radius"],
+              "vertices_first": d["surface_frames"][0]["vertices"],
+              "vertices_mid": d["surface_frames"][30]["vertices"],
+              "vertices_last": d["surface_frames"][-1]["vertices"],
+              "npz_total": d["surface_npz_total_bytes"],
+          })
+          PY
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Save Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build USD, validate and render large-droplet variant
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python-exit-code 1 \
+              --python sph-experiments/large-droplets-075/build_and_render.py \
+              2>&1 | tee output/sph-large-droplets-075/blender.log
+          test -s output/sph-large-droplets-075/validation.json
+          test -s output/sph-large-droplets-075/preview.png
+          test -s output/sph-large-droplets-075/media.mp4
+          test -s output/sph-large-droplets-075/fluid-cube-large-droplets-075.blend
+
+      - name: Compare against radius-0.05 baseline
+        run: |
+          python sph-experiments/large-droplets-075/compare.py
+          cat output/sph-large-droplets-075/comparison.json
+
+      - name: Upload full variant artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-large-droplets-075
+          path: output/sph-large-droplets-075/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate persistent result
+        run: |
+          set -euxo pipefail
+          src="output/sph-large-droplets-075"
+          dst="results/sph-large-droplets-075"
+          rm -rf "$dst"
+          mkdir -p "$dst"
+          cp "$src/validation.json" "$dst/validation.json"
+          cp "$src/comparison.json" "$dst/comparison.json"
+          cp "$src/preview.png" "$dst/preview.png"
+          cp "$src/media.mp4" "$dst/media.mp4"
+          cp "$src/fluid-cube-large-droplets-075.blend" "$dst/fluid-cube-large-droplets-075.blend"
+          cp "$src/cache/manifest.json" "$dst/manifest.json"
+
+          usd_bytes="$(stat -c%s "$src/fluid-cube-large-droplets-075.usdc")"
+          if [ "$usd_bytes" -le 99614720 ]; then
+            cp "$src/fluid-cube-large-droplets-075.usdc" "$dst/fluid-cube-large-droplets-075.usdc"
+            usd_note='- USD cache: `fluid-cube-large-droplets-075.usdc`'
+          else
+            usd_note="- USD cache: Actions artifact only ($usd_bytes bytes)"
+          fi
+
+          cat > "$dst/pages.json" <<JSON
+          {
+            "title": "SPH Fluid — Larger Droplets 1.5x",
+            "description": "同じ5秒SPH物理データを使い、pySplashSurfのparticle radius/smoothingだけ1.5倍にして水塊・飛沫を大きくした比較版。",
+            "source_path": "sph-experiments/large-droplets-075",
+            "preview": "preview.png",
+            "media": "media.mp4",
+            "validation": "validation.json",
+            "source_commit": "$GITHUB_SHA",
+            "run_number": "$GITHUB_RUN_NUMBER",
+            "run_id": "$GITHUB_RUN_ID"
+          }
+          JSON
+
+          {
+            echo "# SPH larger droplets 1.5x"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- run: $GITHUB_RUN_ID"
+            echo "- baseline SPH artifact run: $BASELINE_RUN_ID"
+            echo '- full output: Actions artifact `sph-large-droplets-075`'
+            echo "$usd_note"
+            echo
+            echo "Visual-only surface reconstruction comparison: radius 0.05 -> 0.075."
+          } > "$dst/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-large-droplets-075/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish SPH larger-droplet render [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent result
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:$GITHUB_REF_NAME; then exit 0; fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin HEAD:$GITHUB_REF_NAME
