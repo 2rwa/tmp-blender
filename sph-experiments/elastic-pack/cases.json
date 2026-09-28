@@ -1,0 +1,102 @@
+{
+  "defaults": {
+    "stop_at": 2.0,
+    "fps": 12,
+    "particle_radius": 0.04
+  },
+  "cases": {
+    "peer-soft-cube-drop": {
+      "title": "Peer Soft Cube Drop",
+      "description": "Peer et al. 2018 の比較的柔らかい立方体を床へ落とし、潰れと復元を見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "elasticity": {
+        "method": 2,
+        "name": "Peer et al. 2018",
+        "youngsModulus": 120000.0,
+        "poissonsRatio": 0.33,
+        "alpha": 0.1,
+        "maxNeighbors": 24
+      },
+      "blocks": [
+        {"start": [-0.45, 1.10, -0.45], "end": [0.45, 2.00, 0.45], "initialVelocity": [0.0, -0.10, 0.0]}
+      ]
+    },
+    "kugelstadt-stiff-cube-drop": {
+      "title": "Kugelstadt Stiff Cube Drop",
+      "description": "Kugelstadt et al. 2021 の硬めの立方体を床へ落とし、剛性の高い弾性応答を見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "elasticity": {
+        "method": 3,
+        "name": "Kugelstadt et al. 2021",
+        "youngsModulus": 1000000.0,
+        "poissonsRatio": 0.33,
+        "alpha": 0.1,
+        "maxNeighbors": 20,
+        "volumeMaxError": 0.0001,
+        "volumeMaxIter": 100
+      },
+      "blocks": [
+        {"start": [-0.45, 1.10, -0.45], "end": [0.45, 2.00, 0.45], "initialVelocity": [0.0, -0.10, 0.0]}
+      ]
+    },
+    "cantilever-beam": {
+      "title": "Cantilever Beam",
+      "description": "左端を固定した細長い弾性体を重力でたわませ、片持ち梁らしい変形を見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "elasticity": {
+        "method": 3,
+        "name": "Kugelstadt et al. 2021",
+        "youngsModulus": 450000.0,
+        "poissonsRatio": 0.33,
+        "alpha": 0.1,
+        "maxNeighbors": 20,
+        "fixedBoxMin": [-10.0, -10.0, -10.0],
+        "fixedBoxMax": [-1.22, 10.0, 10.0],
+        "volumeMaxError": 0.0001,
+        "volumeMaxIter": 100
+      },
+      "blocks": [
+        {"start": [-1.60, 1.20, -0.25], "end": [1.60, 1.52, 0.25], "initialVelocity": [0.0, 0.0, 0.0]}
+      ]
+    },
+    "fixed-column-kick": {
+      "title": "Fixed Column Kick",
+      "description": "根元だけを固定した縦長弾性体へ横向き初速を与え、曲げ振動と復元を見る。",
+      "gravity": [0.0, -4.0, 0.0],
+      "elasticity": {
+        "method": 3,
+        "name": "Kugelstadt et al. 2021",
+        "youngsModulus": 320000.0,
+        "poissonsRatio": 0.33,
+        "alpha": 0.1,
+        "maxNeighbors": 20,
+        "fixedBoxMin": [-10.0, -10.0, -10.0],
+        "fixedBoxMax": [10.0, 0.34, 10.0],
+        "volumeMaxError": 0.0001,
+        "volumeMaxIter": 100
+      },
+      "blocks": [
+        {"start": [-0.28, 0.12, -0.28], "end": [0.28, 1.82, 0.28], "initialVelocity": [1.10, 0.0, 0.0]}
+      ]
+    },
+    "elastic-block-collision": {
+      "title": "Elastic Block Collision",
+      "description": "二つの弾性ブロックを反対向きに加速して正面衝突させ、圧縮と跳ね返りを見る。",
+      "gravity": [0.0, 0.0, 0.0],
+      "elasticity": {
+        "method": 3,
+        "name": "Kugelstadt et al. 2021",
+        "youngsModulus": 300000.0,
+        "poissonsRatio": 0.33,
+        "alpha": 0.1,
+        "maxNeighbors": 20,
+        "volumeMaxError": 0.0001,
+        "volumeMaxIter": 100
+      },
+      "blocks": [
+        {"start": [-1.55, 0.55, -0.38], "end": [-0.75, 1.35, 0.38], "initialVelocity": [1.80, 0.0, 0.0]},
+        {"start": [0.75, 0.55, -0.38], "end": [1.55, 1.35, 0.38], "initialVelocity": [-1.80, 0.0, 0.0]}
+      ]
+    }
+  }
+}
