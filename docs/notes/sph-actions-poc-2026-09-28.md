@@ -879,3 +879,60 @@ Current corrected result:
 This supersedes old "final surface" numbers produced when
 `reconstruct.py` accidentally treated lexicographic frame 9 as the final
 frame.
+
+
+## 2026-09-28 point-cloud / Geometry Nodes branch
+
+The earlier preferred path baked pySplashSurf topology before Blender. That is
+still useful for fixed high-detail exports, but a lighter exploratory path is
+now proven.
+
+Successful point-cloud workflow:
+
+- `SPH Geometry Nodes point volume`
+- run #1 / Actions id `36367596940`
+
+Pipeline:
+
+```text
+SPlisHSPlasH VTK
+  -> compact NPZ point cache
+       position + velocity + density
+  -> vertex-only time-sampled USD
+  -> Blender Mesh Sequence Cache
+  -> Geometry Nodes
+       Mesh to Points
+       Points to Volume
+       Volume to Mesh
+```
+
+Measured across 61 frames / 1800 particles:
+
+- point NPZ: **2,790,514 bytes**
+- point USD: **1,327,136 bytes**
+- Blend: **978,058 bytes**
+- USD authoring: **0.165 s**
+- USD import: **0.0014 s**
+- render: **190.052 s**
+- validation errors: **0**
+
+The node group exposes `Radius=0.10`, `Voxel Size=0.04`, and
+`Threshold=0.10`.
+
+This is now the preferred representation for interactive investigation.
+
+Important: the v1 USD currently carries animated **position** only. Velocity
+and density are preserved in the NPZ cache for future attribute-aware
+visualization.
+
+Next useful extensions:
+
+- velocity vectors as instanced arrows,
+- acceleration from frame-difference velocity and color mapping,
+- density/speed driven spray classification,
+- WebGPU storage-buffer / density-field visualization using the same point
+  dataset.
+
+See:
+
+`docs/notes/sph-point-cloud-geometry-nodes-2026-09-28.md`

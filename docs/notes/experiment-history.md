@@ -298,3 +298,75 @@ Corrected true-final values:
 - cube frame 1 -> frame 13 displacement: 2.007310 m
 - final surface: 207,276 vertices / 407,352 faces
 - final OBJ: 20,799,581 bytes
+
+
+## 2026-09-28 — large droplets, smoothing, and point-cloud Geometry Nodes
+
+The 5-second SPH output was reused without rerunning fluid physics to compare
+different presentation representations.
+
+### Large-droplet pySplashSurf
+
+Workflow `SPH large droplets 075`, run #1 / `36362387414`.
+
+Changed reconstruction radius from 0.05 to 0.075 and smoothing length from
+0.10 to 0.15 while keeping cube size 0.05.
+
+Result:
+
+- 114,766 .. 116,800 vertices/frame
+- 222,384 .. 226,400 faces/frame
+- NPZ surfaces: 128,952,028 bytes
+- USD: 191,451,188 bytes
+- render: 781.988 s
+
+The water masses became visually easier to read, but mesh cost increased
+substantially.
+
+### Taubin post-process
+
+Workflow `SPH large droplets 075 smooth`, successful run #2 /
+`36364391725`.
+
+Parameters:
+
+- 5 iterations
+- lambda 0.45
+- mu -0.47
+
+Result:
+
+- topology preserved
+- smoothing time: 153.193 s
+- average bbox volume ratio: 0.99855
+- render: 776.658 s
+- USD size unchanged at 191,451,188 bytes
+
+This is a valid quality post-process, but not a storage/performance solution.
+
+### Point-cloud Geometry Nodes
+
+Workflow `SPH Geometry Nodes point volume`, run #1 / `36367596940`.
+
+The same 61-frame solve was converted to a compact point representation and
+surfaced inside Blender with:
+
+`Mesh to Points -> Points to Volume -> Volume to Mesh`.
+
+Result:
+
+- 1800 particles/frame
+- point NPZ cache: 2,790,514 bytes
+- point USD: 1,327,136 bytes
+- Blend: 978,058 bytes
+- render: 190.052 s
+- Actions wall-clock: about 3 min 55 s
+- representative generated meshes: about 6.8k .. 31.9k faces
+- validation errors: 0
+
+This changes the exploratory architecture: keep SPH particles as the primary
+data and create the surface downstream only when needed.
+
+Detailed notes:
+
+`docs/notes/sph-point-cloud-geometry-nodes-2026-09-28.md`

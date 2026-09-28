@@ -353,3 +353,46 @@ When resuming work:
 5. continue from GitHub as the source of truth.
 
 必要に応じて `architecture.md`、`experiment-history.md`、`operations.md` も参照してください。
+
+
+## 2026-09-28 — point-cloud representation is now the preferred exploratory path
+
+The SPH branch progressed beyond the 5-second surface-cache experiment.
+
+Read first:
+
+`docs/notes/sph-point-cloud-geometry-nodes-2026-09-28.md`
+
+Key result:
+
+- same 1800-particle / 61-frame SPH solve,
+- point NPZ cache: **2.79 MB**,
+- animated point USD: **1.33 MB**,
+- editable Blend: **0.98 MB**,
+- Geometry Nodes surface render: **190.05 s**,
+- complete Actions run: about **3 min 55 s**,
+- validation errors: **0**.
+
+The successful Geometry Nodes path is:
+
+```text
+SPH VTK
+  -> compact point cache
+  -> vertex-only animated USD
+  -> Blender Mesh Sequence Cache
+  -> Mesh to Points
+  -> Points to Volume
+  -> Volume to Mesh
+```
+
+The saved node group exposes `Radius`, `Voxel Size`, and `Threshold`.
+
+For exploratory visualization, treat the **particle data as source of truth**
+rather than a pre-generated surface mesh.
+
+The point NPZ already preserves `position`, `velocity`, and `density`.
+Natural next diagnostics are velocity arrows, acceleration-based coloring,
+density/spray classification, and eventually a WebGPU point/density-field
+viewer.
+
+pySplashSurf remains useful when a fixed high-detail export mesh is required.
