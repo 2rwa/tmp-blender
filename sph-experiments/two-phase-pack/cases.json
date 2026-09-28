@@ -1,0 +1,74 @@
+{
+  "defaults": {
+    "stop_at": 2.0,
+    "fps": 12,
+    "particle_radius": 0.07
+  },
+  "cases": {
+    "stratified-oil-water": {
+      "title": "Stratified Oil / Water",
+      "description": "重い水相の上に軽く粘性の高い油相を置き、界面の維持と揺らぎを見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "materials": {
+        "PhaseA": {"density": 1000.0, "viscosity": 0.01},
+        "PhaseB": {"density": 800.0, "viscosity": 0.04}
+      },
+      "blocks": [
+        {"id": "PhaseA", "start": [-1.6, 0.10, -0.75], "end": [1.6, 0.72, 0.75], "initialVelocity": [0, 0, 0]},
+        {"id": "PhaseB", "start": [-1.6, 0.80, -0.75], "end": [1.6, 1.38, 0.75], "initialVelocity": [0, 0, 0]}
+      ]
+    },
+    "dual-dam-break": {
+      "title": "Two-phase Dual Dam Break",
+      "description": "左右の二相を同時に崩して中央で接触させ、密度・粘性差のある界面を見る。",
+      "gravity": [0, -9.81, 0],
+      "materials": {
+        "PhaseA": {"density": 1000.0, "viscosity": 0.01},
+        "PhaseB": {"density": 820.0, "viscosity": 0.035}
+      },
+      "blocks": [
+        {"id": "PhaseA", "start": [-1.65, 0.10, -0.72], "end": [-0.28, 1.25, 0.72], "initialVelocity": [0, 0, 0]},
+        {"id": "PhaseB", "start": [0.28, 0.10, -0.72], "end": [1.65, 1.25, 0.72], "initialVelocity": [0, 0, 0]}
+      ]
+    },
+    "heavy-drop-into-light-pool": {
+      "title": "Heavy Drop into Light Pool",
+      "description": "重い液塊を軽い液体の浅いプールへ落とし、沈み込みと界面変形を見る。",
+      "gravity": [0, -9.81, 0],
+      "materials": {
+        "PhaseA": {"density": 1150.0, "viscosity": 0.015},
+        "PhaseB": {"density": 800.0, "viscosity": 0.035}
+      },
+      "blocks": [
+        {"id": "PhaseA", "start": [-0.55, 1.12, -0.50], "end": [0.55, 1.68, 0.50], "initialVelocity": [0, -0.25, 0]},
+        {"id": "PhaseB", "start": [-1.65, 0.10, -0.75], "end": [1.65, 0.48, 0.75], "initialVelocity": [0, 0, 0]}
+      ]
+    },
+    "light-drop-into-heavy-pool": {
+      "title": "Light Drop into Heavy Pool",
+      "description": "軽い液塊を重い液体へ落とし、潜り込みから浮上する挙動を見る。",
+      "gravity": [0, -9.81, 0],
+      "materials": {
+        "PhaseA": {"density": 1100.0, "viscosity": 0.015},
+        "PhaseB": {"density": 750.0, "viscosity": 0.03}
+      },
+      "blocks": [
+        {"id": "PhaseA", "start": [-1.65, 0.10, -0.75], "end": [1.65, 0.55, 0.75], "initialVelocity": [0, 0, 0]},
+        {"id": "PhaseB", "start": [-0.55, 1.18, -0.50], "end": [0.55, 1.72, 0.50], "initialVelocity": [0, -0.25, 0]}
+      ]
+    },
+    "opposed-two-phase-jets": {
+      "title": "Opposed Two-phase Jets",
+      "description": "左右の有限液塊に反対向き初速度を与え、中央衝突時の二相界面を見る。",
+      "gravity": [0, -2.0, 0],
+      "materials": {
+        "PhaseA": {"density": 1000.0, "viscosity": 0.01},
+        "PhaseB": {"density": 850.0, "viscosity": 0.03}
+      },
+      "blocks": [
+        {"id": "PhaseA", "start": [-1.62, 0.66, -0.42], "end": [-1.02, 1.20, 0.42], "initialVelocity": [2.4, 0, 0]},
+        {"id": "PhaseB", "start": [1.02, 0.66, -0.42], "end": [1.62, 1.20, 0.42], "initialVelocity": [-2.4, 0, 0]}
+      ]
+    }
+  }
+}

@@ -18,6 +18,7 @@ on:
       - 'SPH Geometry Nodes point volume'
       - 'SPH point diagnostics'
       - 'SPH sample pack 5'
+      - 'SPH two-phase sample pack 5'
     types: [completed]
 
 permissions:

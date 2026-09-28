@@ -1,0 +1,301 @@
+name: SPH two-phase sample pack 5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/two-phase-pack/**'
+      - '.github/workflows/sph-two-phase-pack.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-two-phase-pack-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  BLENDER_VERSION: "4.0.2"
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Restore SPlisHSPlasH build cache
+        id: sph-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Install SPlisHSPlasH build dependencies
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update --fix-missing
+          sudo apt-get -y install xorg-dev freeglut3-dev
+
+      - name: Build SPlisHSPlasH 2.18.1
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/splishsplash-2.18.1
+          mkdir -p .cache
+          git clone --depth 1 --branch 2.18.1 \
+            https://github.com/InteractiveComputerGraphics/SPlisHSPlasH.git \
+            .cache/splishsplash-2.18.1
+          cmake \
+            -S .cache/splishsplash-2.18.1 \
+            -B .cache/splishsplash-2.18.1/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUSE_PYTHON_BINDINGS=OFF \
+            -DUSE_AVX=OFF \
+            -DCI_BUILD=ON \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.10
+          cmake --build .cache/splishsplash-2.18.1/build \
+            --target SPHSimulator \
+            --parallel 4
+
+      - name: Save SPlisHSPlasH build cache
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Save Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Verify runtimes
+        run: |
+          test -x .cache/splishsplash-2.18.1/bin/SPHSimulator
+          test -x .cache/blender-runtime/blender/blender
+
+  sample:
+    needs: runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        case:
+          - stratified-oil-water
+          - dual-dam-break
+          - heavy-drop-into-light-pool
+          - light-drop-into-heavy-pool
+          - opposed-two-phase-jets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cheap preflight
+        run: |
+          python -m json.tool sph-experiments/two-phase-pack/cases.json >/dev/null
+          python -m py_compile \
+            sph-experiments/two-phase-pack/make_scene.py \
+            sph-experiments/two-phase-pack/prepare_points.py \
+            sph-experiments/two-phase-pack/build_and_render.py \
+            sph-experiments/two-phase-pack/publish_results.py
+          test -s sph-experiments/two-phase-pack/models/UnitBox.obj
+
+      - name: Install runtime dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get -y install xorg-dev freeglut3-dev >/dev/null
+          python -m pip install --disable-pip-version-check meshio numpy
+
+      - name: Restore SPlisHSPlasH runtime
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+          fail-on-cache-miss: true
+
+      - name: Restore Blender runtime
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+          fail-on-cache-miss: true
+
+      - name: Generate ${{ matrix.case }} scene
+        run: |
+          base="output/sph-two-phase-${{ matrix.case }}"
+          rm -rf "$base"
+          mkdir -p "$base/sph" "$base/points"
+          python sph-experiments/two-phase-pack/make_scene.py \
+            "${{ matrix.case }}" \
+            "$base/scene.json"
+          python -m json.tool "$base/scene.json" >/dev/null
+          grep -q '"id": "PhaseA"' "$base/scene.json"
+          grep -q '"id": "PhaseB"' "$base/scene.json"
+
+      - name: Simulate ${{ matrix.case }}
+        run: |
+          set -euxo pipefail
+          base="output/sph-two-phase-${{ matrix.case }}"
+          scene_file="$(realpath "$base/scene.json")"
+          output_dir="$(realpath "$base/sph")"
+          .cache/splishsplash-2.18.1/bin/SPHSimulator \
+            "$scene_file" \
+            --no-gui \
+            --no-cache \
+            --no-initial-pause \
+            --stopAt 2.0 \
+            --output-dir "$output_dir" \
+            2>&1 | tee "$output_dir/splash.log"
+          test -n "$(find "$output_dir/vtk" -type f -name 'ParticleData_PhaseA_*.vtk' -print -quit)"
+          test -n "$(find "$output_dir/vtk" -type f -name 'ParticleData_PhaseB_*.vtk' -print -quit)"
+          echo "PhaseA frames: $(find "$output_dir/vtk" -type f -name 'ParticleData_PhaseA_*.vtk' | wc -l)"
+          echo "PhaseB frames: $(find "$output_dir/vtk" -type f -name 'ParticleData_PhaseB_*.vtk' | wc -l)"
+
+      - name: Build compact two-phase point cache
+        run: |
+          base="output/sph-two-phase-${{ matrix.case }}"
+          python sph-experiments/two-phase-pack/prepare_points.py \
+            "$base/sph" \
+            "$base/points" \
+            --case "${{ matrix.case }}" \
+            --fps 12
+          cat "$base/points/manifest.json"
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Geometry Nodes render ${{ matrix.case }}
+        run: |
+          set -o pipefail
+          base="output/sph-two-phase-${{ matrix.case }}"
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python-exit-code 1 \
+              --python sph-experiments/two-phase-pack/build_and_render.py \
+              -- \
+              --case "${{ matrix.case }}" \
+              --cache "$base/points" \
+              2>&1 | tee "$base/blender.log"
+
+          test -s "$base/validation.json"
+          test -s "$base/preview.png"
+          test -s "$base/media.mp4"
+          test -s "$base/sph-two-phase-${{ matrix.case }}.blend"
+          test -s "$base/two-phase-points.usdc"
+          grep -q '"errors": \\[\\]' "$base/validation.json"
+          cat "$base/validation.json"
+
+      - name: Upload ${{ matrix.case }} result
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-two-phase-${{ matrix.case }}
+          path: |
+            output/sph-two-phase-${{ matrix.case }}/validation.json
+            output/sph-two-phase-${{ matrix.case }}/preview.png
+            output/sph-two-phase-${{ matrix.case }}/media.mp4
+            output/sph-two-phase-${{ matrix.case }}/sph-two-phase-${{ matrix.case }}.blend
+            output/sph-two-phase-${{ matrix.case }}/two-phase-points.usdc
+            output/sph-two-phase-${{ matrix.case }}/points/manifest.json
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: sample
+    if: ${{ needs.sample.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Rebase before persistent result generation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main
+
+      - name: Download all five two-phase samples
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sph-two-phase-*
+          path: artifacts
+          merge-multiple: false
+
+      - name: Generate persistent results
+        run: |
+          python sph-experiments/two-phase-pack/publish_results.py \
+            artifacts \
+            results \
+            --source-commit "$GITHUB_SHA" \
+            --run-number "$GITHUB_RUN_NUMBER" \
+            --run-id "$GITHUB_RUN_ID"
+
+      - name: Commit persistent results
+        id: commit-results
+        run: |
+          git add results/sph-two-phase-*/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish five two-phase SPH samples [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent results
+        if: steps.commit-results.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
