@@ -12,6 +12,7 @@ on:
     workflows:
       - 'SPH Blender surface sequence'
       - 'SPH fluid cube USD render'
+      - 'SPH 5s scale test'
     types: [completed]
 
 permissions:

@@ -1,0 +1,247 @@
+name: SPH 5s scale test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/long-duration-5s/**'
+      - '.github/workflows/sph-long-duration-5s.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-long-5s-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BLENDER_VERSION: "4.0.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cheap preflight
+        run: |
+          python3 -m py_compile \
+            sph-experiments/long-duration-5s/prepare_cache.py \
+            sph-experiments/long-duration-5s/build_and_render.py
+          python3 -m json.tool sph-experiments/dam-break-cube/scene.json >/dev/null
+
+      - name: Install native SPH dependencies
+        run: |
+          sudo apt-get update --fix-missing
+          sudo apt-get -y install xorg-dev freeglut3-dev
+
+      - name: Restore SPlisHSPlasH build cache
+        id: sph-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Build SPlisHSPlasH if cache is missing
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/splishsplash-2.18.1
+          mkdir -p .cache
+          git clone --depth 1 --branch 2.18.1 \
+            https://github.com/InteractiveComputerGraphics/SPlisHSPlasH.git \
+            .cache/splishsplash-2.18.1
+          cmake \
+            -S .cache/splishsplash-2.18.1 \
+            -B .cache/splishsplash-2.18.1/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUSE_PYTHON_BINDINGS=OFF \
+            -DUSE_AVX=OFF \
+            -DCI_BUILD=ON \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.10
+          cmake --build .cache/splishsplash-2.18.1/build --target SPHSimulator --parallel 4
+
+      - name: Save SPlisHSPlasH cache
+        if: steps.sph-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/splishsplash-2.18.1
+          key: splishsplash-2.18.1-ubuntu24-cpp-v1
+
+      - name: Install surface reconstruction runtime
+        run: |
+          python -m pip install --disable-pip-version-check "pysplashsurf[meshio]"
+          python -c "import pysplashsurf, meshio, numpy; print('surface runtime OK')"
+
+      - name: Simulate 5 seconds
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/sph-long-5s"
+          rm -rf "$base"
+          mkdir -p "$base/sph"
+          scene_file="$(realpath sph-experiments/dam-break-cube/scene.json)"
+          /usr/bin/time -f '%e' -o "$base/simulation-seconds.txt" \
+            .cache/splishsplash-2.18.1/bin/SPHSimulator \
+              "$scene_file" \
+              --no-gui \
+              --no-cache \
+              --no-initial-pause \
+              --stopAt 5.0 \
+              --output-dir "$base/sph" \
+              2>&1 | tee "$base/sph/splash.log"
+          echo "SIMULATION_SECONDS=$(cat "$base/simulation-seconds.txt")"
+
+      - name: Reconstruct long sequence to compressed NPZ
+        run: |
+          python sph-experiments/long-duration-5s/prepare_cache.py \
+            output/sph-long-5s/sph \
+            output/sph-long-5s/cache
+          cat output/sph-long-5s/cache/manifest.json | head -80
+          du -sh output/sph-long-5s/cache
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Save Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build direct USD, validate and render
+        run: |
+          set -o pipefail
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python-exit-code 1 \
+              --python sph-experiments/long-duration-5s/build_and_render.py \
+              2>&1 | tee output/sph-long-5s/blender.log
+          test -s output/sph-long-5s/validation.json
+          test -s output/sph-long-5s/preview.png
+          test -s output/sph-long-5s/media.mp4
+          test -s output/sph-long-5s/fluid-cube-5s.blend
+
+      - name: Show long-run validation
+        run: |
+          cat output/sph-long-5s/validation.json
+          du -sh output/sph-long-5s
+          ls -lh output/sph-long-5s | tail -20
+
+      - name: Upload full long-run artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-long-duration-5s
+          path: output/sph-long-5s/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+
+      - name: Generate persistent result
+        run: |
+          set -euxo pipefail
+          src="output/sph-long-5s"
+          dst="results/sph-long-duration-5s"
+          rm -rf "$dst"
+          mkdir -p "$dst"
+          cp "$src/validation.json" "$dst/validation.json"
+          cp "$src/preview.png" "$dst/preview.png"
+          cp "$src/media.mp4" "$dst/media.mp4"
+          cp "$src/fluid-cube-5s.blend" "$dst/fluid-cube-5s.blend"
+          cp "$src/cache/manifest.json" "$dst/manifest.json"
+          cp "$src/simulation-seconds.txt" "$dst/simulation-seconds.txt"
+
+          usd_bytes="$(stat -c%s "$src/fluid-cube-5s.usdc")"
+          if [ "$usd_bytes" -le 99614720 ]; then
+            cp "$src/fluid-cube-5s.usdc" "$dst/fluid-cube-5s.usdc"
+            usd_note='- USD cache: `fluid-cube-5s.usdc`'
+          else
+            usd_note="- USD cache: Actions artifact only ($usd_bytes bytes)"
+          fi
+
+          cat > "$dst/pages.json" <<JSON
+          {
+            "title": "SPH Fluid + Cube — 5s Scale Test",
+            "description": "1800粒子のSPHを5秒・約61フレームまで延長し、compressed NPZ→direct USD→Blenderで長尺再生したスケール試験。",
+            "source_path": "sph-experiments/long-duration-5s",
+            "preview": "preview.png",
+            "media": "media.mp4",
+            "validation": "validation.json",
+            "source_commit": "$GITHUB_SHA",
+            "run_number": "$GITHUB_RUN_NUMBER",
+            "run_id": "$GITHUB_RUN_ID"
+          }
+          JSON
+
+          {
+            echo "# SPH 5-second scale test"
+            echo
+            echo "- source: $GITHUB_SHA"
+            echo "- run: $GITHUB_RUN_ID"
+            echo '- full output: Actions artifact `sph-long-duration-5s`'
+            echo "$usd_note"
+            echo
+            echo "Temporal scaling test of the proven SPH -> compressed surface cache -> direct USD -> Blender pipeline."
+          } > "$dst/README.md"
+
+      - name: Commit persistent result
+        id: commit-result
+        run: |
+          git add results/sph-long-duration-5s/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish SPH 5s scale test [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent result
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:$GITHUB_REF_NAME; then exit 0; fi
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin HEAD:$GITHUB_REF_NAME
