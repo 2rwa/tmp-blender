@@ -1,0 +1,286 @@
+name: SPH point diagnostics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/point-diagnostics/**'
+      - '.github/workflows/sph-point-diagnostics.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: sph-point-diagnostics-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  BLENDER_VERSION: "4.0.2"
+  SOURCE_RUN_ID: "36360959609"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cheap preflight
+        run: |
+          python3 -m py_compile \
+            sph-experiments/point-diagnostics/prepare_diagnostics.py \
+            sph-experiments/point-diagnostics/build_and_render.py
+
+      - name: Download proven 5-second SPH artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-long-duration-5s
+          path: input/sph
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Locate VTK cache
+        id: source
+        run: |
+          set -euxo pipefail
+          particle="$(find input/sph -type f -name 'ParticleData_Fluid_1.vtk' -print -quit)"
+          test -n "$particle"
+          sph_dir="$(dirname "$(dirname "$particle")")"
+          echo "sph_dir=$sph_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Install point-cache runtime
+        run: |
+          python -m pip install --disable-pip-version-check meshio numpy
+
+      - name: Build diagnostic point cache
+        run: |
+          rm -rf output/sph-point-diagnostics-cache
+          mkdir -p output/sph-point-diagnostics-cache
+          python sph-experiments/point-diagnostics/prepare_diagnostics.py \
+            "${{ steps.source.outputs.sph_dir }}" \
+            output/sph-point-diagnostics-cache
+          python - <<'PY'
+          import json
+          p = json.load(open("output/sph-point-diagnostics-cache/manifest.json"))
+          assert p["frames"] == 61
+          assert p["particle_count"] == 1800
+          assert p["sparse_particle_count"] > 0
+          assert p["velocity_stats"]["p95"] > 0
+          assert p["acceleration_stats"]["normalization_value"] > 0
+          print(json.dumps({
+              "frames": p["frames"],
+              "particles": p["particle_count"],
+              "sparse": p["sparse_particle_count"],
+              "velocity_p95": p["velocity_stats"]["p95"],
+              "acceleration_p97": p["acceleration_stats"]["normalization_value"],
+          }, indent=2))
+          PY
+
+      - name: Upload prepared cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-point-diagnostics-cache
+          path: output/sph-point-diagnostics-cache/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  render:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        mode: [velocity, acceleration, combined]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download prepared cache
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-point-diagnostics-cache
+          path: input/diagnostics
+
+      - name: Restore Blender runtime cache
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime cache
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Configure Blender runtime
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Build, validate and render ${{ matrix.mode }}
+        run: |
+          set -o pipefail
+          out="output/sph-point-diagnostics-${{ matrix.mode }}"
+          mkdir -p "$out"
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy \
+            xvfb-run -a -s "-screen 0 1280x720x24" \
+            blender --background --factory-startup \
+              --python-exit-code 1 \
+              --python sph-experiments/point-diagnostics/build_and_render.py \
+              -- \
+              --mode "${{ matrix.mode }}" \
+              --cache input/diagnostics \
+              2>&1 | tee "$out/blender.log"
+          test -s "$out/validation.json"
+          test -s "$out/preview.png"
+          test -s "$out/media.mp4"
+          test -s "$out/sph-point-diagnostics-${{ matrix.mode }}.blend"
+          test -s "$out/sph-diagnostics.usdc"
+          cat "$out/validation.json"
+
+      - name: Upload ${{ matrix.mode }} artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-point-diagnostic-${{ matrix.mode }}
+          path: output/sph-point-diagnostics-${{ matrix.mode }}/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: render
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Rebase before persistent result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main
+
+      - name: Download velocity artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-point-diagnostic-velocity
+          path: collected/velocity
+
+      - name: Download acceleration artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-point-diagnostic-acceleration
+          path: collected/acceleration
+
+      - name: Download combined artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sph-point-diagnostic-combined
+          path: collected/combined
+
+      - name: Generate persistent results
+        run: |
+          set -euxo pipefail
+          for mode in velocity acceleration combined; do
+            src="collected/$mode"
+            dst="results/sph-point-diagnostics-$mode"
+            rm -rf "$dst"
+            mkdir -p "$dst"
+            cp "$src/validation.json" "$dst/validation.json"
+            cp "$src/preview.png" "$dst/preview.png"
+            cp "$src/media.mp4" "$dst/media.mp4"
+            cp "$src/sph-point-diagnostics-$mode.blend" "$dst/sph-point-diagnostics-$mode.blend"
+            cp "$src/sph-diagnostics.usdc" "$dst/sph-diagnostics.usdc"
+
+            case "$mode" in
+              velocity)
+                title="SPH Point Diagnostics — Velocity Arrows"
+                description="SPH点群のうち8点ごとにvelocity矢印をGeometry Nodesで表示。矢印長は速度の95パーセンタイルで正規化。"
+                ;;
+              acceleration)
+                title="SPH Point Diagnostics — Acceleration Heatmap"
+                description="velocity差分からaccelerationを算出し、97パーセンタイル正規化した5段階の色で全SPH粒子を表示。"
+                ;;
+              combined)
+                title="SPH Point Diagnostics — Velocity + Acceleration"
+                description="acceleration色表示したSPH粒子に、疎化したvelocity矢印をGeometry Nodesで重ねた診断表示。"
+                ;;
+            esac
+
+            cat > "$dst/pages.json" <<JSON
+          {
+            "title": "$title",
+            "description": "$description",
+            "source_path": "sph-experiments/point-diagnostics",
+            "preview": "preview.png",
+            "media": "media.mp4",
+            "validation": "validation.json",
+            "source_commit": "$GITHUB_SHA",
+            "run_number": "$GITHUB_RUN_NUMBER",
+            "run_id": "$GITHUB_RUN_ID"
+          }
+          JSON
+
+            cat > "$dst/README.md" <<EOF
+          # $title
+
+          - source: $GITHUB_SHA
+          - run: $GITHUB_RUN_ID
+          - editable Blender: sph-point-diagnostics-$mode.blend
+          - synchronized point carriers: sph-diagnostics.usdc
+          - experiment source: sph-experiments/point-diagnostics
+          EOF
+          done
+
+      - name: Commit persistent results
+        id: commit-result
+        run: |
+          git add results/sph-point-diagnostics-*/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish SPH point diagnostic results [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent results
+        if: steps.commit-result.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
