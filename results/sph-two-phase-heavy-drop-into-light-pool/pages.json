@@ -1,0 +1,11 @@
+{
+  "title": "SPH Two-phase — Heavy Drop into Light Pool",
+  "description": "重い液塊を軽い液体の浅いプールへ落とし、沈み込みと界面変形を見る。 PhaseA rho=1150.0, viscosity=0.015; PhaseB rho=800.0, viscosity=0.035.",
+  "source_path": "sph-experiments/two-phase-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "6f5880855d929f17d1ab1e908cb1825a1d4551fc",
+  "run_number": "3",
+  "run_id": "36377544339"
+}

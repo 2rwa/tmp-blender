@@ -1,0 +1,11 @@
+{
+  "title": "SPH Two-phase — Two-phase Dual Dam Break",
+  "description": "左右の二相を同時に崩して中央で接触させ、密度・粘性差のある界面を見る。 PhaseA rho=1000.0, viscosity=0.01; PhaseB rho=820.0, viscosity=0.035.",
+  "source_path": "sph-experiments/two-phase-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "6f5880855d929f17d1ab1e908cb1825a1d4551fc",
+  "run_number": "3",
+  "run_id": "36377544339"
+}
