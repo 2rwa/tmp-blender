@@ -161,7 +161,7 @@ jobs:
             2>&1 | tee "$base/solver.log"
 
           test -d "$work/solver-out/bindata"
-          test -s "$work/solver-out/Solid_Case.xml"
+          test -s "$work/Solid_Case.xml"
 
       - name: Convert fracture output to VTK
         run: |
@@ -172,7 +172,7 @@ jobs:
           export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
           "$up/DSPartVTK/bin/DSPartVTK_linux64" \
             -dirin "$work/solver-out/bindata" \
-            -filexml "$work/solver-out/Solid_Case.xml" \
+            -filexml "$work/Solid_Case.xml" \
             -savevtk "$base/particles/DefStrucBody_%mk%" \
             2>&1 | tee "$base/dspartvtk.log"
           test -n "$(find "$base/particles" -type f -name '*.vtk' -print -quit)"
