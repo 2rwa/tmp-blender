@@ -242,7 +242,7 @@ jobs:
     needs: discover
     if: needs.discover.outputs.movie_experiments != '[]'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -265,6 +265,9 @@ jobs:
             "experiments/$EXPERIMENT/validate.py"
           if [ -f "experiments/$EXPERIMENT/prepare_assets.py" ]; then
             python3 -m py_compile "experiments/$EXPERIMENT/prepare_assets.py"
+          fi
+          if [ -f "experiments/$EXPERIMENT/prepare_audio.py" ]; then
+            python3 -m py_compile "experiments/$EXPERIMENT/prepare_audio.py"
           fi
 
       - name: Restore shared Blender runtime cache
@@ -311,6 +314,18 @@ jobs:
             python3 "experiments/$EXPERIMENT/prepare_assets.py"
           else
             echo "No experiment-specific assets to prepare."
+          fi
+
+      - name: Prepare optional audio analysis
+        run: |
+          if [ -f "experiments/$EXPERIMENT/prepare_audio.py" ]; then
+            if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y ffmpeg
+            fi
+            python3 "experiments/$EXPERIMENT/prepare_audio.py"
+          else
+            echo "No experiment-specific audio analysis to prepare."
           fi
 
       - name: Verify Blender headless runtime
@@ -386,7 +401,7 @@ jobs:
     needs: [discover, prepare_movie]
     if: needs.discover.outputs.movie_chunks != '[]'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -523,8 +538,19 @@ jobs:
         run: |
           printf -v preview_path 'output/frames/frame_%04d.png' "$PREVIEW_FRAME"
           cp "$preview_path" output/preview.png
-          ffmpeg -y -framerate "$FPS" -start_number "$FRAME_START" -i output/frames/frame_%04d.png \
-            -c:v libx264 -preset veryfast -crf 30 -pix_fmt yuv420p "output/$VIDEO_NAME"
+
+          audio_source="$(python3 -c 'import json, os; p=os.path.join("experiments", os.environ["EXPERIMENT"], "experiment.json"); print(json.load(open(p, encoding="utf-8")).get("audio_source", ""))')"
+          if [ -n "$audio_source" ]; then
+            test -f "$audio_source"
+            ffmpeg -y -framerate "$FPS" -start_number "$FRAME_START" -i output/frames/frame_%04d.png \
+              -i "$audio_source" \
+              -map 0:v:0 -map 1:a:0 \
+              -c:v libx264 -preset veryfast -crf 30 -pix_fmt yuv420p \
+              -c:a aac -b:a 192k -shortest -movflags +faststart "output/$VIDEO_NAME"
+          else
+            ffmpeg -y -framerate "$FPS" -start_number "$FRAME_START" -i output/frames/frame_%04d.png \
+              -c:v libx264 -preset veryfast -crf 30 -pix_fmt yuv420p -movflags +faststart "output/$VIDEO_NAME"
+          fi
 
       - name: Validate assembled pre-render
         run: |

@@ -1,0 +1,30 @@
+{
+  "id": "audio-reactive-music-20260928",
+  "title": "Audio-Reactive Music Visualizer 2026-09-28",
+  "description": "A 20-second EEVEE music visualizer driven by frame-level analysis of assets/music/20260928_000.mp3. Low, mid, high, RMS, and transient energy animate a circular bar field, core, rings, lights, and camera; the source audio is muxed into the final MP4.",
+  "preview_source": "preview.png",
+  "audio_source": "assets/music/20260928_000.mp3",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 480,
+    "fps": 24,
+    "chunk_size": 60,
+    "preview_frame": 240,
+    "blend": "audio-reactive-music-20260928.blend",
+    "video": "audio-reactive-music-20260928.mp4"
+  },
+  "prepared_outputs": [
+    "audio-reactive-music-20260928.blend",
+    "audio-reactive-music-20260928-report.json"
+  ],
+  "required_outputs": [
+    "preview.png",
+    "audio-reactive-music-20260928.mp4",
+    "audio-reactive-music-20260928.blend",
+    "audio-reactive-music-20260928-report.json"
+  ],
+  "repo_blends": [
+    "audio-reactive-music-20260928.blend"
+  ]
+}
