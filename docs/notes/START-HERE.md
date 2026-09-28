@@ -31,7 +31,8 @@ Successful baseline:
 - 1800 SPH fluid particles
 - 13 fluid VTK frames
 - 13 dynamic rigid-body frames
-- dynamic cube displacement: 1.366636 m
+- corrected dynamic cube frame 1 -> frame 13 displacement: about 2.007 m
+- the old 1.366636 m figure was caused by lexicographic frame ordering and was frame 1 -> frame 9
 - final pySplashSurf surface: 207,174 vertices / 407,148 faces
 - final OBJ: 20,688,757 bytes
 - native SPlisHSPlasH 2.18.1 build is cached for later runs
@@ -72,6 +73,67 @@ Detailed history:
 `docs/notes/sph-actions-poc-2026-09-28.md`
 
 The next natural step is to compare the current 13-object baseline against Alembic/USD or another compact topology-changing animation cache.
+
+### Preferred SPH -> Blender architecture
+
+The compact cache path is now proven beyond the 13-object prototype.
+
+Successful direct-USD results:
+
+- one topology-changing `/FluidSurface` USD mesh -> Blender as one `MESH_SEQUENCE_CACHE` object
+- synchronized `/FluidSurface` + `/DynamicCube` -> Blender as exactly two cache-driven mesh objects
+- 13-frame fluid+cube replay validation errors: 0
+- combined USD: about 15.30 MB
+- portable Blend: about 5.61 MB
+- dynamic cube frame 1 -> 13 displacement: about 2.007 m
+- result published in `results/sph-fluid-cube-usd-render/` and on Pages
+
+Preferred path:
+
+```text
+SPlisHSPlasH
+  -> VTK
+  -> pySplashSurf
+  -> direct OpenUSD
+  -> Blender Mesh Sequence Cache
+```
+
+For longer sequences, use compressed NPZ as the intermediate surface cache
+rather than an OBJ-per-frame sequence.
+
+### Current SPH scale test
+
+Workflow: `SPH 5s scale test`
+
+Current run to inspect first:
+
+- run #3
+- Actions id `36360959609`
+- source commit `6402eff697c16215d068bd7c4ba5a3a278579ce4`
+
+Goal:
+
+- hold particle count near the 1800-particle baseline,
+- extend simulation from ~1 second / 13 frames to 5 seconds / ~60 frames,
+- measure surface-cache/USD/Blend growth and playback,
+- observe the cube after reaching the far tank wall.
+
+Run #1 and #2 showed that CLI `--stopAt 5.0` did not override the
+scene's one-second stop for this setup. Run #3 generates a temporary scene
+beside the original and directly sets `Configuration.stopAt = 5.0`.
+
+Run #3 has already passed:
+
+- 5-second SPH simulation,
+- long-frame-count guard,
+- all-frame pySplashSurf reconstruction,
+- compressed NPZ generation.
+
+At this documentation update, direct USD validation/render is still running.
+
+Read:
+
+`docs/notes/sph-actions-poc-2026-09-28.md`
 
 ### Latest completed Blender visual experiment
 

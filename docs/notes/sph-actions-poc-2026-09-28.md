@@ -41,8 +41,9 @@ Run #10 validated:
 - dynamic rigid-body frames: **13**
 - fluid particles per checked frame: **1800**
 - dynamic cube initial centroid: `[-0.1, 0.519852, 0.0]`
-- dynamic cube final centroid: `[1.216418, 0.153072, -0.014484]`
-- dynamic cube displacement: **1.366636 m**
+- dynamic cube final centroid from the numerically sorted run #10 artifact: `[1.873282, 0.153315, -0.024456]`
+- corrected dynamic cube frame 1 -> frame 13 displacement: **2.007184 m**
+- note: the original **1.366636 m** figure was frame 1 -> frame 9 because filenames had been sorted lexicographically
 - final liquid surface vertices: **207,174**
 - final liquid surface faces: **407,148**
 - final OBJ size: **20,688,757 bytes**
@@ -321,7 +322,7 @@ Do not overwrite the successful one-frame PoC. Keep run #10 as the baseline regr
 
 A new conversation should be able to resume with:
 
-> Read `2rwa/tmp-blender/docs/notes/sph-actions-poc-2026-09-28.md` and continue the SPlisHSPlasH -> Blender cache experiment from the successful run #10.
+> Read `2rwa/tmp-blender/docs/notes/sph-actions-poc-2026-09-28.md` and continue from the latest SPH -> direct USD -> Blender work. Preserve the successful 13-frame direct-USD fluid+cube result as the regression baseline, and check the latest `SPH 5s scale test` run before continuing.
 
 
 ## 2026-09-28 follow-up — full surface sequence replay in Blender
@@ -681,3 +682,139 @@ frame 1 -> frame 9 displacement.
 
 The validator now parses and sorts numeric frame suffixes. The corrected
 frame 1 -> frame 13 displacement is about **2.007184 m**.
+
+
+## 2026-09-28 long-duration / 5-second scale test
+
+The next scale dimension is **time**, while keeping the original ~1800-particle
+scene unchanged.
+
+Target:
+
+- previous baseline: about 1 second / 13 exported frames
+- scale test: 5 seconds / roughly 60 exported frames at 12 fps
+- keep particle count fixed so temporal scaling can be measured independently
+- observe the dynamic cube after it reaches the far side of the tank
+
+New files:
+
+- `sph-experiments/long-duration-5s/prepare_cache.py`
+- `sph-experiments/long-duration-5s/build_and_render.py`
+- `.github/workflows/sph-long-duration-5s.yml`
+
+Long-sequence pipeline:
+
+```text
+SPlisHSPlasH VTK sequence
+  -> pySplashSurf per frame
+  -> compressed NPZ surface sequence
+       vertices: float32
+       triangles: int32
+  -> direct OpenUSD
+       /FluidSurface
+       /DynamicCube
+  -> Blender Mesh Sequence Cache
+  -> validate every frame
+  -> render MP4
+  -> Pages
+```
+
+The compressed NPZ stage intentionally replaces the earlier OBJ sequence.
+OBJ was useful for the 13-frame proof of concept, but scales poorly for longer
+runs because it is text-heavy and repeats large topology data verbosely.
+
+### Long-duration failure history
+
+#### Run #1 — Actions id 36360733632
+
+- SPH step completed successfully.
+- Post-simulation check still found only **13 frames**.
+- Cause: passing `--stopAt 5.0` after the scene path did not extend the
+  scene's `Configuration.stopAt: 1.0`.
+
+#### Run #2 — Actions id 36360827839
+
+- CLI argument order was changed to match upstream examples:
+  options before the scene path.
+- The command line visibly contained `--stopAt 5.0`.
+- The simulator still stopped after the scene's one-second limit and emitted
+  only 13 frames.
+- Conclusion for this build/scene combination: do not rely on the CLI
+  `--stopAt` override for the long-duration test.
+
+#### Run #3 — Actions id 36360959609
+
+The workflow now generates a temporary scene JSON **in the original scene
+directory** and changes:
+
+```json
+"Configuration": {
+  "stopAt": 5.0
+}
+```
+
+Placing the generated file beside the original preserves relative model paths
+such as `models/UnitBox.obj`.
+
+Verified so far in run #3:
+
+- 5-second SPH simulation completed,
+- long sequence contained enough frames to pass the `>=55` frame guard,
+- all long-sequence pySplashSurf reconstructions completed,
+- compressed NPZ generation completed,
+- Blender runtime cache restored,
+- direct USD / all-frame validation / 5-second render is currently running.
+
+Do not describe run #3 as fully complete until the final render, publication,
+and validation steps have finished.
+
+### Frame-number sorting bug — wider scope
+
+The earlier bug was not limited to `validate.py`.
+
+Both of these patterns are unsafe:
+
+```python
+sorted(vtk_dir.glob("ParticleData_Fluid_*.vtk"))
+sorted(vtk_dir.glob("rb_data_1_*.vtk"))
+```
+
+because lexicographic order becomes:
+
+```text
+1, 10, 11, 12, 13, 2, ... 9
+```
+
+The rigid-body validator was already fixed to parse numeric suffixes.
+
+The one-frame `reconstruct.py` also used lexicographic sorting when choosing
+`particle_files[-1]`, which meant `surface-final.obj` could represent
+frame 9 rather than the true final frame 13. It has now been changed to parse
+and sort numeric frame suffixes too.
+
+Rule for all future VTK sequence code:
+
+**Never rely on filename lexicographic order. Parse the numeric frame suffix.**
+
+### Current preferred architecture
+
+For short or long SPH-to-Blender work, the preferred path is now:
+
+```text
+SPlisHSPlasH
+  -> VTK particles + rigid body geometry
+  -> pySplashSurf
+  -> compressed binary surface cache for intermediate work
+  -> direct OpenUSD authoring
+       one topology-varying FluidSurface
+       one animated DynamicCube
+  -> Blender
+       two Mesh Sequence Cache objects
+       materials / camera / lighting / render only
+```
+
+Keep these earlier results as regression references:
+
+- 13-object Blender surface-sequence baseline
+- direct single-fluid USD result
+- synchronized fluid + dynamic cube USD result

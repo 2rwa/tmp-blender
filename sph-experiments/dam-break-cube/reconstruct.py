@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 import meshio
@@ -31,7 +32,16 @@ def main() -> None:
     args = parser.parse_args()
 
     vtk_dir = args.output_dir / "vtk"
-    particle_files = sorted(vtk_dir.glob("ParticleData_Fluid_*.vtk"))
+    def frame_number(path: Path) -> int:
+        match = re.search(r"_(\d+)\.vtk$", path.name)
+        if not match:
+            raise SystemExit(f"cannot parse frame number: {path}")
+        return int(match.group(1))
+
+    particle_files = sorted(
+        vtk_dir.glob("ParticleData_Fluid_*.vtk"),
+        key=frame_number,
+    )
     if not particle_files:
         raise SystemExit(f"no particle VTK files found in {vtk_dir}")
 

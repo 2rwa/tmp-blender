@@ -179,7 +179,8 @@ Verified result:
 - 13 fluid frames
 - 13 dynamic rigid-body frames
 - 1800 fluid particles
-- dynamic cube displacement: 1.366636 m
+- corrected dynamic cube frame 1 -> frame 13 displacement: about 2.007 m
+- original 1.366636 m report was frame 1 -> frame 9 due lexicographic VTK filename sorting
 - final surface: 207,174 vertices / 407,148 faces
 - final OBJ: 20,688,757 bytes
 
@@ -193,3 +194,76 @@ Key engineering findings:
 Full notes:
 
 `docs/notes/sph-actions-poc-2026-09-28.md`
+
+
+## 2026-09-28 — direct USD topology cache
+
+The 13 independent Blender mesh-object prototype was reduced to one
+topology-varying USD mesh.
+
+Successful workflow:
+
+- `SPH direct USD topology cache`
+- run #2 / id `36358344451`
+
+Result:
+
+- one USD prim: `/FluidSurface`
+- 13 time samples for `points`, `faceVertexCounts`, and
+  `faceVertexIndices`
+- Blender imports one mesh object
+- Blender attaches `MESH_SEQUENCE_CACHE`
+- all 13 source topologies reproduced exactly
+- replay errors: 0
+- USD: 15,296,671 bytes
+- imported Blend: 5,523,896 bytes
+
+This became the preferred surface-cache representation.
+
+## 2026-09-28 — synchronized SPH fluid + rigid cube
+
+Successful workflow:
+
+- `SPH fluid cube USD render`
+- run #2 / id `36359942969`
+
+The direct USD cache was extended to contain:
+
+- `/FluidSurface`
+- `/DynamicCube`
+
+Blender imported exactly two cache-driven mesh objects.
+
+Verified:
+
+- 13 synchronized frames
+- fluid topology correct on every frame
+- cube topology: 8 vertices / 12 faces
+- both objects use `MESH_SEQUENCE_CACHE`
+- replay errors: 0
+- cube frame 1 -> frame 13 displacement: 2.007184 m
+- combined USD: 15,298,504 bytes
+- portable Blend: 5,610,696 bytes
+- preview + MP4 published to Pages
+
+This also exposed a filename-ordering error in older validation code. VTK
+sequence files must be sorted by parsed numeric frame suffix, never plain
+lexicographic filename order.
+
+## 2026-09-28 — 5-second temporal scale test
+
+A new experiment keeps the ~1800-particle baseline but extends the simulation
+to 5 seconds at 12 exported frames per second.
+
+The intermediate surface representation was changed from OBJ-per-frame to
+compressed NPZ before direct USD authoring.
+
+Failure history:
+
+- run #1 / `36360733632`: only 13 frames; CLI stop override did not extend the scene.
+- run #2 / `36360827839`: options moved before the scene path, but still only 13 frames.
+- run #3 / `36360959609`: generates a temporary scene beside the original and directly sets `Configuration.stopAt = 5.0`.
+
+Run #3 has successfully completed the 5-second SPH solve, long-sequence
+surface reconstruction, and compressed NPZ stage. At the time of this log
+update, direct USD validation/render is still running.
