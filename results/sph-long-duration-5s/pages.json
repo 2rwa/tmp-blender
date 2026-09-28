@@ -1,0 +1,11 @@
+{
+  "title": "SPH Fluid + Cube — 5s Scale Test",
+  "description": "1800粒子のSPHを5秒・約61フレームまで延長し、compressed NPZ→direct USD→Blenderで長尺再生したスケール試験。",
+  "source_path": "sph-experiments/long-duration-5s",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "6402eff697c16215d068bd7c4ba5a3a278579ce4",
+  "run_number": "3",
+  "run_id": "36360959609"
+}

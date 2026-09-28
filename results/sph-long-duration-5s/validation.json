@@ -1,0 +1,651 @@
+{
+  "frames": 61,
+  "duration_seconds": 5.083333333333333,
+  "fluid_mesh_objects": 1,
+  "dynamic_cube_mesh_objects": 1,
+  "fluid_modifier": [
+    "MESH_SEQUENCE_CACHE"
+  ],
+  "cube_modifier": [
+    "MESH_SEQUENCE_CACHE"
+  ],
+  "surface_vertices_min": 49554,
+  "surface_vertices_max": 59258,
+  "surface_faces_min": 91908,
+  "surface_faces_max": 111316,
+  "surface_npz_total_bytes": 51406712,
+  "reconstruction_total_seconds": 13.931034417000006,
+  "usd_author_seconds": 8.099956500000019,
+  "usd_import_seconds": 0.037574360999997225,
+  "scrub_all_frames_seconds": 1.3061374600000022,
+  "render_seconds": 415.08990877299993,
+  "cube_path_length_m": 2.5888812815586153,
+  "cube_centroid_min_blender": [
+    -0.09999999776482582,
+    -0.0015071630477905273,
+    0.09613838791847229
+  ],
+  "cube_centroid_max_blender": [
+    1.982248529791832,
+    0.023252949118614197,
+    0.5198524445295334
+  ],
+  "cube_x_direction_reversals": 2,
+  "usd_bytes": 70695428,
+  "blend_bytes": 5636876,
+  "preview_bytes": 283154,
+  "video_bytes": 113836,
+  "errors": [],
+  "observed": [
+    {
+      "frame": 1,
+      "fluid_vertices": 54000,
+      "fluid_faces": 100800,
+      "cube_centroid": [
+        -0.1,
+        0.0,
+        0.519852
+      ]
+    },
+    {
+      "frame": 2,
+      "fluid_vertices": 59258,
+      "fluid_faces": 111316,
+      "cube_centroid": [
+        -0.1,
+        0.0,
+        0.479738
+      ]
+    },
+    {
+      "frame": 3,
+      "fluid_vertices": 50768,
+      "fluid_faces": 94336,
+      "cube_centroid": [
+        -0.1,
+        0.0,
+        0.368733
+      ]
+    },
+    {
+      "frame": 4,
+      "fluid_vertices": 49780,
+      "fluid_faces": 92360,
+      "cube_centroid": [
+        -0.087027,
+        0.000207,
+        0.2004
+      ]
+    },
+    {
+      "frame": 5,
+      "fluid_vertices": 49646,
+      "fluid_faces": 92092,
+      "cube_centroid": [
+        0.074557,
+        -0.001507,
+        0.158206
+      ]
+    },
+    {
+      "frame": 6,
+      "fluid_vertices": 49646,
+      "fluid_faces": 92096,
+      "cube_centroid": [
+        0.325389,
+        0.001683,
+        0.157019
+      ]
+    },
+    {
+      "frame": 7,
+      "fluid_vertices": 49600,
+      "fluid_faces": 92004,
+      "cube_centroid": [
+        0.611386,
+        0.005678,
+        0.155596
+      ]
+    },
+    {
+      "frame": 8,
+      "fluid_vertices": 49900,
+      "fluid_faces": 92600,
+      "cube_centroid": [
+        0.907557,
+        0.009949,
+        0.154156
+      ]
+    },
+    {
+      "frame": 9,
+      "fluid_vertices": 49702,
+      "fluid_faces": 92204,
+      "cube_centroid": [
+        1.216639,
+        0.014682,
+        0.153068
+      ]
+    },
+    {
+      "frame": 10,
+      "fluid_vertices": 49766,
+      "fluid_faces": 92332,
+      "cube_centroid": [
+        1.553282,
+        0.01979,
+        0.152119
+      ]
+    },
+    {
+      "frame": 11,
+      "fluid_vertices": 49760,
+      "fluid_faces": 92320,
+      "cube_centroid": [
+        1.851361,
+        0.020082,
+        0.151885
+      ]
+    },
+    {
+      "frame": 12,
+      "fluid_vertices": 49790,
+      "fluid_faces": 92380,
+      "cube_centroid": [
+        1.864661,
+        0.02025,
+        0.152517
+      ]
+    },
+    {
+      "frame": 13,
+      "fluid_vertices": 49554,
+      "fluid_faces": 91908,
+      "cube_centroid": [
+        1.872848,
+        0.023108,
+        0.153781
+      ]
+    },
+    {
+      "frame": 14,
+      "fluid_vertices": 49904,
+      "fluid_faces": 92608,
+      "cube_centroid": [
+        1.881784,
+        0.017768,
+        0.154642
+      ]
+    },
+    {
+      "frame": 15,
+      "fluid_vertices": 49924,
+      "fluid_faces": 92648,
+      "cube_centroid": [
+        1.887348,
+        0.013855,
+        0.154459
+      ]
+    },
+    {
+      "frame": 16,
+      "fluid_vertices": 49648,
+      "fluid_faces": 92096,
+      "cube_centroid": [
+        1.896203,
+        0.012784,
+        0.15523
+      ]
+    },
+    {
+      "frame": 17,
+      "fluid_vertices": 49892,
+      "fluid_faces": 92584,
+      "cube_centroid": [
+        1.903387,
+        0.011029,
+        0.156781
+      ]
+    },
+    {
+      "frame": 18,
+      "fluid_vertices": 49604,
+      "fluid_faces": 92008,
+      "cube_centroid": [
+        1.907157,
+        0.004636,
+        0.155434
+      ]
+    },
+    {
+      "frame": 19,
+      "fluid_vertices": 49794,
+      "fluid_faces": 92388,
+      "cube_centroid": [
+        1.912238,
+        0.007434,
+        0.151462
+      ]
+    },
+    {
+      "frame": 20,
+      "fluid_vertices": 49558,
+      "fluid_faces": 91916,
+      "cube_centroid": [
+        1.92023,
+        0.008208,
+        0.140538
+      ]
+    },
+    {
+      "frame": 21,
+      "fluid_vertices": 49762,
+      "fluid_faces": 92324,
+      "cube_centroid": [
+        1.922385,
+        0.01132,
+        0.12342
+      ]
+    },
+    {
+      "frame": 22,
+      "fluid_vertices": 49928,
+      "fluid_faces": 92656,
+      "cube_centroid": [
+        1.926468,
+        0.011987,
+        0.106204
+      ]
+    },
+    {
+      "frame": 23,
+      "fluid_vertices": 49672,
+      "fluid_faces": 92144,
+      "cube_centroid": [
+        1.932721,
+        0.016392,
+        0.098184
+      ]
+    },
+    {
+      "frame": 24,
+      "fluid_vertices": 50002,
+      "fluid_faces": 92804,
+      "cube_centroid": [
+        1.937357,
+        0.021575,
+        0.097331
+      ]
+    },
+    {
+      "frame": 25,
+      "fluid_vertices": 49774,
+      "fluid_faces": 92348,
+      "cube_centroid": [
+        1.939964,
+        0.018129,
+        0.097198
+      ]
+    },
+    {
+      "frame": 26,
+      "fluid_vertices": 49704,
+      "fluid_faces": 92208,
+      "cube_centroid": [
+        1.941079,
+        0.018116,
+        0.100249
+      ]
+    },
+    {
+      "frame": 27,
+      "fluid_vertices": 49758,
+      "fluid_faces": 92316,
+      "cube_centroid": [
+        1.941746,
+        0.020921,
+        0.10262
+      ]
+    },
+    {
+      "frame": 28,
+      "fluid_vertices": 49902,
+      "fluid_faces": 92604,
+      "cube_centroid": [
+        1.943812,
+        0.021711,
+        0.104611
+      ]
+    },
+    {
+      "frame": 29,
+      "fluid_vertices": 50008,
+      "fluid_faces": 92816,
+      "cube_centroid": [
+        1.946609,
+        0.023049,
+        0.106921
+      ]
+    },
+    {
+      "frame": 30,
+      "fluid_vertices": 49608,
+      "fluid_faces": 92024,
+      "cube_centroid": [
+        1.950541,
+        0.023253,
+        0.10894
+      ]
+    },
+    {
+      "frame": 31,
+      "fluid_vertices": 50064,
+      "fluid_faces": 92928,
+      "cube_centroid": [
+        1.955592,
+        0.020012,
+        0.110392
+      ]
+    },
+    {
+      "frame": 32,
+      "fluid_vertices": 50200,
+      "fluid_faces": 93200,
+      "cube_centroid": [
+        1.961131,
+        0.019039,
+        0.11014
+      ]
+    },
+    {
+      "frame": 33,
+      "fluid_vertices": 50080,
+      "fluid_faces": 92960,
+      "cube_centroid": [
+        1.967294,
+        0.018039,
+        0.108755
+      ]
+    },
+    {
+      "frame": 34,
+      "fluid_vertices": 50052,
+      "fluid_faces": 92904,
+      "cube_centroid": [
+        1.972076,
+        0.019833,
+        0.105927
+      ]
+    },
+    {
+      "frame": 35,
+      "fluid_vertices": 49884,
+      "fluid_faces": 92568,
+      "cube_centroid": [
+        1.976434,
+        0.017739,
+        0.103301
+      ]
+    },
+    {
+      "frame": 36,
+      "fluid_vertices": 49698,
+      "fluid_faces": 92200,
+      "cube_centroid": [
+        1.98012,
+        0.017141,
+        0.101681
+      ]
+    },
+    {
+      "frame": 37,
+      "fluid_vertices": 49958,
+      "fluid_faces": 92728,
+      "cube_centroid": [
+        1.982238,
+        0.017177,
+        0.099455
+      ]
+    },
+    {
+      "frame": 38,
+      "fluid_vertices": 49718,
+      "fluid_faces": 92244,
+      "cube_centroid": [
+        1.982249,
+        0.015033,
+        0.097694
+      ]
+    },
+    {
+      "frame": 39,
+      "fluid_vertices": 49624,
+      "fluid_faces": 92056,
+      "cube_centroid": [
+        1.979244,
+        0.012933,
+        0.096537
+      ]
+    },
+    {
+      "frame": 40,
+      "fluid_vertices": 49914,
+      "fluid_faces": 92636,
+      "cube_centroid": [
+        1.973467,
+        0.013876,
+        0.096138
+      ]
+    },
+    {
+      "frame": 41,
+      "fluid_vertices": 49814,
+      "fluid_faces": 92440,
+      "cube_centroid": [
+        1.96263,
+        0.016475,
+        0.096748
+      ]
+    },
+    {
+      "frame": 42,
+      "fluid_vertices": 49846,
+      "fluid_faces": 92496,
+      "cube_centroid": [
+        1.947423,
+        0.016842,
+        0.0989
+      ]
+    },
+    {
+      "frame": 43,
+      "fluid_vertices": 49614,
+      "fluid_faces": 92036,
+      "cube_centroid": [
+        1.933103,
+        0.015987,
+        0.101396
+      ]
+    },
+    {
+      "frame": 44,
+      "fluid_vertices": 49898,
+      "fluid_faces": 92604,
+      "cube_centroid": [
+        1.920761,
+        0.014625,
+        0.104472
+      ]
+    },
+    {
+      "frame": 45,
+      "fluid_vertices": 49994,
+      "fluid_faces": 92796,
+      "cube_centroid": [
+        1.911489,
+        0.013639,
+        0.10728
+      ]
+    },
+    {
+      "frame": 46,
+      "fluid_vertices": 49968,
+      "fluid_faces": 92744,
+      "cube_centroid": [
+        1.904223,
+        0.012189,
+        0.110531
+      ]
+    },
+    {
+      "frame": 47,
+      "fluid_vertices": 49612,
+      "fluid_faces": 92032,
+      "cube_centroid": [
+        1.897824,
+        0.010641,
+        0.113108
+      ]
+    },
+    {
+      "frame": 48,
+      "fluid_vertices": 49820,
+      "fluid_faces": 92452,
+      "cube_centroid": [
+        1.891977,
+        0.00947,
+        0.115719
+      ]
+    },
+    {
+      "frame": 49,
+      "fluid_vertices": 50072,
+      "fluid_faces": 92964,
+      "cube_centroid": [
+        1.887588,
+        0.008484,
+        0.118259
+      ]
+    },
+    {
+      "frame": 50,
+      "fluid_vertices": 50444,
+      "fluid_faces": 93704,
+      "cube_centroid": [
+        1.88233,
+        0.005759,
+        0.121577
+      ]
+    },
+    {
+      "frame": 51,
+      "fluid_vertices": 49766,
+      "fluid_faces": 92344,
+      "cube_centroid": [
+        1.878922,
+        0.006926,
+        0.1237
+      ]
+    },
+    {
+      "frame": 52,
+      "fluid_vertices": 49842,
+      "fluid_faces": 92492,
+      "cube_centroid": [
+        1.876724,
+        0.008459,
+        0.125001
+      ]
+    },
+    {
+      "frame": 53,
+      "fluid_vertices": 49806,
+      "fluid_faces": 92416,
+      "cube_centroid": [
+        1.875361,
+        0.008785,
+        0.125638
+      ]
+    },
+    {
+      "frame": 54,
+      "fluid_vertices": 49984,
+      "fluid_faces": 92780,
+      "cube_centroid": [
+        1.873372,
+        0.008592,
+        0.126194
+      ]
+    },
+    {
+      "frame": 55,
+      "fluid_vertices": 49740,
+      "fluid_faces": 92296,
+      "cube_centroid": [
+        1.871109,
+        0.007933,
+        0.126926
+      ]
+    },
+    {
+      "frame": 56,
+      "fluid_vertices": 50040,
+      "fluid_faces": 92900,
+      "cube_centroid": [
+        1.869283,
+        0.008493,
+        0.127629
+      ]
+    },
+    {
+      "frame": 57,
+      "fluid_vertices": 50194,
+      "fluid_faces": 93204,
+      "cube_centroid": [
+        1.868026,
+        0.009598,
+        0.127953
+      ]
+    },
+    {
+      "frame": 58,
+      "fluid_vertices": 50174,
+      "fluid_faces": 93168,
+      "cube_centroid": [
+        1.867441,
+        0.009262,
+        0.128004
+      ]
+    },
+    {
+      "frame": 59,
+      "fluid_vertices": 50206,
+      "fluid_faces": 93228,
+      "cube_centroid": [
+        1.867273,
+        0.008648,
+        0.127893
+      ]
+    },
+    {
+      "frame": 60,
+      "fluid_vertices": 50046,
+      "fluid_faces": 92912,
+      "cube_centroid": [
+        1.867144,
+        0.008621,
+        0.127739
+      ]
+    },
+    {
+      "frame": 61,
+      "fluid_vertices": 49948,
+      "fluid_faces": 92712,
+      "cube_centroid": [
+        1.867298,
+        0.008566,
+        0.127719
+      ]
+    }
+  ]
+}
