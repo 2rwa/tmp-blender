@@ -1,0 +1,11 @@
+{
+  "title": "Elastic Burst SPH \u2014 Head-on Smash",
+  "description": "Two deformable blocks collide head-on at high speed and rebound apart. Classification=high-energy elastic collision. Method=Kugelstadt et al. 2021, Young=280000.",
+  "source_path": "sph-experiments/elastic-burst-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "a1542271e8cdcaa719515a46da0d3624153b54ca",
+  "run_number": "1",
+  "run_id": "36383409140"
+}

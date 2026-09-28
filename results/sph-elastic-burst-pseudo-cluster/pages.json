@@ -1,0 +1,11 @@
+{
+  "title": "Elastic Burst SPH \u2014 Pseudo Burst Cluster",
+  "description": "Eight pre-separated small elastic blocks start as one visual cluster and fly outward radially. This is not fracture. Classification=pseudo-burst: pre-separated blocks, not fracture. Method=Kugelstadt et al. 2021, Young=400000.",
+  "source_path": "sph-experiments/elastic-burst-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "a1542271e8cdcaa719515a46da0d3624153b54ca",
+  "run_number": "1",
+  "run_id": "36383409140"
+}

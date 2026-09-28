@@ -1,0 +1,11 @@
+{
+  "title": "Elastic Burst SPH \u2014 Stiff Floor Shock",
+  "description": "Stiff Kugelstadt elastic cube hits the floor even faster for sharp compression and recoil. Classification=high-energy elastic rebound. Method=Kugelstadt et al. 2021, Young=1400000.",
+  "source_path": "sph-experiments/elastic-burst-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "a1542271e8cdcaa719515a46da0d3624153b54ca",
+  "run_number": "1",
+  "run_id": "36383409140"
+}
