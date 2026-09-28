@@ -9,12 +9,12 @@
     0.0
   ],
   "dynamic_cube_last_centroid": [
-    1.872925,
-    0.15383,
-    -0.020062
+    1.873515,
+    0.153564,
+    -0.019086
   ],
-  "dynamic_cube_displacement_m": 2.006691,
-  "surface_obj_vertices": 207370,
-  "surface_obj_faces": 407540,
-  "surface_obj_bytes": 20700958
+  "dynamic_cube_displacement_m": 2.00731,
+  "surface_obj_vertices": 207276,
+  "surface_obj_faces": 407352,
+  "surface_obj_bytes": 20799581
 }
