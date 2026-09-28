@@ -1,0 +1,11 @@
+{
+  "title": "SPH Point Cloud — Geometry Nodes Surface",
+  "description": "1800点×61フレームのSPH点群を主データにし、Blender Geometry NodesのMesh to Points→Points to Volume→Volume to Meshで水面化した実験。",
+  "source_path": "sph-experiments/geometry-nodes-points-volume",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "040d3d6f57267785db7461a2ea9513e9faf8bf35",
+  "run_number": "1",
+  "run_id": "36367596940"
+}

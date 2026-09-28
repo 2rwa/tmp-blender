@@ -1,0 +1,80 @@
+{
+  "representation": "animated-vertex-only-usd-plus-geometry-nodes",
+  "frames": 61,
+  "particle_count": 1800,
+  "point_attributes_cached": [
+    "position",
+    "velocity",
+    "density"
+  ],
+  "point_npz_total_bytes": 2790514,
+  "point_usd_bytes": 1327136,
+  "blend_bytes": 978058,
+  "preview_bytes": 287025,
+  "video_bytes": 408136,
+  "usd_author_seconds": 0.1647743179999992,
+  "usd_import_seconds": 0.001414077999996266,
+  "geometry_nodes_check_seconds": 0.0705567500000015,
+  "render_seconds": 190.05154965499997,
+  "geometry_nodes": {
+    "radius": 0.1,
+    "voxel_size": 0.04,
+    "threshold": 0.1,
+    "nodes": [
+      "GeometryNodeMeshToPoints",
+      "GeometryNodePointsToVolume",
+      "GeometryNodeSetMaterial",
+      "GeometryNodeVolumeToMesh",
+      "NodeGroupInput",
+      "NodeGroupOutput"
+    ],
+    "modifier_stack": [
+      "MESH_SEQUENCE_CACHE",
+      "NODES"
+    ],
+    "exposed_inputs": [
+      "Radius",
+      "Voxel Size",
+      "Threshold"
+    ]
+  },
+  "checks": [
+    {
+      "frame": 1,
+      "source_particles": 1800,
+      "surface_vertices": 6848,
+      "surface_faces": 6846
+    },
+    {
+      "frame": 7,
+      "source_particles": 1800,
+      "surface_vertices": 20042,
+      "surface_faces": 20034
+    },
+    {
+      "frame": 13,
+      "source_particles": 1800,
+      "surface_vertices": 31930,
+      "surface_faces": 31866
+    },
+    {
+      "frame": 31,
+      "source_particles": 1800,
+      "surface_vertices": 19324,
+      "surface_faces": 19328
+    },
+    {
+      "frame": 46,
+      "source_particles": 1800,
+      "surface_vertices": 17162,
+      "surface_faces": 17162
+    },
+    {
+      "frame": 61,
+      "source_particles": 1800,
+      "surface_vertices": 15428,
+      "surface_faces": 15424
+    }
+  ],
+  "errors": []
+}
