@@ -1,0 +1,32 @@
+{
+  "video": "audio-reactive-music-20260928.mp4",
+  "preview": {
+    "size_bytes": 241800,
+    "luminance_min": 0,
+    "luminance_max": 251,
+    "luminance_stddev": 58.851,
+    "sha256": "a5ee52370eb4efd0609fbc3420265dc1bfdb2b3e89cd55fc950ce359319be0fe"
+  },
+  "movie": {
+    "size_bytes": 1405987,
+    "duration_seconds": 20.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "audio_sample_rate": "48000",
+    "audio_channels": 2,
+    "avg_frame_rate": "24/1",
+    "nb_frames": "480",
+    "sha256": "ac3c18e95fea1a7e18cf32159b69c36919f6bd36862ba6681046d680a91098cc"
+  },
+  "report": {
+    "source": "assets/music/20260928_000.mp3",
+    "source_sha256": "9f7355de1e6ec71a1431088afd245bfda8d3df1a26d8b159dc52a6b4895781c1",
+    "beat_count": 20,
+    "max_full": 1.263459,
+    "max_transient": 1.5,
+    "animated_objects": 44,
+    "bar_count": 36,
+    "keyframe_insert_calls": 49440,
+    "blend_size_bytes": 5151176
+  }
+}
