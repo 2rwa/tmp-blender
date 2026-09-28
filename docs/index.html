@@ -44,170 +44,98 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
 <main>
 
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/character-room-interior-eevee/media.mp4" data-poster="assets/character-room-interior-eevee/preview.jpg" aria-label="Character Room Interior EEVEE の動画を再生"><img src="assets/character-room-interior-eevee/preview.jpg" alt="Character Room Interior EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-point-diagnostics-velocity/media.mp4" data-poster="assets/sph-point-diagnostics-velocity/preview.png" aria-label="SPH Point Diagnostics — Velocity Arrows の動画を再生"><img src="assets/sph-point-diagnostics-velocity/preview.png" alt="SPH Point Diagnostics — Velocity Arrows preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Character Room Interior EEVEE</h2>
-            <p class="id">character-room-interior-eevee</p>
-            <p>A reusable 7.2m x 5.4m x 3.0m open-front living/study room built from Blender primitives, furnished and lit at room scale, with the Quaternius Warrior idling as a human-scale reference during a 15-second camera tour.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/c849e43fca049e20f43ed5098492e1492296e502">c849e43fca</a></p>
-            <table></table>
-            <p class="links"><a href="assets/character-room-interior-eevee/preview.jpg">preview</a> · <a href="assets/character-room-interior-eevee/media.mp4">mp4</a> · <a href="assets/character-room-interior-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/character-room-interior-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/character-room-interior-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/character-room-interior-eevee/character-room-interior-eevee.blend">character-room-interior-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36322787601">Actions #53</a></p>
+            <h2>SPH Point Diagnostics — Velocity Arrows</h2>
+            <p class="id">sph-point-diagnostics-velocity</p>
+            <p>SPH点群のうち8点ごとにvelocity矢印をGeometry Nodesで表示。矢印長は速度の95パーセンタイルで正規化。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/49feb3b91b96b85c74e5a80ffd3c392f33ce2090">49feb3b91b</a></p>
+            <table><tr><th>blend_bytes</th><td>1247512</td></tr><tr><th>video_bytes</th><td>523690</td></tr></table>
+            <p class="links"><a href="assets/sph-point-diagnostics-velocity/preview.png">preview</a> · <a href="assets/sph-point-diagnostics-velocity/media.mp4">mp4</a> · <a href="assets/sph-point-diagnostics-velocity/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/point-diagnostics">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-point-diagnostics-velocity">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-point-diagnostics-velocity/sph-point-diagnostics-velocity.blend">sph-point-diagnostics-velocity.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36369860412">Actions #2</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><img src="assets/cloth-hammock-collision-eevee/preview.jpg" alt="Cloth Hammock Collision EEVEE preview"></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-point-diagnostics-combined/media.mp4" data-poster="assets/sph-point-diagnostics-combined/preview.png" aria-label="SPH Point Diagnostics — Velocity + Acceleration の動画を再生"><img src="assets/sph-point-diagnostics-combined/preview.png" alt="SPH Point Diagnostics — Velocity + Acceleration preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Cloth Hammock Collision EEVEE</h2>
-            <p class="id">cloth-hammock-collision-eevee</p>
-            <p>A CPU-heavy cloth simulation test: a four-corner-pinned hammock cloth with self collision, wind/turbulence and two animated sphere colliders. Physics is baked into shape keys before parallel EEVEE rendering.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/e2f23a87a9502b9a0268bfb7bc1493ee773590dd">e2f23a87a9</a></p>
-            <table></table>
-            <p class="links"><a href="assets/cloth-hammock-collision-eevee/preview.jpg">preview</a> · <a href="assets/cloth-hammock-collision-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/cloth-hammock-collision-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/cloth-hammock-collision-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/cloth-hammock-collision-eevee/cloth-hammock-collision-eevee.blend">cloth-hammock-collision-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36235853079">Actions #32</a></p>
+            <h2>SPH Point Diagnostics — Velocity + Acceleration</h2>
+            <p class="id">sph-point-diagnostics-combined</p>
+            <p>acceleration色表示したSPH粒子に、疎化したvelocity矢印をGeometry Nodesで重ねた診断表示。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/49feb3b91b96b85c74e5a80ffd3c392f33ce2090">49feb3b91b</a></p>
+            <table><tr><th>blend_bytes</th><td>1367669</td></tr><tr><th>video_bytes</th><td>555488</td></tr></table>
+            <p class="links"><a href="assets/sph-point-diagnostics-combined/preview.png">preview</a> · <a href="assets/sph-point-diagnostics-combined/media.mp4">mp4</a> · <a href="assets/sph-point-diagnostics-combined/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/point-diagnostics">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-point-diagnostics-combined">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-point-diagnostics-combined/sph-point-diagnostics-combined.blend">sph-point-diagnostics-combined.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36369860412">Actions #2</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/cloth-hammock-collision-movie-eevee/media.mp4" data-poster="assets/cloth-hammock-collision-movie-eevee/preview.jpg" aria-label="Cloth Hammock Collision Movie EEVEE の動画を再生"><img src="assets/cloth-hammock-collision-movie-eevee/preview.jpg" alt="Cloth Hammock Collision Movie EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-point-diagnostics-acceleration/media.mp4" data-poster="assets/sph-point-diagnostics-acceleration/preview.png" aria-label="SPH Point Diagnostics — Acceleration Heatmap の動画を再生"><img src="assets/sph-point-diagnostics-acceleration/preview.png" alt="SPH Point Diagnostics — Acceleration Heatmap preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Cloth Hammock Collision Movie EEVEE</h2>
-            <p class="id">cloth-hammock-collision-movie-eevee</p>
-            <p>An 8-second presentation-oriented extension of the cloth hammock experiment with two-stage sphere impacts, moving wind/turbulence, and a slow animated camera. Cloth physics is baked to shape keys before parallel EEVEE rendering.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/632813ff48f45f92111f330386e2f10f72d4b454">632813ff48</a></p>
-            <table></table>
-            <p class="links"><a href="assets/cloth-hammock-collision-movie-eevee/preview.jpg">preview</a> · <a href="assets/cloth-hammock-collision-movie-eevee/media.mp4">mp4</a> · <a href="assets/cloth-hammock-collision-movie-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/cloth-hammock-collision-movie-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/cloth-hammock-collision-movie-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/cloth-hammock-collision-movie-eevee/cloth-hammock-collision-movie-eevee.blend">cloth-hammock-collision-movie-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36236915724">Actions #34</a></p>
+            <h2>SPH Point Diagnostics — Acceleration Heatmap</h2>
+            <p class="id">sph-point-diagnostics-acceleration</p>
+            <p>velocity差分からaccelerationを算出し、97パーセンタイル正規化した5段階の色で全SPH粒子を表示。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/49feb3b91b96b85c74e5a80ffd3c392f33ce2090">49feb3b91b</a></p>
+            <table><tr><th>blend_bytes</th><td>1311323</td></tr><tr><th>video_bytes</th><td>520112</td></tr></table>
+            <p class="links"><a href="assets/sph-point-diagnostics-acceleration/preview.png">preview</a> · <a href="assets/sph-point-diagnostics-acceleration/media.mp4">mp4</a> · <a href="assets/sph-point-diagnostics-acceleration/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/point-diagnostics">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-point-diagnostics-acceleration">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-point-diagnostics-acceleration/sph-point-diagnostics-acceleration.blend">sph-point-diagnostics-acceleration.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36369860412">Actions #2</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/cloth-hammock-rigidbody-drop-eevee/media.mp4" data-poster="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg" aria-label="Cloth Hammock Rigid Body Drop EEVEE の動画を再生"><img src="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg" alt="Cloth Hammock Rigid Body Drop EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-geometry-nodes-points-volume/media.mp4" data-poster="assets/sph-geometry-nodes-points-volume/preview.png" aria-label="SPH Point Cloud — Geometry Nodes Surface の動画を再生"><img src="assets/sph-geometry-nodes-points-volume/preview.png" alt="SPH Point Cloud — Geometry Nodes Surface preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Cloth Hammock Rigid Body Drop EEVEE</h2>
-            <p class="id">cloth-hammock-rigidbody-drop-eevee</p>
-            <p>Hybrid cloth + rigid-body experiment: 12 staggered rigid-body spheres fall into a four-corner-pinned cloth hammock. A hidden passive rigid proxy provides stable two-system coupling while the visible cloth reacts to the moving spheres. Physics is baked before parallel EEVEE rendering.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/eb529cae9431fe5d0ee5092a240912c88d9ad2de">eb529cae94</a></p>
-            <table></table>
-            <p class="links"><a href="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg">preview</a> · <a href="assets/cloth-hammock-rigidbody-drop-eevee/media.mp4">mp4</a> · <a href="assets/cloth-hammock-rigidbody-drop-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/cloth-hammock-rigidbody-drop-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/cloth-hammock-rigidbody-drop-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/cloth-hammock-rigidbody-drop-eevee/cloth-hammock-rigidbody-drop-eevee.blend">cloth-hammock-rigidbody-drop-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36239159364">Actions #37</a></p>
+            <h2>SPH Point Cloud — Geometry Nodes Surface</h2>
+            <p class="id">sph-geometry-nodes-points-volume</p>
+            <p>1800点×61フレームのSPH点群を主データにし、Blender Geometry NodesのMesh to Points→Points to Volume→Volume to Meshで水面化した実験。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/040d3d6f57267785db7461a2ea9513e9faf8bf35">040d3d6f57</a></p>
+            <table><tr><th>blend_bytes</th><td>978058</td></tr><tr><th>video_bytes</th><td>408136</td></tr></table>
+            <p class="links"><a href="assets/sph-geometry-nodes-points-volume/preview.png">preview</a> · <a href="assets/sph-geometry-nodes-points-volume/media.mp4">mp4</a> · <a href="assets/sph-geometry-nodes-points-volume/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/geometry-nodes-points-volume">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-geometry-nodes-points-volume">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-geometry-nodes-points-volume/sph-points-geometry-nodes.blend">sph-points-geometry-nodes.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36367596940">Actions #1</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/fire-column/media.mp4" data-poster="assets/fire-column/preview.jpg" aria-label="Fire Column の動画を再生"><img src="assets/fire-column/preview.jpg" alt="Fire Column preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-large-droplets-075-smooth/media.mp4" data-poster="assets/sph-large-droplets-075-smooth/preview.png" aria-label="SPH Fluid — Larger Droplets + Taubin Smooth の動画を再生"><img src="assets/sph-large-droplets-075-smooth/preview.png" alt="SPH Fluid — Larger Droplets + Taubin Smooth preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Fire Column</h2>
-            <p class="id">fire-column</p>
-            <p>A short stylized flame animation built from layered emissive flame tongues, flickering light, glow, and rising sparks.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/5c9e0e14f0c596f3f247b07cc1d58a209ad7b590">5c9e0e14f0</a></p>
-            <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>95,958 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>72.766</td></tr><tr><th>bright_pixel_ratio</th><td>0.182305</td></tr><tr><th>warm_pixel_ratio</th><td>0.068837</td></tr></table>
-            <p class="links"><a href="assets/fire-column/preview.jpg">preview</a> · <a href="assets/fire-column/media.mp4">mp4</a> · <a href="assets/fire-column/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/fire-column">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/fire-column">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36213194885">Actions #8</a></p>
+            <h2>SPH Fluid — Larger Droplets + Taubin Smooth</h2>
+            <p class="id">sph-large-droplets-075-smooth</p>
+            <p>radius 0.075の大粒版surfaceをそのまま使い、5回のTaubin smoothingで細かな凹凸だけを抑えた比較版。物理計算とtopologyは同一。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/f3344d048dab1be147039e1be6dd0c88ed32b266">f3344d048d</a></p>
+            <table><tr><th>duration_seconds</th><td>5.083333333333333</td></tr><tr><th>blend_bytes</th><td>11414476</td></tr><tr><th>video_bytes</th><td>294320</td></tr></table>
+            <p class="links"><a href="assets/sph-large-droplets-075-smooth/preview.png">preview</a> · <a href="assets/sph-large-droplets-075-smooth/media.mp4">mp4</a> · <a href="assets/sph-large-droplets-075-smooth/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/large-droplets-075-smooth">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-large-droplets-075-smooth">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-large-droplets-075-smooth/fluid-cube-large-droplets-075-smooth.blend">fluid-cube-large-droplets-075-smooth.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36364391725">Actions #2</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/fluid-dam-break/media.mp4" data-poster="assets/fluid-dam-break/preview.jpg" aria-label="Fluid Dam Break の動画を再生"><img src="assets/fluid-dam-break/preview.jpg" alt="Fluid Dam Break preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-large-droplets-075/media.mp4" data-poster="assets/sph-large-droplets-075/preview.png" aria-label="SPH Fluid — Larger Droplets 1.5x の動画を再生"><img src="assets/sph-large-droplets-075/preview.png" alt="SPH Fluid — Larger Droplets 1.5x preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Fluid Dam Break</h2>
-            <p class="id">fluid-dam-break</p>
-            <p>A low-resolution Mantaflow liquid dam-break simulation with a center obstacle and a low barrier.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/9f290e0f9aa71f129ab0ce5d1a5e7cbba9a9265d">9f290e0f9a</a></p>
-            <table><tr><th>duration_seconds</th><td>1.75</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>168,055 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>38.753</td></tr><tr><th>poster_unique_colors_64x36</th><td>889</td></tr></table>
-            <p class="links"><a href="assets/fluid-dam-break/preview.jpg">preview</a> · <a href="assets/fluid-dam-break/media.mp4">mp4</a> · <a href="assets/fluid-dam-break/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/fluid-dam-break">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/fluid-dam-break">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/fluid-dam-break/fluid-result.blend">fluid-result.blend</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/fluid-dam-break/fluid-sim.blend">fluid-sim.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36215444736">Actions #15</a></p>
+            <h2>SPH Fluid — Larger Droplets 1.5x</h2>
+            <p class="id">sph-large-droplets-075</p>
+            <p>同じ5秒SPH物理データを使い、pySplashSurfのparticle radius/smoothingだけ1.5倍にして水塊・飛沫を大きくした比較版。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/3761822b8dd3dabf54bb34096c2aaf8bf4b9bba5">3761822b8d</a></p>
+            <table><tr><th>duration_seconds</th><td>5.083333333333333</td></tr><tr><th>blend_bytes</th><td>11414476</td></tr><tr><th>video_bytes</th><td>295222</td></tr></table>
+            <p class="links"><a href="assets/sph-large-droplets-075/preview.png">preview</a> · <a href="assets/sph-large-droplets-075/media.mp4">mp4</a> · <a href="assets/sph-large-droplets-075/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/large-droplets-075">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-large-droplets-075">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-large-droplets-075/fluid-cube-large-droplets-075.blend">fluid-cube-large-droplets-075.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36362387414">Actions #1</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><img src="assets/geometry-nodes-ripple-grid/preview.jpg" alt="Geometry Nodes Ripple Grid preview"></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-long-duration-5s/media.mp4" data-poster="assets/sph-long-duration-5s/preview.png" aria-label="SPH Fluid + Cube — 5s Scale Test の動画を再生"><img src="assets/sph-long-duration-5s/preview.png" alt="SPH Fluid + Cube — 5s Scale Test preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Geometry Nodes Ripple Grid</h2>
-            <p class="id">geometry-nodes-ripple-grid</p>
-            <p>Procedural radial wave field built with Geometry Nodes: Grid, Set Position, Mesh to Points, Icosphere instancing, and Realize Instances.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/2b361ff6a650bd4e22acbea532e5a183ecf5b4f6">2b361ff6a6</a></p>
-            <table></table>
-            <p class="links"><a href="assets/geometry-nodes-ripple-grid/preview.jpg">preview</a> · <a href="assets/geometry-nodes-ripple-grid/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-ripple-grid">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-ripple-grid">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-ripple-grid/geometry-nodes.blend">geometry-nodes.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36222746274">Actions #19</a></p>
+            <h2>SPH Fluid + Cube — 5s Scale Test</h2>
+            <p class="id">sph-long-duration-5s</p>
+            <p>1800粒子のSPHを5秒・約61フレームまで延長し、compressed NPZ→direct USD→Blenderで長尺再生したスケール試験。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/6402eff697c16215d068bd7c4ba5a3a278579ce4">6402eff697</a></p>
+            <table><tr><th>duration_seconds</th><td>5.083333333333333</td></tr><tr><th>blend_bytes</th><td>5636876</td></tr><tr><th>video_bytes</th><td>113836</td></tr></table>
+            <p class="links"><a href="assets/sph-long-duration-5s/preview.png">preview</a> · <a href="assets/sph-long-duration-5s/media.mp4">mp4</a> · <a href="assets/sph-long-duration-5s/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/long-duration-5s">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-long-duration-5s">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-long-duration-5s/fluid-cube-5s.blend">fluid-cube-5s.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36360959609">Actions #3</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-ripple-grid-movie/media.mp4" data-poster="assets/geometry-nodes-ripple-grid-movie/preview.jpg" aria-label="Geometry Nodes Ripple Grid Movie の動画を再生"><img src="assets/geometry-nodes-ripple-grid-movie/preview.jpg" alt="Geometry Nodes Ripple Grid Movie preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-fluid-cube-usd-render/media.mp4" data-poster="assets/sph-fluid-cube-usd-render/preview.png" aria-label="SPH Fluid + Dynamic Cube — USD Cache Replay の動画を再生"><img src="assets/sph-fluid-cube-usd-render/preview.png" alt="SPH Fluid + Dynamic Cube — USD Cache Replay preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Geometry Nodes Ripple Grid Movie</h2>
-            <p class="id">geometry-nodes-ripple-grid-movie</p>
-            <p>Low-cost frame-sequence pre-render for validating an animated Geometry Nodes ripple field before higher-quality Colab rendering.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/108b76d67569f42b26f589e69a109c9ddf958716">108b76d675</a></p>
-            <table></table>
-            <p class="links"><a href="assets/geometry-nodes-ripple-grid-movie/preview.jpg">preview</a> · <a href="assets/geometry-nodes-ripple-grid-movie/media.mp4">mp4</a> · <a href="assets/geometry-nodes-ripple-grid-movie/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-ripple-grid-movie">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-ripple-grid-movie">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-ripple-grid-movie/geometry-nodes-movie.blend">geometry-nodes-movie.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36226476811">Actions #24</a></p>
-          </div>
-        </article>
-        
-        <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame/media.mp4" data-poster="assets/geometry-nodes-volume-flame/preview.jpg" aria-label="Geometry Nodes Volume Flame の動画を再生"><img src="assets/geometry-nodes-volume-flame/preview.jpg" alt="Geometry Nodes Volume Flame preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
-          <div class="body">
-            <h2>Geometry Nodes Volume Flame</h2>
-            <p class="id">geometry-nodes-volume-flame</p>
-            <p>Animated low-cost pre-render of a procedural flame built from moving seed points, Points to Volume, and Principled Volume emission.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/4035bd87918994ea9bce97f05c0f51d813b49839">4035bd8791</a></p>
-            <table></table>
-            <p class="links"><a href="assets/geometry-nodes-volume-flame/preview.jpg">preview</a> · <a href="assets/geometry-nodes-volume-flame/media.mp4">mp4</a> · <a href="assets/geometry-nodes-volume-flame/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-volume-flame">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-volume-flame">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-volume-flame/geometry-nodes-volume-flame.blend">geometry-nodes-volume-flame.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36227169396">Actions #25</a></p>
-          </div>
-        </article>
-        
-        <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame-v2/media.mp4" data-poster="assets/geometry-nodes-volume-flame-v2/preview.jpg" aria-label="Geometry Nodes Volume Flame v2 の動画を再生"><img src="assets/geometry-nodes-volume-flame-v2/preview.jpg" alt="Geometry Nodes Volume Flame v2 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
-          <div class="body">
-            <h2>Geometry Nodes Volume Flame v2</h2>
-            <p class="id">geometry-nodes-volume-flame-v2</p>
-            <p>Second-pass low-cost pre-render of a procedural flame using two Geometry Nodes volume layers (outer and core) tuned to avoid the washed-out look of the first attempt.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/b7426212de23b2afefd1533900259b39b2ba448c">b7426212de</a></p>
-            <table></table>
-            <p class="links"><a href="assets/geometry-nodes-volume-flame-v2/preview.jpg">preview</a> · <a href="assets/geometry-nodes-volume-flame-v2/media.mp4">mp4</a> · <a href="assets/geometry-nodes-volume-flame-v2/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-volume-flame-v2">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-volume-flame-v2">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-volume-flame-v2/geometry-nodes-volume-flame-v2.blend">geometry-nodes-volume-flame-v2.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36234002366">Actions #30</a></p>
-          </div>
-        </article>
-        
-        <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame-v2-cycles/media.mp4" data-poster="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg" aria-label="Geometry Nodes Volume Flame v2 Cycles の動画を再生"><img src="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg" alt="Geometry Nodes Volume Flame v2 Cycles preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
-          <div class="body">
-            <h2>Geometry Nodes Volume Flame v2 Cycles</h2>
-            <p class="id">geometry-nodes-volume-flame-v2-cycles</p>
-            <p>Diagnostic comparison render of the v2 procedural flame using Cycles CPU to isolate renderer-vs-node-setup differences.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/54e08f2fcc65916212027f6c0ab1ac510bb34106">54e08f2fcc</a></p>
-            <table></table>
-            <p class="links"><a href="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg">preview</a> · <a href="assets/geometry-nodes-volume-flame-v2-cycles/media.mp4">mp4</a> · <a href="assets/geometry-nodes-volume-flame-v2-cycles/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-volume-flame-v2-cycles">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-volume-flame-v2-cycles">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-volume-flame-v2-cycles/geometry-nodes-volume-flame-v2-cycles.blend">geometry-nodes-volume-flame-v2-cycles.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36234997583">Actions #31</a></p>
-          </div>
-        </article>
-        
-        <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-fountain-100-eevee/media.mp4" data-poster="assets/metaball-fountain-100-eevee/preview.jpg" aria-label="Metaball Fountain 100 EEVEE の動画を再生"><img src="assets/metaball-fountain-100-eevee/preview.jpg" alt="Metaball Fountain 100 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
-          <div class="body">
-            <h2>Metaball Fountain 100 EEVEE</h2>
-            <p class="id">metaball-fountain-100-eevee</p>
-            <p>One hundred animated metaball elements spray from a nozzle, bounce inside a basin, and merge into smooth mercury-like blobs.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/f22b1323eb83b06b6735fbf345ed8c04d3fe52f1">f22b1323eb</a></p>
-            <table></table>
-            <p class="links"><a href="assets/metaball-fountain-100-eevee/preview.jpg">preview</a> · <a href="assets/metaball-fountain-100-eevee/media.mp4">mp4</a> · <a href="assets/metaball-fountain-100-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/metaball-fountain-100-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/metaball-fountain-100-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/metaball-fountain-100-eevee/metaball-fountain-100-eevee.blend">metaball-fountain-100-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36244708972">Actions #41</a></p>
-          </div>
-        </article>
-        
-        <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-fountain-300-eevee/media.mp4" data-poster="assets/metaball-fountain-300-eevee/preview.jpg" aria-label="Metaball Fountain 300 EEVEE の動画を再生"><img src="assets/metaball-fountain-300-eevee/preview.jpg" alt="Metaball Fountain 300 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
-          <div class="body">
-            <h2>Metaball Fountain 300 EEVEE</h2>
-            <p class="id">metaball-fountain-300-eevee</p>
-            <p>Three hundred animated metaball elements spray from a nozzle, bounce inside a basin, and merge into smooth mercury-like blobs.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/cbd6614e238de4efe3e6c409eca7822b5574a814">cbd6614e23</a></p>
-            <table></table>
-            <p class="links"><a href="assets/metaball-fountain-300-eevee/preview.jpg">preview</a> · <a href="assets/metaball-fountain-300-eevee/media.mp4">mp4</a> · <a href="assets/metaball-fountain-300-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/metaball-fountain-300-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/metaball-fountain-300-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/metaball-fountain-300-eevee/metaball-fountain-300-eevee.blend">metaball-fountain-300-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36245916623">Actions #42</a></p>
-          </div>
-        </article>
-        
-        <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-hidden-funnel-300-eevee/media.mp4" data-poster="assets/metaball-hidden-funnel-300-eevee/preview.jpg" aria-label="Metaball Hidden Funnel 300 EEVEE の動画を再生"><img src="assets/metaball-hidden-funnel-300-eevee/preview.jpg" alt="Metaball Hidden Funnel 300 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
-          <div class="body">
-            <h2>Metaball Hidden Funnel 300 EEVEE</h2>
-            <p class="id">metaball-hidden-funnel-300-eevee</p>
-            <p>Three hundred invisible rigid-body proxy spheres fall through an invisible collision funnel and tube; their sampled positions drive visible mercury-like metaballs into a receiver.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/727823676f344f3b457c727f3d38c8ba1d1098e4">727823676f</a></p>
-            <table></table>
-            <p class="links"><a href="assets/metaball-hidden-funnel-300-eevee/preview.jpg">preview</a> · <a href="assets/metaball-hidden-funnel-300-eevee/media.mp4">mp4</a> · <a href="assets/metaball-hidden-funnel-300-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/metaball-hidden-funnel-300-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/metaball-hidden-funnel-300-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/metaball-hidden-funnel-300-eevee/metaball-hidden-funnel-300-eevee.blend">metaball-hidden-funnel-300-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36272459487">Actions #45</a></p>
+            <h2>SPH Fluid + Dynamic Cube — USD Cache Replay</h2>
+            <p class="id">sph-fluid-cube-usd-render</p>
+            <p>SPlisHSPlasHで計算した流体と動的Cubeを1つのUSDへまとめ、Blenderで13フレーム同期再生した結果。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/020368bac5ed2a3d1d4a2817bea014a27b64c042">020368bac5</a></p>
+            <table><tr><th>blend_bytes</th><td>5610696</td></tr><tr><th>video_bytes</th><td>22971</td></tr></table>
+            <p class="links"><a href="assets/sph-fluid-cube-usd-render/preview.png">preview</a> · <a href="assets/sph-fluid-cube-usd-render/media.mp4">mp4</a> · <a href="assets/sph-fluid-cube-usd-render/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/fluid-cube-usd-render">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-fluid-cube-usd-render">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-fluid-cube-usd-render/fluid-cube.blend">fluid-cube.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36359942969">Actions #2</a></p>
           </div>
         </article>
         
@@ -224,26 +152,26 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rigid-sphere-impact-1000/media.mp4" data-poster="assets/rigid-sphere-impact-1000/preview.jpg" aria-label="Rigid Sphere Impact 1000 の動画を再生"><img src="assets/rigid-sphere-impact-1000/preview.jpg" alt="Rigid Sphere Impact 1000 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-dam-break-blender-sequence/media.mp4" data-poster="assets/sph-dam-break-blender-sequence/preview.png" aria-label="SPH Dam Break — Blender Surface Replay の動画を再生"><img src="assets/sph-dam-break-blender-sequence/preview.png" alt="SPH Dam Break — Blender Surface Replay preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Rigid Sphere Impact 1000</h2>
-            <p class="id">rigid-sphere-impact-1000</p>
-            <p>A heavy sphere drops from above and blasts through a stack of 1000 rigid body cubes.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/377b43b1aab3c7ed5dcee8b34a69d333df7b7894">377b43b1aa</a></p>
-            <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>90,435 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>52.367</td></tr><tr><th>bright_pixel_ratio</th><td>0.061033</td></tr><tr><th>warm_pixel_ratio</th><td>0.014175</td></tr></table>
-            <p class="links"><a href="assets/rigid-sphere-impact-1000/preview.jpg">preview</a> · <a href="assets/rigid-sphere-impact-1000/media.mp4">mp4</a> · <a href="assets/rigid-sphere-impact-1000/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/rigid-sphere-impact-1000">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/rigid-sphere-impact-1000">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000/rigid-result.blend">rigid-result.blend</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000/rigid-sim.blend">rigid-sim.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36218506754">Actions #17</a></p>
+            <h2>SPH Dam Break — Blender Surface Replay</h2>
+            <p class="id">sph-dam-break-blender-sequence</p>
+            <p>SPlisHSPlasHで外部計算した流体を13フレームのsurface meshへ再構成し、Blender 4.0.2で時系列再生したPoC。スナップショットをクリックするとレンダリング動画を再生します。</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/de73c54a996384de23cddebff903c95929649be7">de73c54a99</a></p>
+            <table><tr><th>surface_frames</th><td>13</td></tr><tr><th>vertices_min</th><td>49560</td></tr><tr><th>vertices_max</th><td>59258</td></tr><tr><th>faces_min</th><td>91920</td></tr><tr><th>faces_max</th><td>111316</td></tr><tr><th>surface_bytes_total</th><td>62451074</td></tr><tr><th>blend_bytes</th><td>59273460</td></tr><tr><th>video_bytes</th><td>31499</td></tr></table>
+            <p class="links"><a href="assets/sph-dam-break-blender-sequence/preview.png">preview</a> · <a href="assets/sph-dam-break-blender-sequence/media.mp4">mp4</a> · <a href="assets/sph-dam-break-blender-sequence/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/dam-break-blender-sequence">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-dam-break-blender-sequence">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-dam-break-blender-sequence/surface-sequence.blend">surface-sequence.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36329404518">Actions #1</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rigid-sphere-impact-1000-transparent-v2/media.mp4" data-poster="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg" aria-label="Rigid Sphere Impact 1000 Transparent V2 の動画を再生"><img src="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg" alt="Rigid Sphere Impact 1000 Transparent V2 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/character-room-interior-eevee/media.mp4" data-poster="assets/character-room-interior-eevee/preview.jpg" aria-label="Character Room Interior EEVEE の動画を再生"><img src="assets/character-room-interior-eevee/preview.jpg" alt="Character Room Interior EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>Rigid Sphere Impact 1000 Transparent V2</h2>
-            <p class="id">rigid-sphere-impact-1000-transparent-v2</p>
-            <p>A heavier, higher-quality 1000-body sphere impact experiment with transparent physical containment walls.</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/1662fa8e863ed9838e751be0ac8b9bb9f8d73bdd">1662fa8e86</a></p>
-            <table><tr><th>duration_seconds</th><td>4.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>960</td></tr><tr><th>height</th><td>540</td></tr><tr><th>video_size_bytes</th><td>459,528 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>65.199</td></tr><tr><th>bright_pixel_ratio</th><td>0.271584</td></tr><tr><th>warm_pixel_ratio</th><td>0.067315</td></tr></table>
-            <p class="links"><a href="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg">preview</a> · <a href="assets/rigid-sphere-impact-1000-transparent-v2/media.mp4">mp4</a> · <a href="assets/rigid-sphere-impact-1000-transparent-v2/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/rigid-sphere-impact-1000-transparent-v2">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/rigid-sphere-impact-1000-transparent-v2">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000-transparent-v2/rigid-result.blend">rigid-result.blend</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000-transparent-v2/rigid-sim.blend">rigid-sim.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36219589354">Actions #18</a></p>
+            <h2>Character Room Interior EEVEE</h2>
+            <p class="id">character-room-interior-eevee</p>
+            <p>A reusable 7.2m x 5.4m x 3.0m open-front living/study room built from Blender primitives, furnished and lit at room scale, with the Quaternius Warrior idling as a human-scale reference during a 15-second camera tour.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/c849e43fca049e20f43ed5098492e1492296e502">c849e43fca</a></p>
+            <table></table>
+            <p class="links"><a href="assets/character-room-interior-eevee/preview.jpg">preview</a> · <a href="assets/character-room-interior-eevee/media.mp4">mp4</a> · <a href="assets/character-room-interior-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/character-room-interior-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/character-room-interior-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/character-room-interior-eevee/character-room-interior-eevee.blend">character-room-interior-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36322787601">Actions #53</a></p>
           </div>
         </article>
         
@@ -272,6 +200,42 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-hidden-funnel-300-eevee/media.mp4" data-poster="assets/metaball-hidden-funnel-300-eevee/preview.jpg" aria-label="Metaball Hidden Funnel 300 EEVEE の動画を再生"><img src="assets/metaball-hidden-funnel-300-eevee/preview.jpg" alt="Metaball Hidden Funnel 300 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="body">
+            <h2>Metaball Hidden Funnel 300 EEVEE</h2>
+            <p class="id">metaball-hidden-funnel-300-eevee</p>
+            <p>Three hundred invisible rigid-body proxy spheres fall through an invisible collision funnel and tube; their sampled positions drive visible mercury-like metaballs into a receiver.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/727823676f344f3b457c727f3d38c8ba1d1098e4">727823676f</a></p>
+            <table></table>
+            <p class="links"><a href="assets/metaball-hidden-funnel-300-eevee/preview.jpg">preview</a> · <a href="assets/metaball-hidden-funnel-300-eevee/media.mp4">mp4</a> · <a href="assets/metaball-hidden-funnel-300-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/metaball-hidden-funnel-300-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/metaball-hidden-funnel-300-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/metaball-hidden-funnel-300-eevee/metaball-hidden-funnel-300-eevee.blend">metaball-hidden-funnel-300-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36272459487">Actions #45</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-fountain-300-eevee/media.mp4" data-poster="assets/metaball-fountain-300-eevee/preview.jpg" aria-label="Metaball Fountain 300 EEVEE の動画を再生"><img src="assets/metaball-fountain-300-eevee/preview.jpg" alt="Metaball Fountain 300 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="body">
+            <h2>Metaball Fountain 300 EEVEE</h2>
+            <p class="id">metaball-fountain-300-eevee</p>
+            <p>Three hundred animated metaball elements spray from a nozzle, bounce inside a basin, and merge into smooth mercury-like blobs.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/cbd6614e238de4efe3e6c409eca7822b5574a814">cbd6614e23</a></p>
+            <table></table>
+            <p class="links"><a href="assets/metaball-fountain-300-eevee/preview.jpg">preview</a> · <a href="assets/metaball-fountain-300-eevee/media.mp4">mp4</a> · <a href="assets/metaball-fountain-300-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/metaball-fountain-300-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/metaball-fountain-300-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/metaball-fountain-300-eevee/metaball-fountain-300-eevee.blend">metaball-fountain-300-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36245916623">Actions #42</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/metaball-fountain-100-eevee/media.mp4" data-poster="assets/metaball-fountain-100-eevee/preview.jpg" aria-label="Metaball Fountain 100 EEVEE の動画を再生"><img src="assets/metaball-fountain-100-eevee/preview.jpg" alt="Metaball Fountain 100 EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="body">
+            <h2>Metaball Fountain 100 EEVEE</h2>
+            <p class="id">metaball-fountain-100-eevee</p>
+            <p>One hundred animated metaball elements spray from a nozzle, bounce inside a basin, and merge into smooth mercury-like blobs.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/f22b1323eb83b06b6735fbf345ed8c04d3fe52f1">f22b1323eb</a></p>
+            <table></table>
+            <p class="links"><a href="assets/metaball-fountain-100-eevee/preview.jpg">preview</a> · <a href="assets/metaball-fountain-100-eevee/media.mp4">mp4</a> · <a href="assets/metaball-fountain-100-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/metaball-fountain-100-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/metaball-fountain-100-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/metaball-fountain-100-eevee/metaball-fountain-100-eevee.blend">metaball-fountain-100-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36244708972">Actions #41</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
           <div class="visual"><button class="media-toggle" type="button" data-video="assets/softbody-jelly-cube-impact-eevee/media.mp4" data-poster="assets/softbody-jelly-cube-impact-eevee/preview.jpg" aria-label="Soft Body Jelly Cube Impact EEVEE の動画を再生"><img src="assets/softbody-jelly-cube-impact-eevee/preview.jpg" alt="Soft Body Jelly Cube Impact EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
             <h2>Soft Body Jelly Cube Impact EEVEE</h2>
@@ -284,110 +248,122 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-dam-break-blender-sequence/media.mp4" data-poster="assets/sph-dam-break-blender-sequence/preview.png" aria-label="SPH Dam Break — Blender Surface Replay の動画を再生"><img src="assets/sph-dam-break-blender-sequence/preview.png" alt="SPH Dam Break — Blender Surface Replay preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/cloth-hammock-rigidbody-drop-eevee/media.mp4" data-poster="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg" aria-label="Cloth Hammock Rigid Body Drop EEVEE の動画を再生"><img src="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg" alt="Cloth Hammock Rigid Body Drop EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Dam Break — Blender Surface Replay</h2>
-            <p class="id">sph-dam-break-blender-sequence</p>
-            <p>SPlisHSPlasHで外部計算した流体を13フレームのsurface meshへ再構成し、Blender 4.0.2で時系列再生したPoC。スナップショットをクリックするとレンダリング動画を再生します。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/de73c54a996384de23cddebff903c95929649be7">de73c54a99</a></p>
-            <table><tr><th>surface_frames</th><td>13</td></tr><tr><th>vertices_min</th><td>49560</td></tr><tr><th>vertices_max</th><td>59258</td></tr><tr><th>faces_min</th><td>91920</td></tr><tr><th>faces_max</th><td>111316</td></tr><tr><th>surface_bytes_total</th><td>62451074</td></tr><tr><th>blend_bytes</th><td>59273460</td></tr><tr><th>video_bytes</th><td>31499</td></tr></table>
-            <p class="links"><a href="assets/sph-dam-break-blender-sequence/preview.png">preview</a> · <a href="assets/sph-dam-break-blender-sequence/media.mp4">mp4</a> · <a href="assets/sph-dam-break-blender-sequence/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/dam-break-blender-sequence">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-dam-break-blender-sequence">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-dam-break-blender-sequence/surface-sequence.blend">surface-sequence.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36329404518">Actions #1</a></p>
+            <h2>Cloth Hammock Rigid Body Drop EEVEE</h2>
+            <p class="id">cloth-hammock-rigidbody-drop-eevee</p>
+            <p>Hybrid cloth + rigid-body experiment: 12 staggered rigid-body spheres fall into a four-corner-pinned cloth hammock. A hidden passive rigid proxy provides stable two-system coupling while the visible cloth reacts to the moving spheres. Physics is baked before parallel EEVEE rendering.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/eb529cae9431fe5d0ee5092a240912c88d9ad2de">eb529cae94</a></p>
+            <table></table>
+            <p class="links"><a href="assets/cloth-hammock-rigidbody-drop-eevee/preview.jpg">preview</a> · <a href="assets/cloth-hammock-rigidbody-drop-eevee/media.mp4">mp4</a> · <a href="assets/cloth-hammock-rigidbody-drop-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/cloth-hammock-rigidbody-drop-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/cloth-hammock-rigidbody-drop-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/cloth-hammock-rigidbody-drop-eevee/cloth-hammock-rigidbody-drop-eevee.blend">cloth-hammock-rigidbody-drop-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36239159364">Actions #37</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-fluid-cube-usd-render/media.mp4" data-poster="assets/sph-fluid-cube-usd-render/preview.png" aria-label="SPH Fluid + Dynamic Cube — USD Cache Replay の動画を再生"><img src="assets/sph-fluid-cube-usd-render/preview.png" alt="SPH Fluid + Dynamic Cube — USD Cache Replay preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/cloth-hammock-collision-movie-eevee/media.mp4" data-poster="assets/cloth-hammock-collision-movie-eevee/preview.jpg" aria-label="Cloth Hammock Collision Movie EEVEE の動画を再生"><img src="assets/cloth-hammock-collision-movie-eevee/preview.jpg" alt="Cloth Hammock Collision Movie EEVEE preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Fluid + Dynamic Cube — USD Cache Replay</h2>
-            <p class="id">sph-fluid-cube-usd-render</p>
-            <p>SPlisHSPlasHで計算した流体と動的Cubeを1つのUSDへまとめ、Blenderで13フレーム同期再生した結果。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/020368bac5ed2a3d1d4a2817bea014a27b64c042">020368bac5</a></p>
-            <table><tr><th>blend_bytes</th><td>5610696</td></tr><tr><th>video_bytes</th><td>22971</td></tr></table>
-            <p class="links"><a href="assets/sph-fluid-cube-usd-render/preview.png">preview</a> · <a href="assets/sph-fluid-cube-usd-render/media.mp4">mp4</a> · <a href="assets/sph-fluid-cube-usd-render/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/fluid-cube-usd-render">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-fluid-cube-usd-render">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-fluid-cube-usd-render/fluid-cube.blend">fluid-cube.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36359942969">Actions #2</a></p>
+            <h2>Cloth Hammock Collision Movie EEVEE</h2>
+            <p class="id">cloth-hammock-collision-movie-eevee</p>
+            <p>An 8-second presentation-oriented extension of the cloth hammock experiment with two-stage sphere impacts, moving wind/turbulence, and a slow animated camera. Cloth physics is baked to shape keys before parallel EEVEE rendering.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/632813ff48f45f92111f330386e2f10f72d4b454">632813ff48</a></p>
+            <table></table>
+            <p class="links"><a href="assets/cloth-hammock-collision-movie-eevee/preview.jpg">preview</a> · <a href="assets/cloth-hammock-collision-movie-eevee/media.mp4">mp4</a> · <a href="assets/cloth-hammock-collision-movie-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/cloth-hammock-collision-movie-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/cloth-hammock-collision-movie-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/cloth-hammock-collision-movie-eevee/cloth-hammock-collision-movie-eevee.blend">cloth-hammock-collision-movie-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36236915724">Actions #34</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-geometry-nodes-points-volume/media.mp4" data-poster="assets/sph-geometry-nodes-points-volume/preview.png" aria-label="SPH Point Cloud — Geometry Nodes Surface の動画を再生"><img src="assets/sph-geometry-nodes-points-volume/preview.png" alt="SPH Point Cloud — Geometry Nodes Surface preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><img src="assets/cloth-hammock-collision-eevee/preview.jpg" alt="Cloth Hammock Collision EEVEE preview"></div>
           <div class="body">
-            <h2>SPH Point Cloud — Geometry Nodes Surface</h2>
-            <p class="id">sph-geometry-nodes-points-volume</p>
-            <p>1800点×61フレームのSPH点群を主データにし、Blender Geometry NodesのMesh to Points→Points to Volume→Volume to Meshで水面化した実験。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/040d3d6f57267785db7461a2ea9513e9faf8bf35">040d3d6f57</a></p>
-            <table><tr><th>blend_bytes</th><td>978058</td></tr><tr><th>video_bytes</th><td>408136</td></tr></table>
-            <p class="links"><a href="assets/sph-geometry-nodes-points-volume/preview.png">preview</a> · <a href="assets/sph-geometry-nodes-points-volume/media.mp4">mp4</a> · <a href="assets/sph-geometry-nodes-points-volume/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/geometry-nodes-points-volume">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-geometry-nodes-points-volume">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-geometry-nodes-points-volume/sph-points-geometry-nodes.blend">sph-points-geometry-nodes.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36367596940">Actions #1</a></p>
+            <h2>Cloth Hammock Collision EEVEE</h2>
+            <p class="id">cloth-hammock-collision-eevee</p>
+            <p>A CPU-heavy cloth simulation test: a four-corner-pinned hammock cloth with self collision, wind/turbulence and two animated sphere colliders. Physics is baked into shape keys before parallel EEVEE rendering.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/e2f23a87a9502b9a0268bfb7bc1493ee773590dd">e2f23a87a9</a></p>
+            <table></table>
+            <p class="links"><a href="assets/cloth-hammock-collision-eevee/preview.jpg">preview</a> · <a href="assets/cloth-hammock-collision-eevee/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/cloth-hammock-collision-eevee">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/cloth-hammock-collision-eevee">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/cloth-hammock-collision-eevee/cloth-hammock-collision-eevee.blend">cloth-hammock-collision-eevee.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36235853079">Actions #32</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-large-droplets-075/media.mp4" data-poster="assets/sph-large-droplets-075/preview.png" aria-label="SPH Fluid — Larger Droplets 1.5x の動画を再生"><img src="assets/sph-large-droplets-075/preview.png" alt="SPH Fluid — Larger Droplets 1.5x preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame-v2-cycles/media.mp4" data-poster="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg" aria-label="Geometry Nodes Volume Flame v2 Cycles の動画を再生"><img src="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg" alt="Geometry Nodes Volume Flame v2 Cycles preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Fluid — Larger Droplets 1.5x</h2>
-            <p class="id">sph-large-droplets-075</p>
-            <p>同じ5秒SPH物理データを使い、pySplashSurfのparticle radius/smoothingだけ1.5倍にして水塊・飛沫を大きくした比較版。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/3761822b8dd3dabf54bb34096c2aaf8bf4b9bba5">3761822b8d</a></p>
-            <table><tr><th>duration_seconds</th><td>5.083333333333333</td></tr><tr><th>blend_bytes</th><td>11414476</td></tr><tr><th>video_bytes</th><td>295222</td></tr></table>
-            <p class="links"><a href="assets/sph-large-droplets-075/preview.png">preview</a> · <a href="assets/sph-large-droplets-075/media.mp4">mp4</a> · <a href="assets/sph-large-droplets-075/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/large-droplets-075">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-large-droplets-075">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-large-droplets-075/fluid-cube-large-droplets-075.blend">fluid-cube-large-droplets-075.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36362387414">Actions #1</a></p>
+            <h2>Geometry Nodes Volume Flame v2 Cycles</h2>
+            <p class="id">geometry-nodes-volume-flame-v2-cycles</p>
+            <p>Diagnostic comparison render of the v2 procedural flame using Cycles CPU to isolate renderer-vs-node-setup differences.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/54e08f2fcc65916212027f6c0ab1ac510bb34106">54e08f2fcc</a></p>
+            <table></table>
+            <p class="links"><a href="assets/geometry-nodes-volume-flame-v2-cycles/preview.jpg">preview</a> · <a href="assets/geometry-nodes-volume-flame-v2-cycles/media.mp4">mp4</a> · <a href="assets/geometry-nodes-volume-flame-v2-cycles/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-volume-flame-v2-cycles">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-volume-flame-v2-cycles">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-volume-flame-v2-cycles/geometry-nodes-volume-flame-v2-cycles.blend">geometry-nodes-volume-flame-v2-cycles.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36234997583">Actions #31</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-large-droplets-075-smooth/media.mp4" data-poster="assets/sph-large-droplets-075-smooth/preview.png" aria-label="SPH Fluid — Larger Droplets + Taubin Smooth の動画を再生"><img src="assets/sph-large-droplets-075-smooth/preview.png" alt="SPH Fluid — Larger Droplets + Taubin Smooth preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame-v2/media.mp4" data-poster="assets/geometry-nodes-volume-flame-v2/preview.jpg" aria-label="Geometry Nodes Volume Flame v2 の動画を再生"><img src="assets/geometry-nodes-volume-flame-v2/preview.jpg" alt="Geometry Nodes Volume Flame v2 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Fluid — Larger Droplets + Taubin Smooth</h2>
-            <p class="id">sph-large-droplets-075-smooth</p>
-            <p>radius 0.075の大粒版surfaceをそのまま使い、5回のTaubin smoothingで細かな凹凸だけを抑えた比較版。物理計算とtopologyは同一。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/f3344d048dab1be147039e1be6dd0c88ed32b266">f3344d048d</a></p>
-            <table><tr><th>duration_seconds</th><td>5.083333333333333</td></tr><tr><th>blend_bytes</th><td>11414476</td></tr><tr><th>video_bytes</th><td>294320</td></tr></table>
-            <p class="links"><a href="assets/sph-large-droplets-075-smooth/preview.png">preview</a> · <a href="assets/sph-large-droplets-075-smooth/media.mp4">mp4</a> · <a href="assets/sph-large-droplets-075-smooth/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/large-droplets-075-smooth">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-large-droplets-075-smooth">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-large-droplets-075-smooth/fluid-cube-large-droplets-075-smooth.blend">fluid-cube-large-droplets-075-smooth.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36364391725">Actions #2</a></p>
+            <h2>Geometry Nodes Volume Flame v2</h2>
+            <p class="id">geometry-nodes-volume-flame-v2</p>
+            <p>Second-pass low-cost pre-render of a procedural flame using two Geometry Nodes volume layers (outer and core) tuned to avoid the washed-out look of the first attempt.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/b7426212de23b2afefd1533900259b39b2ba448c">b7426212de</a></p>
+            <table></table>
+            <p class="links"><a href="assets/geometry-nodes-volume-flame-v2/preview.jpg">preview</a> · <a href="assets/geometry-nodes-volume-flame-v2/media.mp4">mp4</a> · <a href="assets/geometry-nodes-volume-flame-v2/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-volume-flame-v2">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-volume-flame-v2">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-volume-flame-v2/geometry-nodes-volume-flame-v2.blend">geometry-nodes-volume-flame-v2.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36234002366">Actions #30</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-long-duration-5s/media.mp4" data-poster="assets/sph-long-duration-5s/preview.png" aria-label="SPH Fluid + Cube — 5s Scale Test の動画を再生"><img src="assets/sph-long-duration-5s/preview.png" alt="SPH Fluid + Cube — 5s Scale Test preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-volume-flame/media.mp4" data-poster="assets/geometry-nodes-volume-flame/preview.jpg" aria-label="Geometry Nodes Volume Flame の動画を再生"><img src="assets/geometry-nodes-volume-flame/preview.jpg" alt="Geometry Nodes Volume Flame preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Fluid + Cube — 5s Scale Test</h2>
-            <p class="id">sph-long-duration-5s</p>
-            <p>1800粒子のSPHを5秒・約61フレームまで延長し、compressed NPZ→direct USD→Blenderで長尺再生したスケール試験。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/6402eff697c16215d068bd7c4ba5a3a278579ce4">6402eff697</a></p>
-            <table><tr><th>duration_seconds</th><td>5.083333333333333</td></tr><tr><th>blend_bytes</th><td>5636876</td></tr><tr><th>video_bytes</th><td>113836</td></tr></table>
-            <p class="links"><a href="assets/sph-long-duration-5s/preview.png">preview</a> · <a href="assets/sph-long-duration-5s/media.mp4">mp4</a> · <a href="assets/sph-long-duration-5s/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/long-duration-5s">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-long-duration-5s">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-long-duration-5s/fluid-cube-5s.blend">fluid-cube-5s.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36360959609">Actions #3</a></p>
+            <h2>Geometry Nodes Volume Flame</h2>
+            <p class="id">geometry-nodes-volume-flame</p>
+            <p>Animated low-cost pre-render of a procedural flame built from moving seed points, Points to Volume, and Principled Volume emission.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/4035bd87918994ea9bce97f05c0f51d813b49839">4035bd8791</a></p>
+            <table></table>
+            <p class="links"><a href="assets/geometry-nodes-volume-flame/preview.jpg">preview</a> · <a href="assets/geometry-nodes-volume-flame/media.mp4">mp4</a> · <a href="assets/geometry-nodes-volume-flame/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-volume-flame">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-volume-flame">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-volume-flame/geometry-nodes-volume-flame.blend">geometry-nodes-volume-flame.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36227169396">Actions #25</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-point-diagnostics-acceleration/media.mp4" data-poster="assets/sph-point-diagnostics-acceleration/preview.png" aria-label="SPH Point Diagnostics — Acceleration Heatmap の動画を再生"><img src="assets/sph-point-diagnostics-acceleration/preview.png" alt="SPH Point Diagnostics — Acceleration Heatmap preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/geometry-nodes-ripple-grid-movie/media.mp4" data-poster="assets/geometry-nodes-ripple-grid-movie/preview.jpg" aria-label="Geometry Nodes Ripple Grid Movie の動画を再生"><img src="assets/geometry-nodes-ripple-grid-movie/preview.jpg" alt="Geometry Nodes Ripple Grid Movie preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Point Diagnostics — Acceleration Heatmap</h2>
-            <p class="id">sph-point-diagnostics-acceleration</p>
-            <p>velocity差分からaccelerationを算出し、97パーセンタイル正規化した5段階の色で全SPH粒子を表示。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/49feb3b91b96b85c74e5a80ffd3c392f33ce2090">49feb3b91b</a></p>
-            <table><tr><th>blend_bytes</th><td>1311323</td></tr><tr><th>video_bytes</th><td>520112</td></tr></table>
-            <p class="links"><a href="assets/sph-point-diagnostics-acceleration/preview.png">preview</a> · <a href="assets/sph-point-diagnostics-acceleration/media.mp4">mp4</a> · <a href="assets/sph-point-diagnostics-acceleration/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/point-diagnostics">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-point-diagnostics-acceleration">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-point-diagnostics-acceleration/sph-point-diagnostics-acceleration.blend">sph-point-diagnostics-acceleration.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36369860412">Actions #2</a></p>
+            <h2>Geometry Nodes Ripple Grid Movie</h2>
+            <p class="id">geometry-nodes-ripple-grid-movie</p>
+            <p>Low-cost frame-sequence pre-render for validating an animated Geometry Nodes ripple field before higher-quality Colab rendering.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/108b76d67569f42b26f589e69a109c9ddf958716">108b76d675</a></p>
+            <table></table>
+            <p class="links"><a href="assets/geometry-nodes-ripple-grid-movie/preview.jpg">preview</a> · <a href="assets/geometry-nodes-ripple-grid-movie/media.mp4">mp4</a> · <a href="assets/geometry-nodes-ripple-grid-movie/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-ripple-grid-movie">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-ripple-grid-movie">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-ripple-grid-movie/geometry-nodes-movie.blend">geometry-nodes-movie.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36226476811">Actions #24</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-point-diagnostics-combined/media.mp4" data-poster="assets/sph-point-diagnostics-combined/preview.png" aria-label="SPH Point Diagnostics — Velocity + Acceleration の動画を再生"><img src="assets/sph-point-diagnostics-combined/preview.png" alt="SPH Point Diagnostics — Velocity + Acceleration preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><img src="assets/geometry-nodes-ripple-grid/preview.jpg" alt="Geometry Nodes Ripple Grid preview"></div>
           <div class="body">
-            <h2>SPH Point Diagnostics — Velocity + Acceleration</h2>
-            <p class="id">sph-point-diagnostics-combined</p>
-            <p>acceleration色表示したSPH粒子に、疎化したvelocity矢印をGeometry Nodesで重ねた診断表示。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/49feb3b91b96b85c74e5a80ffd3c392f33ce2090">49feb3b91b</a></p>
-            <table><tr><th>blend_bytes</th><td>1367669</td></tr><tr><th>video_bytes</th><td>555488</td></tr></table>
-            <p class="links"><a href="assets/sph-point-diagnostics-combined/preview.png">preview</a> · <a href="assets/sph-point-diagnostics-combined/media.mp4">mp4</a> · <a href="assets/sph-point-diagnostics-combined/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/point-diagnostics">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-point-diagnostics-combined">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-point-diagnostics-combined/sph-point-diagnostics-combined.blend">sph-point-diagnostics-combined.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36369860412">Actions #2</a></p>
+            <h2>Geometry Nodes Ripple Grid</h2>
+            <p class="id">geometry-nodes-ripple-grid</p>
+            <p>Procedural radial wave field built with Geometry Nodes: Grid, Set Position, Mesh to Points, Icosphere instancing, and Realize Instances.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/2b361ff6a650bd4e22acbea532e5a183ecf5b4f6">2b361ff6a6</a></p>
+            <table></table>
+            <p class="links"><a href="assets/geometry-nodes-ripple-grid/preview.jpg">preview</a> · <a href="assets/geometry-nodes-ripple-grid/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/geometry-nodes-ripple-grid">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/geometry-nodes-ripple-grid">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/geometry-nodes-ripple-grid/geometry-nodes.blend">geometry-nodes.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36222746274">Actions #19</a></p>
           </div>
         </article>
         
         <article class="card">
-          <div class="visual"><button class="media-toggle" type="button" data-video="assets/sph-point-diagnostics-velocity/media.mp4" data-poster="assets/sph-point-diagnostics-velocity/preview.png" aria-label="SPH Point Diagnostics — Velocity Arrows の動画を再生"><img src="assets/sph-point-diagnostics-velocity/preview.png" alt="SPH Point Diagnostics — Velocity Arrows preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rigid-sphere-impact-1000-transparent-v2/media.mp4" data-poster="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg" aria-label="Rigid Sphere Impact 1000 Transparent V2 の動画を再生"><img src="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg" alt="Rigid Sphere Impact 1000 Transparent V2 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
           <div class="body">
-            <h2>SPH Point Diagnostics — Velocity Arrows</h2>
-            <p class="id">sph-point-diagnostics-velocity</p>
-            <p>SPH点群のうち8点ごとにvelocity矢印をGeometry Nodesで表示。矢印長は速度の95パーセンタイルで正規化。</p>
-            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/49feb3b91b96b85c74e5a80ffd3c392f33ce2090">49feb3b91b</a></p>
-            <table><tr><th>blend_bytes</th><td>1247512</td></tr><tr><th>video_bytes</th><td>523690</td></tr></table>
-            <p class="links"><a href="assets/sph-point-diagnostics-velocity/preview.png">preview</a> · <a href="assets/sph-point-diagnostics-velocity/media.mp4">mp4</a> · <a href="assets/sph-point-diagnostics-velocity/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/sph-experiments/point-diagnostics">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/sph-point-diagnostics-velocity">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/sph-point-diagnostics-velocity/sph-point-diagnostics-velocity.blend">sph-point-diagnostics-velocity.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36369860412">Actions #2</a></p>
+            <h2>Rigid Sphere Impact 1000 Transparent V2</h2>
+            <p class="id">rigid-sphere-impact-1000-transparent-v2</p>
+            <p>A heavier, higher-quality 1000-body sphere impact experiment with transparent physical containment walls.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/1662fa8e863ed9838e751be0ac8b9bb9f8d73bdd">1662fa8e86</a></p>
+            <table><tr><th>duration_seconds</th><td>4.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>960</td></tr><tr><th>height</th><td>540</td></tr><tr><th>video_size_bytes</th><td>459,528 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>65.199</td></tr><tr><th>bright_pixel_ratio</th><td>0.271584</td></tr><tr><th>warm_pixel_ratio</th><td>0.067315</td></tr></table>
+            <p class="links"><a href="assets/rigid-sphere-impact-1000-transparent-v2/preview.jpg">preview</a> · <a href="assets/rigid-sphere-impact-1000-transparent-v2/media.mp4">mp4</a> · <a href="assets/rigid-sphere-impact-1000-transparent-v2/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/rigid-sphere-impact-1000-transparent-v2">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/rigid-sphere-impact-1000-transparent-v2">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000-transparent-v2/rigid-result.blend">rigid-result.blend</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000-transparent-v2/rigid-sim.blend">rigid-sim.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36219589354">Actions #18</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/rigid-sphere-impact-1000/media.mp4" data-poster="assets/rigid-sphere-impact-1000/preview.jpg" aria-label="Rigid Sphere Impact 1000 の動画を再生"><img src="assets/rigid-sphere-impact-1000/preview.jpg" alt="Rigid Sphere Impact 1000 preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="body">
+            <h2>Rigid Sphere Impact 1000</h2>
+            <p class="id">rigid-sphere-impact-1000</p>
+            <p>A heavy sphere drops from above and blasts through a stack of 1000 rigid body cubes.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/377b43b1aab3c7ed5dcee8b34a69d333df7b7894">377b43b1aa</a></p>
+            <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>90,435 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>52.367</td></tr><tr><th>bright_pixel_ratio</th><td>0.061033</td></tr><tr><th>warm_pixel_ratio</th><td>0.014175</td></tr></table>
+            <p class="links"><a href="assets/rigid-sphere-impact-1000/preview.jpg">preview</a> · <a href="assets/rigid-sphere-impact-1000/media.mp4">mp4</a> · <a href="assets/rigid-sphere-impact-1000/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/rigid-sphere-impact-1000">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/rigid-sphere-impact-1000">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000/rigid-result.blend">rigid-result.blend</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/rigid-sphere-impact-1000/rigid-sim.blend">rigid-sim.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36218506754">Actions #17</a></p>
           </div>
         </article>
         
@@ -400,6 +376,30 @@ footer { max-width:1200px; margin:auto; padding:10px 22px 44px; color:#73879a; }
             <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/5c9e0e14f0c596f3f247b07cc1d58a209ad7b590">5c9e0e14f0</a></p>
             <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>128,655 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>42.403</td></tr><tr><th>poster_unique_colors_64x36</th><td>1241</td></tr></table>
             <p class="links"><a href="assets/water-dump/preview.jpg">preview</a> · <a href="assets/water-dump/media.mp4">mp4</a> · <a href="assets/water-dump/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/water-dump">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/water-dump">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36213194885">Actions #8</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/fluid-dam-break/media.mp4" data-poster="assets/fluid-dam-break/preview.jpg" aria-label="Fluid Dam Break の動画を再生"><img src="assets/fluid-dam-break/preview.jpg" alt="Fluid Dam Break preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="body">
+            <h2>Fluid Dam Break</h2>
+            <p class="id">fluid-dam-break</p>
+            <p>A low-resolution Mantaflow liquid dam-break simulation with a center obstacle and a low barrier.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/9f290e0f9aa71f129ab0ce5d1a5e7cbba9a9265d">9f290e0f9a</a></p>
+            <table><tr><th>duration_seconds</th><td>1.75</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>168,055 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>38.753</td></tr><tr><th>poster_unique_colors_64x36</th><td>889</td></tr></table>
+            <p class="links"><a href="assets/fluid-dam-break/preview.jpg">preview</a> · <a href="assets/fluid-dam-break/media.mp4">mp4</a> · <a href="assets/fluid-dam-break/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/fluid-dam-break">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/fluid-dam-break">result</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/fluid-dam-break/fluid-result.blend">fluid-result.blend</a> · <a href="https://github.com/2rwa/tmp-blender/blob/main/results/fluid-dam-break/fluid-sim.blend">fluid-sim.blend</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36215444736">Actions #15</a></p>
+          </div>
+        </article>
+        
+        <article class="card">
+          <div class="visual"><button class="media-toggle" type="button" data-video="assets/fire-column/media.mp4" data-poster="assets/fire-column/preview.jpg" aria-label="Fire Column の動画を再生"><img src="assets/fire-column/preview.jpg" alt="Fire Column preview"><span class="play-badge" aria-hidden="true">▶</span><span class="play-label" aria-hidden="true">PLAY</span></button></div>
+          <div class="body">
+            <h2>Fire Column</h2>
+            <p class="id">fire-column</p>
+            <p>A short stylized flame animation built from layered emissive flame tongues, flickering light, glow, and rising sparks.</p>
+            <p class="source">source <a href="https://github.com/2rwa/tmp-blender/commit/5c9e0e14f0c596f3f247b07cc1d58a209ad7b590">5c9e0e14f0</a></p>
+            <table><tr><th>duration_seconds</th><td>3.0</td></tr><tr><th>fps</th><td>24</td></tr><tr><th>width</th><td>640</td></tr><tr><th>height</th><td>360</td></tr><tr><th>video_size_bytes</th><td>95,958 bytes</td></tr><tr><th>poster_luminance_stddev</th><td>72.766</td></tr><tr><th>bright_pixel_ratio</th><td>0.182305</td></tr><tr><th>warm_pixel_ratio</th><td>0.068837</td></tr></table>
+            <p class="links"><a href="assets/fire-column/preview.jpg">preview</a> · <a href="assets/fire-column/media.mp4">mp4</a> · <a href="assets/fire-column/validation.json">validation</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/experiments/fire-column">source</a> · <a href="https://github.com/2rwa/tmp-blender/tree/main/results/fire-column">result</a> · <a href="https://github.com/2rwa/tmp-blender/actions/runs/36213194885">Actions #8</a></p>
           </div>
         </article>
         
