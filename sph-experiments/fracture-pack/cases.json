@@ -1,0 +1,37 @@
+{
+  "upstream_repository": "https://github.com/naqibr/SoliDualSPHysics",
+  "upstream_example": "SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml",
+  "note": "Exploratory parameter sweep based on the upstream Kalthoff-Winkler benchmark. Not a validation reproduction.",
+  "cases": {
+    "kw-baseline": {
+      "title": "Kalthoff-Winkler Baseline",
+      "description": "Upstream-like Kalthoff-Winkler impact fracture parameters.",
+      "maxv": 16.5,
+      "Gc": 22130
+    },
+    "kw-brittle": {
+      "title": "Kalthoff-Winkler Lower Gc",
+      "description": "Lower critical energy release rate to encourage easier crack growth.",
+      "maxv": 16.5,
+      "Gc": 12000
+    },
+    "kw-tough": {
+      "title": "Kalthoff-Winkler Higher Gc",
+      "description": "Higher critical energy release rate to resist crack growth.",
+      "maxv": 16.5,
+      "Gc": 35000
+    },
+    "kw-high-impact": {
+      "title": "Kalthoff-Winkler High Impact",
+      "description": "Baseline fracture energy with a stronger imposed impact velocity.",
+      "maxv": 25,
+      "Gc": 22130
+    },
+    "kw-extreme-impact": {
+      "title": "Kalthoff-Winkler Extreme Impact",
+      "description": "Aggressive impact probe intended to expose branching or catastrophic failure.",
+      "maxv": 35,
+      "Gc": 22130
+    }
+  }
+}
