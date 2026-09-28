@@ -354,7 +354,21 @@ def make_geometry_nodes(
 
     for output in outputs:
         links.new(output, find_socket(join.inputs, "Geometry"))
-    links.new(find_socket(join.outputs, "Geometry"), find_socket(gout.inputs, "Geometry"))
+
+    # Instances render correctly, but evaluated_get(...).to_mesh() reports 0/0
+    # while the node tree still contains unrealized instances. Realize the final
+    # diagnostic geometry so validation, export, and downstream inspection see
+    # the same concrete mesh that is rendered.
+    realize = nodes.new("GeometryNodeRealizeInstances")
+    realize.location = (930, 120)
+    links.new(
+        find_socket(join.outputs, "Geometry"),
+        find_any_socket(realize.inputs, "Geometry", "Instances"),
+    )
+    links.new(
+        find_any_socket(realize.outputs, "Geometry", "Instances"),
+        find_socket(gout.inputs, "Geometry"),
+    )
 
     modifier = obj.modifiers.new(f"SPH Diagnostics {mode}", "NODES")
     modifier.node_group = group
@@ -571,7 +585,12 @@ def main() -> None:
     check_seconds = time.perf_counter() - check_t0
 
     actual_nodes = {node.bl_idname for node in node_group.nodes}
-    required = {"GeometryNodeMeshToPoints", "GeometryNodeInstanceOnPoints", "GeometryNodeJoinGeometry"}
+    required = {
+        "GeometryNodeMeshToPoints",
+        "GeometryNodeInstanceOnPoints",
+        "GeometryNodeJoinGeometry",
+        "GeometryNodeRealizeInstances",
+    }
     if args.mode in ("velocity", "combined"):
         required |= {
             "GeometryNodeSampleIndex",
