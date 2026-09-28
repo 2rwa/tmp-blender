@@ -1,25 +1,79 @@
 from __future__ import annotations
-import argparse, json, math
+import argparse, json, math, shutil
 from pathlib import Path
-import meshio
 import numpy as np
 
 CANDIDATE_WORDS = ("phase", "fract", "damage", "crack", "pf")
 
-def find_scalar(mesh):
+def read_legacy_polydata(path: Path):
+    text = path.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+    if not any(line.strip().upper() == "DATASET POLYDATA" for line in lines[:12]):
+        raise ValueError(f"expected legacy ASCII POLYDATA: {path}")
+
+    points = None
+    scalars = {}
+    i = 0
+    point_count = None
+    while i < len(lines):
+        line = lines[i].strip()
+        up = line.upper()
+        if up.startswith("POINTS "):
+            parts = line.split()
+            n = int(parts[1])
+            vals = []
+            i += 1
+            while i < len(lines) and len(vals) < n * 3:
+                vals.extend(float(x) for x in lines[i].split())
+                i += 1
+            if len(vals) < n * 3:
+                raise ValueError(f"truncated POINTS in {path}")
+            points = np.asarray(vals[: n * 3], dtype=np.float64).reshape(n, 3)
+            continue
+        if up.startswith("POINT_DATA "):
+            point_count = int(line.split()[1])
+            i += 1
+            continue
+        if point_count is not None and up.startswith("SCALARS "):
+            parts = line.split()
+            name = parts[1]
+            ncomp = int(parts[3]) if len(parts) >= 4 and parts[3].isdigit() else 1
+            i += 1
+            if i < len(lines) and lines[i].strip().upper().startswith("LOOKUP_TABLE"):
+                i += 1
+            need = point_count * ncomp
+            vals = []
+            while i < len(lines) and len(vals) < need:
+                probe = lines[i].strip()
+                probe_up = probe.upper()
+                if probe_up.startswith(("SCALARS ", "VECTORS ", "FIELD ", "CELL_DATA ", "POINT_DATA ")):
+                    break
+                if probe:
+                    vals.extend(float(x) for x in probe.split())
+                i += 1
+            if len(vals) >= need:
+                arr = np.asarray(vals[:need], dtype=np.float64).reshape(point_count, ncomp)
+                if ncomp == 1:
+                    arr = arr[:, 0]
+                scalars[name] = arr
+            continue
+        i += 1
+
+    if points is None:
+        raise ValueError(f"POINTS section missing in {path}")
+    return points, scalars
+
+def find_scalar(scalars):
     scored = []
-    for key, value in mesh.point_data.items():
-        arr = np.asarray(value)
-        if arr.ndim > 1 and arr.shape[-1] == 1:
-            arr = arr.reshape(-1)
-        if arr.ndim != 1 or len(arr) != len(mesh.points):
+    for key, arr in scalars.items():
+        if np.asarray(arr).ndim != 1:
             continue
         score = sum(w in key.lower() for w in CANDIDATE_WORDS)
         if score:
-            scored.append((score, key, arr.astype(np.float64, copy=False)))
+            scored.append((score, key, np.asarray(arr, dtype=np.float64)))
     if not scored:
         return None, None
-    scored.sort(reverse=True)
+    scored.sort(key=lambda x: (x[0], x[1]), reverse=True)
     _, key, arr = scored[0]
     return key, arr
 
@@ -28,7 +82,7 @@ def main():
     p.add_argument("vtk_dir", type=Path)
     p.add_argument("output", type=Path)
     p.add_argument("--case", required=True)
-    p.add_argument("--max-render-frames", type=int, default=25)
+    p.add_argument("--max-render-frames", type=int, default=18)
     a = p.parse_args()
 
     files = sorted(a.vtk_dir.rglob("*.vtk"))
@@ -56,18 +110,17 @@ def main():
     particle_max = None
 
     for seq, path in enumerate(selected):
-        mesh = meshio.read(path)
-        pts = np.asarray(mesh.points, dtype=np.float64)
-        if len(pts) == 0:
-            continue
-        all_fields.update(mesh.point_data.keys())
+        pts, scalars = read_legacy_polydata(path)
+        all_fields.update(scalars.keys())
         particle_min = len(pts) if particle_min is None else min(particle_min, len(pts))
         particle_max = len(pts) if particle_max is None else max(particle_max, len(pts))
-        key, scalar = find_scalar(mesh)
+
+        key, candidate = find_scalar(scalars)
         if chosen_field is None and key is not None:
             chosen_field = key
-        if chosen_field is not None and chosen_field in mesh.point_data:
-            scalar = np.asarray(mesh.point_data[chosen_field]).reshape(-1).astype(np.float64)
+        scalar = scalars.get(chosen_field) if chosen_field else candidate
+        if scalar is not None and np.asarray(scalar).ndim == 1 and len(scalar) == len(pts):
+            scalar = np.asarray(scalar, dtype=np.float64)
             smin, smax = float(np.nanmin(scalar)), float(np.nanmax(scalar))
             global_scalar_min = smin if global_scalar_min is None else min(global_scalar_min, smin)
             global_scalar_max = smax if global_scalar_max is None else max(global_scalar_max, smax)
@@ -75,17 +128,16 @@ def main():
             scalar = None
             smin = smax = None
 
-        # Kalthoff-Winkler plate lies primarily in x-z.
-        max_points = 35000
+        max_points = 40000
         step = max(1, len(pts) // max_points)
         q = pts[::step]
         c = scalar[::step] if scalar is not None else None
 
         fig, ax = plt.subplots(figsize=(6.4, 6.4), dpi=100)
         if c is None:
-            ax.scatter(q[:,0], q[:,2], s=1.0)
+            ax.scatter(q[:, 0], q[:, 2], s=0.8)
         else:
-            sc = ax.scatter(q[:,0], q[:,2], s=1.0, c=c)
+            sc = ax.scatter(q[:, 0], q[:, 2], s=0.8, c=c)
             fig.colorbar(sc, ax=ax, shrink=0.8, label=chosen_field)
         ax.set_aspect("equal", adjustable="box")
         ax.set_xlabel("x (m)")
@@ -109,8 +161,6 @@ def main():
     if not stats:
         raise SystemExit("no readable VTK frames")
 
-    # Final selected frame becomes preview.
-    import shutil
     shutil.copy2(frame_dir / f"frame_{len(stats)-1:04d}.png", a.output / "preview.png")
 
     result = {
