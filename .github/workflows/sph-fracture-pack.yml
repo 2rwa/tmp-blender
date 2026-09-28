@@ -1,0 +1,256 @@
+name: SPH fracture pack 5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/fracture-pack/**'
+      - '.github/workflows/sph-fracture-pack.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: tmp-blender-sph-fracture-pack-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Cheap local preflight
+        run: |
+          python -m json.tool sph-experiments/fracture-pack/cases.json >/dev/null
+          python -m py_compile \
+            sph-experiments/fracture-pack/make_case.py \
+            sph-experiments/fracture-pack/inspect_vtk.py \
+            sph-experiments/fracture-pack/publish_results.py
+
+      - name: Restore SoliDualSPHysics cache
+        id: solid-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/SoliDualSPHysics
+          key: solidualsphysics-main-20260928-v1
+
+      - name: Clone SoliDualSPHysics
+        if: steps.solid-cache.outputs.cache-hit != 'true'
+        run: |
+          rm -rf .cache/SoliDualSPHysics
+          mkdir -p .cache
+          git clone --depth 1 https://github.com/naqibr/SoliDualSPHysics.git .cache/SoliDualSPHysics
+
+      - name: Verify upstream CPU runtime
+        run: |
+          set -euxo pipefail
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          chmod +x "$up/bin/linux/"* "$up/DSPartVTK/bin/"* || true
+          test -x "$up/bin/linux/GenCase_linux64"
+          test -x "$up/bin/linux/SoliDualSPHysics_linux64"
+          test -x "$up/DSPartVTK/bin/DSPartVTK_linux64"
+          test -s "$up/SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml"
+          export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
+          "$up/bin/linux/SoliDualSPHysics_linux64" -h >/tmp/solid-help.txt 2>&1 || {
+            cat /tmp/solid-help.txt
+            ldd "$up/bin/linux/SoliDualSPHysics_linux64" || true
+            exit 1
+          }
+          head -80 /tmp/solid-help.txt
+
+      - name: Save SoliDualSPHysics cache
+        if: steps.solid-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/SoliDualSPHysics
+          key: solidualsphysics-main-20260928-v1
+
+  sample:
+    needs: runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        case:
+          - kw-baseline
+          - kw-brittle
+          - kw-tough
+          - kw-high-impact
+          - kw-extreme-impact
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Preflight
+        run: |
+          python -m json.tool sph-experiments/fracture-pack/cases.json >/dev/null
+          python -m py_compile \
+            sph-experiments/fracture-pack/make_case.py \
+            sph-experiments/fracture-pack/inspect_vtk.py
+
+      - name: Install visualization dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get -y install ffmpeg >/dev/null
+          python -m pip install --disable-pip-version-check meshio numpy matplotlib
+
+      - name: Restore SoliDualSPHysics runtime
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/SoliDualSPHysics
+          key: solidualsphysics-main-20260928-v1
+          fail-on-cache-miss: true
+
+      - name: Generate fracture case
+        run: |
+          set -euxo pipefail
+          base="output/sph-fracture-${{ matrix.case }}"
+          mkdir -p "$base"
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          python sph-experiments/fracture-pack/make_case.py \
+            "${{ matrix.case }}" \
+            "$up/SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml" \
+            "$base/Solid_Case_Def.xml" \
+            --metadata "$base/case-metadata.json"
+          python - <<'PY' "$base/Solid_Case_Def.xml"
+          import sys, xml.etree.ElementTree as ET
+          root=ET.parse(sys.argv[1]).getroot()
+          body=root.find(".//deformstrucbody")
+          assert body.find("fracture").get("value") == "1"
+          assert body.find("Gc") is not None
+          PY
+
+      - name: Run true fracture simulation (CPU)
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/sph-fracture-${{ matrix.case }}"
+          work="$base/work"
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          mkdir -p "$work" "$base/particles"
+          cp "$base/Solid_Case_Def.xml" "$work/Solid_Case_Def.xml"
+          export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
+
+          "$up/bin/linux/GenCase_linux64" \
+            "$work/Solid_Case_Def" "$work/Solid_Case" -save:all \
+            2>&1 | tee "$base/gencase.log"
+
+          "$up/bin/linux/SoliDualSPHysics_linux64" -cpu \
+            "$work/Solid_Case" "$work/solver-out" \
+            -dirdataout bindata -svres \
+            2>&1 | tee "$base/solver.log"
+
+          test -d "$work/solver-out/bindata"
+          test -s "$work/solver-out/Solid_Case.xml"
+
+      - name: Convert fracture output to VTK
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/sph-fracture-${{ matrix.case }}"
+          work="$base/work"
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
+          "$up/DSPartVTK/bin/DSPartVTK_linux64" \
+            -dirin "$work/solver-out/bindata" \
+            -filexml "$work/solver-out/Solid_Case.xml" \
+            -savevtk "$base/particles/DefStrucBody_%mk%" \
+            2>&1 | tee "$base/dspartvtk.log"
+          test -n "$(find "$base/particles" -type f -name '*.vtk' -print -quit)"
+          echo "VTK files: $(find "$base/particles" -type f -name '*.vtk' | wc -l)"
+
+      - name: Inspect fracture fields and render lightweight preview
+        env:
+          MPLBACKEND: Agg
+        run: |
+          set -euxo pipefail
+          base="output/sph-fracture-${{ matrix.case }}"
+          python sph-experiments/fracture-pack/inspect_vtk.py \
+            "$base/particles" "$base/visual" --case "${{ matrix.case }}"
+          cp "$base/visual/validation.json" "$base/validation.json"
+          cp "$base/visual/preview.png" "$base/preview.png"
+          ffmpeg -y -loglevel warning -framerate 8 \
+            -i "$base/visual/frames/frame_%04d.png" \
+            -c:v libx264 -pix_fmt yuv420p -crf 25 "$base/media.mp4"
+          test -s "$base/media.mp4"
+          python -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d["errors"] == []; assert d["vtk_files"] > 0' "$base/validation.json"
+          cat "$base/validation.json"
+
+      - name: Upload fracture result
+        uses: actions/upload-artifact@v4
+        with:
+          name: sph-fracture-${{ matrix.case }}
+          path: |
+            output/sph-fracture-${{ matrix.case }}/validation.json
+            output/sph-fracture-${{ matrix.case }}/preview.png
+            output/sph-fracture-${{ matrix.case }}/media.mp4
+            output/sph-fracture-${{ matrix.case }}/case-metadata.json
+            output/sph-fracture-${{ matrix.case }}/solver.log
+            output/sph-fracture-${{ matrix.case }}/dspartvtk.log
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  publish:
+    needs: sample
+    if: ${{ needs.sample.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Rebase before persistent result generation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main
+
+      - name: Download all fracture samples
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sph-fracture-*
+          path: artifacts
+          merge-multiple: false
+
+      - name: Generate persistent results
+        run: |
+          python sph-experiments/fracture-pack/publish_results.py \
+            artifacts results \
+            --source-commit "$GITHUB_SHA" \
+            --run-number "$GITHUB_RUN_NUMBER" \
+            --run-id "$GITHUB_RUN_ID"
+
+      - name: Commit persistent results
+        id: commit-results
+        run: |
+          git add results/sph-fracture-*/
+          if git diff --cached --quiet; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: publish five true-fracture SPH probes [skip ci]"
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Push persistent results
+        if: steps.commit-results.outputs.committed == 'true'
+        run: |
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
