@@ -89,13 +89,22 @@ jobs:
           base="$GITHUB_WORKSPACE/output/sph-long-5s"
           rm -rf "$base"
           mkdir -p "$base/sph"
-          scene_file="$(realpath sph-experiments/dam-break-cube/scene.json)"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          src = Path("sph-experiments/dam-break-cube/scene.json")
+          dst = src.with_name("scene-long-5s.generated.json")
+          data = json.loads(src.read_text(encoding="utf-8"))
+          data["Configuration"]["stopAt"] = 5.0
+          dst.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+          print(dst)
+          PY
+          scene_file="$(realpath sph-experiments/dam-break-cube/scene-long-5s.generated.json)"
           /usr/bin/time -f '%e' -o "$base/simulation-seconds.txt" \
             .cache/splishsplash-2.18.1/bin/SPHSimulator \
               --no-gui \
               --no-cache \
               --no-initial-pause \
-              --stopAt 5.0 \
               --output-dir "$base/sph" \
               "$scene_file" \
               2>&1 | tee "$base/sph/splash.log"
