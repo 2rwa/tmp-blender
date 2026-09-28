@@ -22,6 +22,7 @@ on:
       - 'SPH elastic sample pack 5'
       - 'SPH elastic burst pack 5'
       - 'SPH fracture overnight sweep 10'
+      - 'SPH fracture 3D extreme'
     types: [completed]
 
 permissions:
