@@ -1,0 +1,234 @@
+name: SPH fracture 3D extreme
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sph-experiments/fracture-3d/**'
+      - '.github/workflows/sph-fracture-3d-extreme.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  BLENDER_VERSION: "4.0.2"
+
+concurrency:
+  group: tmp-blender-sph-fracture-3d-extreme-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Restore SoliDualSPHysics cache
+        id: solid-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/SoliDualSPHysics
+          key: solidualsphysics-main-20260928-v1
+
+      - name: Build SoliDualSPHysics CPU runtime if needed
+        if: steps.solid-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          mkdir -p .cache
+          git clone --depth 1 https://github.com/naqibr/SoliDualSPHysics.git .cache/SoliDualSPHysics
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          make -C "$up/src/source" -f Makefile_cpu -j2 COMPILE_CHRONO=NO COMPILE_MOORDYN=NO COMPILE_WAVEGEN=NO
+          make -C "$up/DSPartVTK/source" -j2
+
+      - name: Save SoliDualSPHysics cache
+        if: steps.solid-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/SoliDualSPHysics
+          key: solidualsphysics-main-20260928-v1
+
+      - name: Restore Blender runtime
+        id: blender-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Build Blender runtime if needed
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euxo pipefail
+          rm -rf .cache/blender-runtime
+          mkdir -p .cache/blender-runtime/blender .cache/blender-runtime/egl .cache/blender-runtime/apt
+          archive="blender-$BLENDER_VERSION-linux-x64.tar.xz"
+          base_url="https://download.blender.org/release/Blender4.0"
+          aria2c -x 8 -s 8 -d /tmp -o "$archive" "$base_url/$archive"
+          curl -fsSL "$base_url/blender-$BLENDER_VERSION.sha256" -o /tmp/blender.sha256
+          (cd /tmp && grep "  $archive$" blender.sha256 | sha256sum -c -)
+          tar -xf "/tmp/$archive" -C .cache/blender-runtime/blender --strip-components=1
+          sudo apt-get update -qq
+          (cd .cache/blender-runtime/apt && apt-get download libegl1)
+          dpkg-deb -x .cache/blender-runtime/apt/libegl1_*.deb .cache/blender-runtime/egl
+
+      - name: Save Blender runtime
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+
+      - name: Verify runtimes
+        run: |
+          test -x .cache/SoliDualSPHysics/bin/linux/SoliDualSPHysicsCPU_linux64
+          test -x .cache/SoliDualSPHysics/DSPartVTK/bin/DSPartVTK_linux64
+          test -x .cache/blender-runtime/blender/blender
+
+  render:
+    needs: runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Preflight
+        run: |
+          python -m py_compile             sph-experiments/fracture-pack/make_case.py             sph-experiments/fracture-3d/prepare_cache.py             sph-experiments/fracture-3d/render_blender.py
+
+      - name: Install VTK preprocessing dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy vtk
+
+      - name: Restore runtimes
+        uses: actions/cache/restore@v6
+        with:
+          path: .cache/SoliDualSPHysics
+          key: solidualsphysics-main-20260928-v1
+          fail-on-cache-miss: true
+
+      - uses: actions/cache/restore@v6
+        with:
+          path: .cache/blender-runtime
+          key: blender-runtime-${{ runner.os }}-x64-${{ env.BLENDER_VERSION }}-v1
+          fail-on-cache-miss: true
+
+      - name: Generate extreme fracture case
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/fracture-3d"
+          work="$base/work"
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          mkdir -p "$work" "$base/particles" "$base/cache" "$base/render"
+          python sph-experiments/fracture-pack/make_case.py             kw-v35-g8k-extreme             "$up/SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml"             "$work/Solid_Case_Def.xml"             --metadata "$base/case-metadata.json"
+
+      - name: Simulate true fracture
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/fracture-3d"
+          work="$base/work"
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
+          "$up/bin/linux/GenCase_linux64" "$work/Solid_Case_Def" "$work/Solid_Case" -save:all             2>&1 | tee "$base/gencase.log"
+          "$up/bin/linux/SoliDualSPHysicsCPU_linux64"             "$work/Solid_Case" "$work/solver-out" -dirdataout bindata -svres             2>&1 | tee "$base/solver.log"
+          test -d "$work/solver-out/bindata"
+
+      - name: Convert to VTK
+        run: |
+          set -euxo pipefail
+          base="$GITHUB_WORKSPACE/output/fracture-3d"
+          work="$base/work"
+          up="$GITHUB_WORKSPACE/.cache/SoliDualSPHysics"
+          export LD_LIBRARY_PATH="$up/bin/linux:$up/DSPartVTK/bin:${LD_LIBRARY_PATH:-}"
+          "$up/DSPartVTK/bin/DSPartVTK_linux64"             -dirin "$work/solver-out/bindata"             -filexml "$work/Solid_Case.xml"             -savevtk "$base/particles/DefStrucBody_%mk%"
+          test -n "$(find "$base/particles" -name '*.vtk' -print -quit)"
+
+      - name: Build displaced 3D cache
+        run: |
+          base="$GITHUB_WORKSPACE/output/fracture-3d"
+          python sph-experiments/fracture-3d/prepare_cache.py             "$base/particles" "$base/cache"             --case kw-v35-g8k-extreme --max-frames 24 --grid-step 4 --fps 8
+          cat "$base/cache/manifest.json"
+
+      - name: Configure Blender
+        run: |
+          echo "$GITHUB_WORKSPACE/.cache/blender-runtime/blender" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/.cache/blender-runtime/egl/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+
+      - name: Render Blender 3D fracture
+        run: |
+          set -o pipefail
+          base="$GITHUB_WORKSPACE/output/fracture-3d"
+          LIBGL_ALWAYS_SOFTWARE=1 SDL_AUDIODRIVER=dummy             xvfb-run -a -s "-screen 0 1280x720x24"             blender --background --factory-startup               --python-exit-code 1               --python sph-experiments/fracture-3d/render_blender.py               --               --cache "$base/cache"               --case kw-v35-g8k-extreme               --output "$base/render"               2>&1 | tee "$base/blender.log"
+          test -s "$base/render/preview.png"
+          test -s "$base/render/media.mp4"
+          test -s "$base/render/validation-3d.json"
+          test -s "$base/render/sph-fracture-3d-kw-v35-g8k-extreme.blend"
+
+      - name: Upload 3D result
+        uses: actions/upload-artifact@v4
+        with:
+          name: fracture-3d-extreme
+          path: |
+            output/fracture-3d/render/preview.png
+            output/fracture-3d/render/media.mp4
+            output/fracture-3d/render/validation-3d.json
+            output/fracture-3d/render/sph-fracture-3d-kw-v35-g8k-extreme.blend
+            output/fracture-3d/cache/manifest.json
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: render
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: fracture-3d-extreme
+          path: artifacts/fracture-3d-extreme
+
+      - name: Replace gallery media with Blender 3D version
+        run: |
+          set -euxo pipefail
+          target="results/sph-fracture-kw-v35-g8k-extreme"
+          test -d "$target"
+          test -s artifacts/fracture-3d-extreme/preview.png
+          test -s artifacts/fracture-3d-extreme/media.mp4
+          if [ ! -f "$target/preview-2d.png" ]; then cp "$target/preview.png" "$target/preview-2d.png"; fi
+          if [ ! -f "$target/media-2d.mp4" ]; then cp "$target/media.mp4" "$target/media-2d.mp4"; fi
+          if [ ! -f "$target/validation-2d.json" ]; then cp "$target/validation.json" "$target/validation-2d.json"; fi
+          cp artifacts/fracture-3d-extreme/preview.png "$target/preview.png"
+          cp artifacts/fracture-3d-extreme/media.mp4 "$target/media.mp4"
+          cp artifacts/fracture-3d-extreme/validation-3d.json "$target/validation-3d.json"
+          cp artifacts/fracture-3d-extreme/sph-fracture-3d-kw-v35-g8k-extreme.blend "$target/"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/sph-fracture-kw-v35-g8k-extreme/pages.json")
+          d=json.loads(p.read_text())
+          d["description"] += " Blender 3D view uses mapped position + Displacement; visual thickness is added only for presentation."
+          d["representation"]="Blender 3D displaced phase-field surface"
+          d["validation_3d"]="validation-3d.json"
+          d["media_2d"]="media-2d.mp4"
+          p.write_text(json.dumps(d,indent=2)+"\n")
+          PY
+
+      - name: Commit 3D gallery result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/sph-fracture-kw-v35-g8k-extreme/
+          git commit -m "chore: publish Blender 3D fracture visualization [skip ci]"
+          git push origin HEAD:main
