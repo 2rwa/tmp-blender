@@ -92,12 +92,12 @@ jobs:
           scene_file="$(realpath sph-experiments/dam-break-cube/scene.json)"
           /usr/bin/time -f '%e' -o "$base/simulation-seconds.txt" \
             .cache/splishsplash-2.18.1/bin/SPHSimulator \
-              "$scene_file" \
               --no-gui \
               --no-cache \
               --no-initial-pause \
               --stopAt 5.0 \
               --output-dir "$base/sph" \
+              "$scene_file" \
               2>&1 | tee "$base/sph/splash.log"
           echo "SIMULATION_SECONDS=$(cat "$base/simulation-seconds.txt")"
 

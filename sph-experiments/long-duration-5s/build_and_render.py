@@ -62,14 +62,18 @@ def add_tank_wireframe():
         (4,5),(4,6),(5,7),(6,7),
         (0,4),(1,5),(2,6),(3,7),
     ]
-    mesh = bpy.data.meshes.new("TankWireMesh")
-    mesh.from_pydata(verts, edges, [])
-    mesh.update()
-    obj = bpy.data.objects.new("TankWire", mesh)
+    curve = bpy.data.curves.new("TankWireCurve", type="CURVE")
+    curve.dimensions = "3D"
+    curve.resolution_u = 1
+    curve.bevel_depth = 0.012
+    curve.bevel_resolution = 0
+    for a, b in edges:
+        spline = curve.splines.new("POLY")
+        spline.points.add(1)
+        spline.points[0].co = (*verts[a], 1.0)
+        spline.points[1].co = (*verts[b], 1.0)
+    obj = bpy.data.objects.new("TankWire", curve)
     bpy.context.collection.objects.link(obj)
-    mod = obj.modifiers.new("Wire", "SKIN")
-    for v in mesh.skin_vertices[0].data:
-        v.radius = (0.015, 0.015)
     obj.data.materials.append(
         make_material("TankWireMat", (0.18, 0.24, 0.30), metallic=0.2, roughness=0.35)
     )
