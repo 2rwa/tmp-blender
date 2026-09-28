@@ -1,0 +1,67 @@
+{
+  "experiment": "audio-reactive-music-20260928",
+  "engine": "BLENDER_EEVEE",
+  "render_samples": 16,
+  "frame_start": 1,
+  "frame_end": 480,
+  "fps": 24,
+  "duration_seconds": 20.0,
+  "resolution": [
+    480,
+    360
+  ],
+  "audio": {
+    "source": "assets/music/20260928_000.mp3",
+    "source_size_bytes": 2818607,
+    "source_sha256": "9f7355de1e6ec71a1431088afd245bfda8d3df1a26d8b159dc52a6b4895781c1",
+    "analysis_fps": 24,
+    "analysis_sample_rate": 8000,
+    "analysis_frame_count": 480,
+    "band_filters": {
+      "full": null,
+      "low": "lowpass=f=180",
+      "mid": "highpass=f=180,lowpass=f=2500",
+      "high": "highpass=f=2500"
+    },
+    "beat_frames": [
+      28,
+      83,
+      110,
+      192,
+      219,
+      246,
+      256,
+      271,
+      276,
+      286,
+      294,
+      299,
+      356,
+      385,
+      397,
+      405,
+      419,
+      436,
+      463,
+      475
+    ],
+    "beat_count": 20,
+    "mean_full": 0.725885,
+    "max_full": 1.263459,
+    "mean_transient": 0.195285,
+    "max_transient": 1.5
+  },
+  "visual": {
+    "animated_objects": 44,
+    "bar_count": 36,
+    "keyframe_insert_calls": 49440
+  },
+  "sync_mapping": {
+    "low": "every third radial bar + warm area light + target height",
+    "mid": "every third radial bar + cyan area light + camera height",
+    "high": "every third radial bar + violet area light + ring spin",
+    "full": "core scale + camera radius",
+    "transient": "core pulse + bar accent + light accent + camera punch-in"
+  },
+  "blend": "audio-reactive-music-20260928.blend"
+}

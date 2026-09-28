@@ -1,0 +1,20 @@
+{
+  "experiment": "audio-reactive-music-20260928",
+  "source_sha": "7e8f21919da9784bd78d92930f59b8fca52a2bc5",
+  "run_id": "36407087514",
+  "run_number": "70",
+  "render_mode": "frame-sequence",
+  "frame_sequence": {
+    "start": 1,
+    "end": 480,
+    "fps": 24,
+    "chunk_size": 60,
+    "preview_frame": 240,
+    "blend": "audio-reactive-music-20260928.blend",
+    "video": "audio-reactive-music-20260928.mp4"
+  },
+  "published_prepared_outputs": [
+    "audio-reactive-music-20260928.blend",
+    "audio-reactive-music-20260928-report.json"
+  ]
+}
