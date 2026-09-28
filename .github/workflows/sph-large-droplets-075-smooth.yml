@@ -68,6 +68,10 @@ jobs:
           echo "Using source cache: $cache_dir"
           echo "Surface frames: $(find "$cache_dir/surfaces" -maxdepth 1 -name 'surface_*.npz' | wc -l)"
 
+      - name: Install smoothing runtime
+        run: |
+          python -m pip install --disable-pip-version-check numpy
+
       - name: Smooth all 61 meshes
         run: |
           rm -rf output/sph-large-droplets-075-smooth
