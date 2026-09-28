@@ -15,6 +15,7 @@ on:
       - 'SPH 5s scale test'
       - 'SPH large droplets 075'
       - 'SPH large droplets 075 smooth'
+      - 'SPH Geometry Nodes point volume'
     types: [completed]
 
 permissions:
