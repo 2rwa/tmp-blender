@@ -1,0 +1,195 @@
+{
+  "case": "heavy-drop-into-light-pool",
+  "representation": "two-fluid-models-to-animated-usd-plus-geometry-nodes",
+  "frames": 25,
+  "fps": 12,
+  "total_particle_count": 586,
+  "phases": {
+    "PhaseA": {
+      "particle_count": 126,
+      "velocity_stats": {
+        "p50": 1.0812245607376099,
+        "p95": 3.5461621284484863,
+        "p99": 3.681981086730957,
+        "max": 5.032473564147949
+      },
+      "first_centroid": [
+        0.009999997913837433,
+        1.3997396230697632,
+        -0.010000018402934074
+      ],
+      "last_centroid": [
+        -0.04523753374814987,
+        0.1830396056175232,
+        -0.02975883148610592
+      ],
+      "centroid_displacement": 1.2181135119794237,
+      "first_aabb": {
+        "min": [
+          -0.4100000262260437,
+          1.2597402334213257,
+          -0.36000001430511475
+        ],
+        "max": [
+          0.4300000071525574,
+          1.5397402048110962,
+          0.3399999737739563
+        ]
+      },
+      "last_aabb": {
+        "min": [
+          -1.708099365234375,
+          0.1367173045873642,
+          -0.8621972799301147
+        ],
+        "max": [
+          1.856441855430603,
+          0.6490927338600159,
+          0.8007034063339233
+        ]
+      }
+    },
+    "PhaseB": {
+      "particle_count": 460,
+      "velocity_stats": {
+        "p50": 0.7159547805786133,
+        "p95": 1.9684330224990845,
+        "p99": 2.776874303817749,
+        "max": 3.855684280395508
+      },
+      "first_centroid": [
+        0.029999952763319016,
+        0.30998995900154114,
+        0.019999951124191284
+      ],
+      "last_centroid": [
+        0.01995735615491867,
+        0.22458778321743011,
+        0.0010656564263626933
+      ],
+      "centroid_displacement": 0.08805051329210678,
+      "first_aabb": {
+        "min": [
+          -1.5099999904632568,
+          0.2399902045726776,
+          -0.6100000143051147
+        ],
+        "max": [
+          1.5699999332427979,
+          0.37999019026756287,
+          0.6499999761581421
+        ]
+      },
+      "last_aabb": {
+        "min": [
+          -1.856430172920227,
+          0.13893979787826538,
+          -0.8585817217826843
+        ],
+        "max": [
+          1.8369507789611816,
+          0.60413658618927,
+          0.8657628893852234
+        ]
+      }
+    }
+  },
+  "point_npz_total_bytes": 384144,
+  "point_usd_bytes": 177812,
+  "blend_bytes": 988780,
+  "preview_bytes": 298272,
+  "video_bytes": 178381,
+  "usd_author_seconds": 0.05771389500000623,
+  "usd_import_seconds": 0.002003940000008697,
+  "geometry_nodes_check_seconds": 0.00516824099999269,
+  "render_seconds": 70.015406127,
+  "geometry_nodes": {
+    "point_radius": 0.062,
+    "nodes": {
+      "PhaseA": [
+        "GeometryNodeInstanceOnPoints",
+        "GeometryNodeMeshToPoints",
+        "GeometryNodeObjectInfo",
+        "GeometryNodeRealizeInstances",
+        "NodeGroupInput",
+        "NodeGroupOutput"
+      ],
+      "PhaseB": [
+        "GeometryNodeInstanceOnPoints",
+        "GeometryNodeMeshToPoints",
+        "GeometryNodeObjectInfo",
+        "GeometryNodeRealizeInstances",
+        "NodeGroupInput",
+        "NodeGroupOutput"
+      ]
+    },
+    "modifier_stack": {
+      "PhaseA": [
+        "MESH_SEQUENCE_CACHE",
+        "NODES"
+      ],
+      "PhaseB": [
+        "MESH_SEQUENCE_CACHE",
+        "NODES"
+      ]
+    }
+  },
+  "checks": [
+    {
+      "frame": 1,
+      "PhaseA": {
+        "vertices": 1512,
+        "faces": 2520
+      },
+      "PhaseB": {
+        "vertices": 5520,
+        "faces": 9200
+      }
+    },
+    {
+      "frame": 6,
+      "PhaseA": {
+        "vertices": 1512,
+        "faces": 2520
+      },
+      "PhaseB": {
+        "vertices": 5520,
+        "faces": 9200
+      }
+    },
+    {
+      "frame": 12,
+      "PhaseA": {
+        "vertices": 1512,
+        "faces": 2520
+      },
+      "PhaseB": {
+        "vertices": 5520,
+        "faces": 9200
+      }
+    },
+    {
+      "frame": 18,
+      "PhaseA": {
+        "vertices": 1512,
+        "faces": 2520
+      },
+      "PhaseB": {
+        "vertices": 5520,
+        "faces": 9200
+      }
+    },
+    {
+      "frame": 25,
+      "PhaseA": {
+        "vertices": 1512,
+        "faces": 2520
+      },
+      "PhaseB": {
+        "vertices": 5520,
+        "faces": 9200
+      }
+    }
+  ],
+  "errors": []
+}
