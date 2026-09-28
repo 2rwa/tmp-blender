@@ -1,0 +1,11 @@
+{
+  "title": "Elastic SPH — Elastic Block Collision",
+  "description": "二つの弾性ブロックを反対向きに加速して正面衝突させ、圧縮と跳ね返りを見る。 Method=Kugelstadt et al. 2021, Young=300000.0, nu=0.33.",
+  "source_path": "sph-experiments/elastic-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "2fb51eab9713e2e4d18bfefe38326f97946d5b96",
+  "run_number": "1",
+  "run_id": "36381274836"
+}

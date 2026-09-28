@@ -1,0 +1,11 @@
+{
+  "title": "Elastic SPH — Peer Soft Cube Drop",
+  "description": "Peer et al. 2018 の比較的柔らかい立方体を床へ落とし、潰れと復元を見る。 Method=Peer et al. 2018, Young=120000.0, nu=0.33.",
+  "source_path": "sph-experiments/elastic-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "2fb51eab9713e2e4d18bfefe38326f97946d5b96",
+  "run_number": "1",
+  "run_id": "36381274836"
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Elastic SPH — Fixed Column Kick",
+  "description": "根元だけを固定した縦長弾性体へ横向き初速を与え、曲げ振動と復元を見る。 Method=Kugelstadt et al. 2021, Young=320000.0, nu=0.33.",
+  "source_path": "sph-experiments/elastic-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "2fb51eab9713e2e4d18bfefe38326f97946d5b96",
+  "run_number": "1",
+  "run_id": "36381274836"
+}

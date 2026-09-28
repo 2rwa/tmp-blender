@@ -1,0 +1,11 @@
+{
+  "title": "Elastic SPH — Cantilever Beam",
+  "description": "左端を固定した細長い弾性体を重力でたわませ、片持ち梁らしい変形を見る。 Method=Kugelstadt et al. 2021, Young=450000.0, nu=0.33.",
+  "source_path": "sph-experiments/elastic-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "2fb51eab9713e2e4d18bfefe38326f97946d5b96",
+  "run_number": "1",
+  "run_id": "36381274836"
+}
