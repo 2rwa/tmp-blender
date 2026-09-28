@@ -1,0 +1,30 @@
+{
+  "baseline": {
+    "particle_radius": 0.05,
+    "surface_vertices_min": 49554,
+    "surface_vertices_max": 59258,
+    "surface_faces_min": 91908,
+    "surface_faces_max": 111316,
+    "surface_npz_total_bytes": 51406712,
+    "usd_bytes": 70695428,
+    "blend_bytes": 5636876,
+    "render_seconds": 415.08990877299993
+  },
+  "large_droplets": {
+    "particle_radius": 0.075,
+    "surface_vertices_min": 114766,
+    "surface_vertices_max": 116800,
+    "surface_faces_min": 222384,
+    "surface_faces_max": 226400,
+    "surface_npz_total_bytes": 128952028,
+    "usd_bytes": 191451188,
+    "blend_bytes": 11414476,
+    "render_seconds": 781.988232226
+  },
+  "ratios": {
+    "radius": 1.4999999999999998,
+    "npz_bytes": 2.508466754302434,
+    "usd_bytes": 2.708112722650183,
+    "render_seconds": 1.883900850631485
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "SPH Fluid — Larger Droplets 1.5x",
+  "description": "同じ5秒SPH物理データを使い、pySplashSurfのparticle radius/smoothingだけ1.5倍にして水塊・飛沫を大きくした比較版。",
+  "source_path": "sph-experiments/large-droplets-075",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "3761822b8dd3dabf54bb34096c2aaf8bf4b9bba5",
+  "run_number": "1",
+  "run_id": "36362387414"
+}
