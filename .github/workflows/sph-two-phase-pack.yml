@@ -225,7 +225,7 @@ jobs:
           test -s "$base/media.mp4"
           test -s "$base/sph-two-phase-${{ matrix.case }}.blend"
           test -s "$base/two-phase-points.usdc"
-          grep -q '"errors": \\[\\]' "$base/validation.json"
+          python -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d["errors"] == [], d["errors"]' "$base/validation.json"
           cat "$base/validation.json"
 
       - name: Upload ${{ matrix.case }} result
