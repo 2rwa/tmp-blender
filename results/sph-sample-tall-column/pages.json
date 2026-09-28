@@ -1,0 +1,11 @@
+{
+  "title": "SPH Sample — Tall Column Collapse",
+  "description": "細く高い水柱を自重で崩し、横方向への広がりを見る。",
+  "source_path": "sph-experiments/sample-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "adfca2179627f6e1c912549c7ee5a3d1e7f046d9",
+  "run_number": "1",
+  "run_id": "36374953517"
+}

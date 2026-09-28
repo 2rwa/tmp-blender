@@ -1,0 +1,11 @@
+{
+  "title": "SPH Sample — Twin Column Collision",
+  "description": "左右二本の水柱を同時に崩し、中央で合流する流れを見る。",
+  "source_path": "sph-experiments/sample-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "adfca2179627f6e1c912549c7ee5a3d1e7f046d9",
+  "run_number": "1",
+  "run_id": "36374953517"
+}
