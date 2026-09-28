@@ -264,6 +264,37 @@ Failure history:
 - run #2 / `36360827839`: options moved before the scene path, but still only 13 frames.
 - run #3 / `36360959609`: generates a temporary scene beside the original and directly sets `Configuration.stopAt = 5.0`.
 
-Run #3 has successfully completed the 5-second SPH solve, long-sequence
-surface reconstruction, and compressed NPZ stage. At the time of this log
-update, direct USD validation/render is still running.
+Run #3 completed successfully.
+
+Measured result:
+
+- 61 exported frames spanning 5.0 simulated seconds
+- 1800 particles
+- SPH simulation: 12.53 s
+- surface reconstruction: 13.931 s
+- compressed NPZ total: 51,406,712 bytes
+- direct USD authoring: 8.100 s
+- USD size: 70,695,428 bytes
+- Blender import: 0.0376 s
+- 61-frame scrub: 1.306 s
+- render: 415.090 s
+- portable Blend: 5,636,876 bytes
+- validation errors: 0
+- Cube path length: 2.588881 m
+- Cube X-direction reversals: 2
+
+The result was published to Git and Pages. The test confirms that the
+two-object direct-USD architecture scales cleanly to a 61-frame sequence.
+
+
+### Corrected one-second regression
+
+After numeric frame sorting was applied to both the rigid-body validator and
+`reconstruct.py`, `SPH fluid sample` run #13
+(`36361411160`) completed successfully.
+
+Corrected true-final values:
+
+- cube frame 1 -> frame 13 displacement: 2.007310 m
+- final surface: 207,276 vertices / 407,352 faces
+- final OBJ: 20,799,581 bytes

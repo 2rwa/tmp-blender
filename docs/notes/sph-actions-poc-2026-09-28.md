@@ -756,17 +756,52 @@ directory** and changes:
 Placing the generated file beside the original preserves relative model paths
 such as `models/UnitBox.obj`.
 
-Verified so far in run #3:
+Run #3 completed successfully.
 
-- 5-second SPH simulation completed,
-- long sequence contained enough frames to pass the `>=55` frame guard,
-- all long-sequence pySplashSurf reconstructions completed,
-- compressed NPZ generation completed,
-- Blender runtime cache restored,
-- direct USD / all-frame validation / 5-second render is currently running.
+Final verified result:
 
-Do not describe run #3 as fully complete until the final render, publication,
-and validation steps have finished.
+- exported frames: **61**
+- simulated span: **5.0 s** from first to last sample
+- nominal 61-frame playback length at 12 fps: **5.0833 s**
+- SPH simulation wall time: **12.53 s**
+- particle count: **1800**
+- surface vertices per frame: **49,554 .. 59,258**
+- surface faces per frame: **91,908 .. 111,316**
+- compressed NPZ surfaces total: **51,406,712 bytes**
+- all-frame surface reconstruction time: **13.931 s**
+- direct USD authoring time: **8.100 s**
+- Blender USD import time: **0.0376 s**
+- headless scrub through all 61 frames: **1.306 s**
+- Blender render time: **415.090 s**
+- direct USD size: **70,695,428 bytes**
+- portable Blend size: **5,636,876 bytes**
+- preview PNG: **283,154 bytes**
+- MP4: **113,836 bytes**
+- fluid objects in Blender: **1**
+- dynamic cube objects in Blender: **1**
+- both use `MESH_SEQUENCE_CACHE`
+- validation errors: **0**
+
+Dynamic cube observations over the long run:
+
+- path length: **2.588881 m**
+- Blender-X range: **-0.1000 .. 1.98225 m**
+- X-direction reversals: **2**
+- minimum vertical coordinate: about **0.09614 m**
+- final centroid: about **[1.86730, 0.00857, 0.12772]**
+
+This confirms that extending the timeline exposed behavior that was not
+visible in the 1-second baseline: the cube reaches the far side of the tank,
+changes X direction, and later changes direction again while the fluid
+continues settling.
+
+Persistent result:
+
+`results/sph-long-duration-5s/`
+
+Pages deployment also completed successfully via `Pages gallery` run #6.
+
+The temporal scale test is therefore complete.
 
 ### Frame-number sorting bug — wider scope
 
@@ -818,3 +853,29 @@ Keep these earlier results as regression references:
 - 13-object Blender surface-sequence baseline
 - direct single-fluid USD result
 - synchronized fluid + dynamic cube USD result
+
+
+## 2026-09-28 corrected one-second regression after numeric sorting
+
+Workflow:
+
+- `SPH fluid sample`
+- run: **#13**
+- Actions run id: **36361411160**
+
+This rerun verifies that numeric frame sorting works in both validation and
+final-surface selection.
+
+Current corrected result:
+
+- fluid frames: **13**
+- rigid-body frames: **13**
+- particles: **1800**
+- frame 1 -> frame 13 cube displacement: **2.007310 m**
+- true final surface vertices: **207,276**
+- true final surface faces: **407,352**
+- true final OBJ size: **20,799,581 bytes**
+
+This supersedes old "final surface" numbers produced when
+`reconstruct.py` accidentally treated lexicographic frame 9 as the final
+frame.

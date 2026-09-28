@@ -33,8 +33,9 @@ Successful baseline:
 - 13 dynamic rigid-body frames
 - corrected dynamic cube frame 1 -> frame 13 displacement: about 2.007 m
 - the old 1.366636 m figure was caused by lexicographic frame ordering and was frame 1 -> frame 9
-- final pySplashSurf surface: 207,174 vertices / 407,148 faces
-- final OBJ: 20,688,757 bytes
+- corrected regression run #13: cube frame 1 -> 13 displacement 2.007310 m
+- corrected true-final pySplashSurf surface: 207,276 vertices / 407,352 faces
+- corrected true-final OBJ: 20,799,581 bytes
 - native SPlisHSPlasH 2.18.1 build is cached for later runs
 
 Read first for this branch of work:
@@ -122,14 +123,26 @@ Run #1 and #2 showed that CLI `--stopAt 5.0` did not override the
 scene's one-second stop for this setup. Run #3 generates a temporary scene
 beside the original and directly sets `Configuration.stopAt = 5.0`.
 
-Run #3 has already passed:
+Run #3 completed successfully:
 
-- 5-second SPH simulation,
-- long-frame-count guard,
-- all-frame pySplashSurf reconstruction,
-- compressed NPZ generation.
+- **61 frames** covering a 5.0-second simulated span
+- 1800 particles
+- SPH simulation: **12.53 s**
+- surface reconstruction: **13.93 s**
+- compressed NPZ surfaces: **51.41 MB**
+- direct USD: **70.70 MB**
+- portable Blend: **5.64 MB**
+- all-frame scrub: **1.306 s**
+- render: **415.09 s**
+- validation errors: **0**
+- Cube path length: **2.589 m**
+- Cube X-direction reversals: **2**
+- result published under `results/sph-long-duration-5s/`
+- Pages gallery deployment succeeded
 
-At this documentation update, direct USD validation/render is still running.
+This proves the direct-USD architecture scales from 13 to 61 frames without
+increasing Blender object count: one fluid cache object + one dynamic cube
+cache object.
 
 Read:
 
