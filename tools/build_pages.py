@@ -4,6 +4,7 @@ import html
 import json
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 
@@ -12,6 +13,23 @@ EXPERIMENTS = ROOT / "experiments"
 RESULTS = ROOT / "results"
 DOCS = ROOT / "docs"
 GITHUB_BASE = "https://github.com/2rwa/tmp-blender"
+
+
+def result_updated_epoch(result_dir: Path) -> int:
+    """Return the latest Git commit time touching one result directory."""
+    try:
+        relative = result_dir.relative_to(ROOT).as_posix()
+        completed = subprocess.run(
+            ["git", "log", "-1", "--format=%ct", "--", relative],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        value = completed.stdout.strip()
+        return int(value) if value else 0
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return 0
 
 
 def load_entries() -> list[dict]:
@@ -102,7 +120,13 @@ def load_entries() -> list[dict]:
             "run_id": run_id,
             "has_media": media_path.is_file(),
             "blend_files": blend_files,
+            "updated_epoch": result_updated_epoch(result_dir),
         })
+
+    # The gallery is an activity feed in practice: newly generated or updated
+    # experiments should appear first. Git timestamps are stable across fresh
+    # Actions checkouts, unlike filesystem mtimes.
+    entries.sort(key=lambda entry: (entry["updated_epoch"], entry["id"]), reverse=True)
     return entries
 
 def stat_rows(validation: dict) -> str:
