@@ -1,4 +1,4 @@
-name: SPH fracture pack 5
+name: SPH fracture overnight sweep 10
 
 on:
   push:
@@ -19,7 +19,7 @@ concurrency:
 jobs:
   runtime:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
 
@@ -81,17 +81,22 @@ jobs:
   sample:
     needs: runtime
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 180
     strategy:
       fail-fast: false
-      max-parallel: 5
+      max-parallel: 10
       matrix:
         case:
-          - kw-baseline
-          - kw-brittle
-          - kw-tough
-          - kw-high-impact
-          - kw-extreme-impact
+          - kw-v12-g12k
+          - kw-v12-g22k
+          - kw-v12-g35k
+          - kw-v16-g12k
+          - kw-v16-g22k
+          - kw-v16-g35k
+          - kw-v25-g12k
+          - kw-v25-g22k
+          - kw-v25-g35k
+          - kw-v35-g8k-extreme
 
     steps:
       - uses: actions/checkout@v7
@@ -113,7 +118,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get -y install ffmpeg >/dev/null
-          python -m pip install --disable-pip-version-check meshio numpy matplotlib
+          python -m pip install --disable-pip-version-check numpy matplotlib
 
       - name: Restore SoliDualSPHysics runtime
         uses: actions/cache/restore@v6
@@ -214,7 +219,7 @@ jobs:
     needs: sample
     if: ${{ needs.sample.result == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
         with:
@@ -251,7 +256,7 @@ jobs:
             echo "committed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "chore: publish five true-fracture SPH probes [skip ci]"
+          git commit -m "chore: publish ten fracture parameter sweep results [skip ci]"
           echo "committed=true" >> "$GITHUB_OUTPUT"
 
       - name: Push persistent results
