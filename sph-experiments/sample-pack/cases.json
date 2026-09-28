@@ -1,0 +1,51 @@
+{
+  "defaults": {
+    "stop_at": 2.0,
+    "fps": 12,
+    "particle_radius": 0.07
+  },
+  "cases": {
+    "dam-break": {
+      "title": "Dam Break",
+      "description": "左側の水塊を崩して水槽内へ流す、SPHの基本ダムブレイク。",
+      "gravity": [0.0, -9.81, 0.0],
+      "blocks": [
+        {"denseMode": 0, "start": [-1.65, 0.10, -0.75], "end": [-0.55, 1.30, 0.75]}
+      ]
+    },
+    "tall-column": {
+      "title": "Tall Column Collapse",
+      "description": "細く高い水柱を自重で崩し、横方向への広がりを見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "blocks": [
+        {"denseMode": 0, "start": [-0.65, 0.10, -0.55], "end": [0.10, 1.72, 0.55]}
+      ]
+    },
+    "falling-slug": {
+      "title": "Falling Slug into Pool",
+      "description": "浅い水面へ上方の水塊を落とし、衝突・跳ね・広がりを見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "blocks": [
+        {"denseMode": 0, "start": [-1.60, 0.10, -0.75], "end": [1.60, 0.35, 0.75]},
+        {"denseMode": 0, "start": [-0.65, 1.05, -0.55], "end": [0.65, 1.65, 0.55]}
+      ]
+    },
+    "two-towers": {
+      "title": "Twin Column Collision",
+      "description": "左右二本の水柱を同時に崩し、中央で合流する流れを見る。",
+      "gravity": [0.0, -9.81, 0.0],
+      "blocks": [
+        {"denseMode": 0, "start": [-1.50, 0.10, -0.55], "end": [-0.70, 1.40, 0.55]},
+        {"denseMode": 0, "start": [0.70, 0.10, -0.55], "end": [1.50, 1.40, 0.55]}
+      ]
+    },
+    "tilted-surge": {
+      "title": "Tilted Gravity Surge",
+      "description": "重力に横成分を加え、傾いた容器相当の浅い水塊サージを見る。",
+      "gravity": [3.5, -9.81, 0.0],
+      "blocks": [
+        {"denseMode": 0, "start": [-1.65, 0.10, -0.75], "end": [0.30, 0.58, 0.75]}
+      ]
+    }
+  }
+}

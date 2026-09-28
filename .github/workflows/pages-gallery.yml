@@ -17,6 +17,7 @@ on:
       - 'SPH large droplets 075 smooth'
       - 'SPH Geometry Nodes point volume'
       - 'SPH point diagnostics'
+      - 'SPH sample pack 5'
     types: [completed]
 
 permissions:
