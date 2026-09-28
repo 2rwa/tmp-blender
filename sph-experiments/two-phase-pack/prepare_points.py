@@ -11,7 +11,7 @@ import numpy as np
 PHASES = ("PhaseA", "PhaseB")
 
 def frame_index(path: Path) -> int:
-    match = re.search(r"_(\\d+)\\.vtk$", path.name)
+    match = re.search(r"_(\d+)\.vtk$", path.name)
     if not match:
         raise ValueError(f"cannot parse frame number: {path}")
     return int(match.group(1))
