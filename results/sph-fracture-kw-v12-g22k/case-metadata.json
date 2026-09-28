@@ -1,0 +1,10 @@
+{
+  "case": "kw-v12-g22k",
+  "title": "KW v12 Gc22k",
+  "description": "Low impact, benchmark-like fracture energy.",
+  "maxv": 12.0,
+  "Gc": 22130.0,
+  "fracture": true,
+  "upstream_example": "SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml",
+  "exploratory": true
+}

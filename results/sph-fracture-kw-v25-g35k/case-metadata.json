@@ -1,0 +1,10 @@
+{
+  "case": "kw-v25-g35k",
+  "title": "KW v25 Gc35k",
+  "description": "High impact, tougher fracture energy.",
+  "maxv": 25.0,
+  "Gc": 35000.0,
+  "fracture": true,
+  "upstream_example": "SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml",
+  "exploratory": true
+}

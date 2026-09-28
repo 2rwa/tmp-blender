@@ -1,0 +1,11 @@
+{
+  "title": "True fracture SPH \u2014 KW v16.5 Gc22k",
+  "description": "Benchmark-like impact and fracture energy. Phase-field fracture via SoliDualSPHysics; Gc=22130, impact velocity=16.5 m/s. Exploratory, not a validation reproduction.",
+  "source_path": "sph-experiments/fracture-pack",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "6f6313bb9100659aeb7de97dace58b7e297e85c6",
+  "run_number": "9",
+  "run_id": "36463320360"
+}

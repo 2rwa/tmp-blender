@@ -1,0 +1,10 @@
+{
+  "case": "kw-v25-g22k",
+  "title": "KW v25 Gc22k",
+  "description": "High impact, benchmark-like fracture energy.",
+  "maxv": 25.0,
+  "Gc": 22130.0,
+  "fracture": true,
+  "upstream_example": "SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml",
+  "exploratory": true
+}

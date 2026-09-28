@@ -1,0 +1,10 @@
+{
+  "case": "kw-v35-g8k-extreme",
+  "title": "KW v35 Gc8k Extreme",
+  "description": "Extreme stress corner: very high impact and low fracture energy.",
+  "maxv": 35.0,
+  "Gc": 8000.0,
+  "fracture": true,
+  "upstream_example": "SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml",
+  "exploratory": true
+}
