@@ -396,3 +396,12 @@ density/spray classification, and eventually a WebGPU point/density-field
 viewer.
 
 pySplashSurf remains useful when a fixed high-detail export mesh is required.
+
+## SPH 2026-09-28 session handoff
+
+For the current SPH/Blender/Geometry Nodes state, read:
+
+- `../../HANDOFF_SPH_20260928.md`
+- `sph-session-summary-2026-09-28.md`
+
+These include the successful basic, two-phase, and elastic five-case packs, known failures/fixes, Actions timings, and the next burst-like elastic / future higher-resolution two-phase directions.
