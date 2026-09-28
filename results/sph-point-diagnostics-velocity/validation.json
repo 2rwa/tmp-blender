@@ -1,0 +1,101 @@
+{
+  "mode": "velocity",
+  "representation": "animated-point-carriers-plus-geometry-nodes-diagnostics",
+  "frames": 61,
+  "particle_count": 1800,
+  "sparse_stride": 8,
+  "sparse_particle_count": 225,
+  "velocity_stats": {
+    "p95": 2.4456233978271484,
+    "p99": 4.001692295074463
+  },
+  "acceleration_stats": {
+    "normalization_percentile": 97,
+    "normalization_value": 16.811426162719727,
+    "percentiles": {
+      "50": 2.0588791370391846,
+      "75": 4.891645431518555,
+      "90": 9.97686767578125,
+      "95": 12.714210510253906,
+      "97": 16.811426162719727,
+      "99": 27.73016357421875
+    }
+  },
+  "preview_acceleration_bin_counts": [
+    1234,
+    433,
+    94,
+    27,
+    12
+  ],
+  "usd_bytes": 2956162,
+  "blend_bytes": 1247512,
+  "preview_bytes": 295182,
+  "video_bytes": 523690,
+  "usd_author_seconds": 0.5414450689999626,
+  "usd_import_seconds": 0.00231094700001222,
+  "geometry_nodes_check_seconds": 0.01842567500000314,
+  "render_seconds": 305.119798754,
+  "geometry_nodes": {
+    "nodes": [
+      "FunctionNodeAlignEulerToVector",
+      "GeometryNodeInputIndex",
+      "GeometryNodeInputPosition",
+      "GeometryNodeInstanceOnPoints",
+      "GeometryNodeJoinGeometry",
+      "GeometryNodeMeshToPoints",
+      "GeometryNodeObjectInfo",
+      "GeometryNodeRealizeInstances",
+      "GeometryNodeSampleIndex",
+      "GeometryNodeScaleInstances",
+      "NodeGroupInput",
+      "NodeGroupOutput",
+      "ShaderNodeCombineXYZ",
+      "ShaderNodeMath",
+      "ShaderNodeVectorMath"
+    ],
+    "modifier_stack": [
+      "MESH_SEQUENCE_CACHE",
+      "NODES"
+    ]
+  },
+  "checks": [
+    {
+      "frame": 1,
+      "diagnostic_vertices": 23625,
+      "diagnostic_faces": 38025,
+      "arrow_source_vertices": 225
+    },
+    {
+      "frame": 7,
+      "diagnostic_vertices": 23625,
+      "diagnostic_faces": 38025,
+      "arrow_source_vertices": 225
+    },
+    {
+      "frame": 13,
+      "diagnostic_vertices": 23625,
+      "diagnostic_faces": 38025,
+      "arrow_source_vertices": 225
+    },
+    {
+      "frame": 31,
+      "diagnostic_vertices": 23625,
+      "diagnostic_faces": 38025,
+      "arrow_source_vertices": 225
+    },
+    {
+      "frame": 46,
+      "diagnostic_vertices": 23625,
+      "diagnostic_faces": 38025,
+      "arrow_source_vertices": 225
+    },
+    {
+      "frame": 61,
+      "diagnostic_vertices": 23625,
+      "diagnostic_faces": 38025,
+      "arrow_source_vertices": 225
+    }
+  ],
+  "errors": []
+}

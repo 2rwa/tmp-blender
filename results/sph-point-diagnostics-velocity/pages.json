@@ -1,0 +1,11 @@
+{
+  "title": "SPH Point Diagnostics — Velocity Arrows",
+  "description": "SPH点群のうち8点ごとにvelocity矢印をGeometry Nodesで表示。矢印長は速度の95パーセンタイルで正規化。",
+  "source_path": "sph-experiments/point-diagnostics",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "49feb3b91b96b85c74e5a80ffd3c392f33ce2090",
+  "run_number": "2",
+  "run_id": "36369860412"
+}
