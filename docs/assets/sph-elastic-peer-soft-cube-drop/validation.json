@@ -1,0 +1,89 @@
+{
+  "case": "peer-soft-cube-drop",
+  "representation": "elastic-sph-to-animated-usd-plus-geometry-nodes",
+  "frames": 25,
+  "fps": 12,
+  "particle_count": 1000,
+  "velocity_stats": {
+    "p50": 1.157377004623413,
+    "p95": 5.004986763000488,
+    "p99": 6.45172643661499,
+    "max": 6.616856098175049
+  },
+  "first_extent": [
+    0.7199999690055847,
+    0.7200000286102295,
+    0.7199999690055847
+  ],
+  "last_extent": [
+    0.7627996206283569,
+    0.6916068196296692,
+    0.7627106308937073
+  ],
+  "last_extent_ratio": [
+    1.0594439506530762,
+    0.9605649709701538,
+    1.059320330619812
+  ],
+  "first_centroid": [
+    -0.009999959729611874,
+    1.5398797988891602,
+    -0.010000043548643589
+  ],
+  "last_centroid": [
+    -0.0005993024096824229,
+    0.41188982129096985,
+    0.003995777573436499
+  ],
+  "point_npz_total_bytes": 571801,
+  "point_usd_bytes": 301556,
+  "blend_bytes": 940246,
+  "preview_bytes": 250556,
+  "video_bytes": 49952,
+  "usd_author_seconds": 0.05369376400000192,
+  "usd_import_seconds": 0.0015215090000140208,
+  "render_seconds": 52.916117305,
+  "geometry_nodes": {
+    "point_radius": 0.034,
+    "nodes": [
+      "GeometryNodeInstanceOnPoints",
+      "GeometryNodeMeshToPoints",
+      "GeometryNodeObjectInfo",
+      "GeometryNodeRealizeInstances",
+      "NodeGroupInput",
+      "NodeGroupOutput"
+    ],
+    "modifier_stack": [
+      "MESH_SEQUENCE_CACHE",
+      "NODES"
+    ]
+  },
+  "checks": [
+    {
+      "frame": 1,
+      "vertices": 12000,
+      "faces": 20000
+    },
+    {
+      "frame": 6,
+      "vertices": 12000,
+      "faces": 20000
+    },
+    {
+      "frame": 12,
+      "vertices": 12000,
+      "faces": 20000
+    },
+    {
+      "frame": 18,
+      "vertices": 12000,
+      "faces": 20000
+    },
+    {
+      "frame": 25,
+      "vertices": 12000,
+      "faces": 20000
+    }
+  ],
+  "errors": []
+}
