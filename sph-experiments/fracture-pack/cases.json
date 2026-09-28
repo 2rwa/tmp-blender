@@ -1,37 +1,82 @@
 {
   "upstream_repository": "https://github.com/naqibr/SoliDualSPHysics",
   "upstream_example": "SolidExamples/6_Kalthoff_Winkler_Experiment/Solid_Case_Def.xml",
-  "note": "Exploratory parameter sweep based on the upstream Kalthoff-Winkler benchmark. Not a validation reproduction.",
+  "note": "Overnight exploratory 3x3 parameter grid around the Kalthoff-Winkler benchmark plus one extreme corner. Not a benchmark validation reproduction.",
+  "sweep": {
+    "axes": {
+      "maxv_m_s": [
+        12,
+        16.5,
+        25
+      ],
+      "Gc_J_m2": [
+        12000,
+        22130,
+        35000
+      ]
+    },
+    "extra": "v35-g8k-extreme"
+  },
   "cases": {
-    "kw-baseline": {
-      "title": "Kalthoff-Winkler Baseline",
-      "description": "Upstream-like Kalthoff-Winkler impact fracture parameters.",
-      "maxv": 16.5,
+    "kw-v12-g12k": {
+      "title": "KW v12 Gc12k",
+      "description": "Low impact, low fracture energy.",
+      "maxv": 12,
+      "Gc": 12000
+    },
+    "kw-v12-g22k": {
+      "title": "KW v12 Gc22k",
+      "description": "Low impact, benchmark-like fracture energy.",
+      "maxv": 12,
       "Gc": 22130
     },
-    "kw-brittle": {
-      "title": "Kalthoff-Winkler Lower Gc",
-      "description": "Lower critical energy release rate to encourage easier crack growth.",
+    "kw-v12-g35k": {
+      "title": "KW v12 Gc35k",
+      "description": "Low impact, tougher fracture energy.",
+      "maxv": 12,
+      "Gc": 35000
+    },
+    "kw-v16-g12k": {
+      "title": "KW v16.5 Gc12k",
+      "description": "Benchmark-like impact, low fracture energy.",
       "maxv": 16.5,
       "Gc": 12000
     },
-    "kw-tough": {
-      "title": "Kalthoff-Winkler Higher Gc",
-      "description": "Higher critical energy release rate to resist crack growth.",
+    "kw-v16-g22k": {
+      "title": "KW v16.5 Gc22k",
+      "description": "Benchmark-like impact and fracture energy.",
+      "maxv": 16.5,
+      "Gc": 22130
+    },
+    "kw-v16-g35k": {
+      "title": "KW v16.5 Gc35k",
+      "description": "Benchmark-like impact, tougher fracture energy.",
       "maxv": 16.5,
       "Gc": 35000
     },
-    "kw-high-impact": {
-      "title": "Kalthoff-Winkler High Impact",
-      "description": "Baseline fracture energy with a stronger imposed impact velocity.",
+    "kw-v25-g12k": {
+      "title": "KW v25 Gc12k",
+      "description": "High impact, low fracture energy.",
+      "maxv": 25,
+      "Gc": 12000
+    },
+    "kw-v25-g22k": {
+      "title": "KW v25 Gc22k",
+      "description": "High impact, benchmark-like fracture energy.",
       "maxv": 25,
       "Gc": 22130
     },
-    "kw-extreme-impact": {
-      "title": "Kalthoff-Winkler Extreme Impact",
-      "description": "Aggressive impact probe intended to expose branching or catastrophic failure.",
+    "kw-v25-g35k": {
+      "title": "KW v25 Gc35k",
+      "description": "High impact, tougher fracture energy.",
+      "maxv": 25,
+      "Gc": 35000
+    },
+    "kw-v35-g8k-extreme": {
+      "title": "KW v35 Gc8k Extreme",
+      "description": "Extreme stress corner: very high impact and low fracture energy.",
       "maxv": 35,
-      "Gc": 22130
+      "Gc": 8000
     }
   }
 }
