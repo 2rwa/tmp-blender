@@ -1,0 +1,11 @@
+{
+  "title": "SPH Fluid — Larger Droplets + Taubin Smooth",
+  "description": "radius 0.075の大粒版surfaceをそのまま使い、5回のTaubin smoothingで細かな凹凸だけを抑えた比較版。物理計算とtopologyは同一。",
+  "source_path": "sph-experiments/large-droplets-075-smooth",
+  "preview": "preview.png",
+  "media": "media.mp4",
+  "validation": "validation.json",
+  "source_commit": "f3344d048dab1be147039e1be6dd0c88ed32b266",
+  "run_number": "2",
+  "run_id": "36364391725"
+}

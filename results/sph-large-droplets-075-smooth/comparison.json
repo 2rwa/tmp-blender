@@ -1,0 +1,59 @@
+{
+  "baseline_radius_005": {
+    "particle_radius": 0.05,
+    "surface_vertices_min": 49554,
+    "surface_vertices_max": 59258,
+    "surface_faces_min": 91908,
+    "surface_faces_max": 111316,
+    "surface_npz_total_bytes": 51406712,
+    "usd_bytes": 70695428,
+    "blend_bytes": 5636876,
+    "render_seconds": 415.08990877299993
+  },
+  "large_droplets_radius_0075": {
+    "particle_radius": 0.075,
+    "surface_vertices_min": 114766,
+    "surface_vertices_max": 116800,
+    "surface_faces_min": 222384,
+    "surface_faces_max": 226400,
+    "surface_npz_total_bytes": 128952028,
+    "usd_bytes": 191451188,
+    "blend_bytes": 11414476,
+    "render_seconds": 781.988232226
+  },
+  "large_droplets_radius_0075_taubin5": {
+    "particle_radius": 0.075,
+    "surface_vertices_min": 114766,
+    "surface_vertices_max": 116800,
+    "surface_faces_min": 222384,
+    "surface_faces_max": 226400,
+    "surface_npz_total_bytes": 159666004,
+    "usd_bytes": 191451188,
+    "blend_bytes": 11414476,
+    "render_seconds": 776.658312998
+  },
+  "smoothing": {
+    "method": "taubin",
+    "iterations": 5,
+    "lambda": 0.45,
+    "mu": -0.47,
+    "topology_preserved": true
+  },
+  "smoothing_total_seconds": 153.19304431900005,
+  "smoothing_metrics": {
+    "mean_vertex_displacement_average": 0.0008796616892911619,
+    "mean_vertex_displacement_max_frame": 0.0008882627185453581,
+    "max_vertex_displacement_global": 0.0021757692285089493,
+    "bbox_volume_ratio_average": 0.9985515124884465,
+    "bbox_volume_ratio_min": 0.9965105305619425,
+    "bbox_volume_ratio_max": 1.0005313801568534
+  },
+  "smooth_vs_unsmoothed": {
+    "npz_bytes_ratio": 1.2381814111523706,
+    "usd_bytes_ratio": 1.0,
+    "blend_bytes_ratio": 1.0,
+    "render_seconds_ratio": 0.9931841439444327,
+    "vertices_same_range": true,
+    "faces_same_range": true
+  }
+}
