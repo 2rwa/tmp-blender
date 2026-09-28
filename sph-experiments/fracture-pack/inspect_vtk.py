@@ -2,75 +2,43 @@ from __future__ import annotations
 import argparse, json, math, shutil
 from pathlib import Path
 import numpy as np
+import vtk
+from vtk.util.numpy_support import vtk_to_numpy
 
-CANDIDATE_WORDS = ("phase", "fract", "damage", "crack", "pf")
+CANDIDATE_WORDS = ("phase", "fract", "damage", "crack", "pf", "phi")
 
-def read_legacy_polydata(path: Path):
-    text = path.read_text(encoding="utf-8", errors="replace")
-    lines = text.splitlines()
-    if not any(line.strip().upper() == "DATASET POLYDATA" for line in lines[:12]):
-        raise ValueError(f"expected legacy ASCII POLYDATA: {path}")
+def read_polydata(path: Path):
+    reader = vtk.vtkPolyDataReader()
+    reader.SetFileName(str(path))
+    reader.ReadAllScalarsOn()
+    reader.ReadAllVectorsOn()
+    reader.Update()
+    poly = reader.GetOutput()
+    if poly is None or poly.GetNumberOfPoints() == 0:
+        raise ValueError(f"no points in VTK: {path}")
 
-    points = None
-    scalars = {}
-    i = 0
-    point_count = None
-    while i < len(lines):
-        line = lines[i].strip()
-        up = line.upper()
-        if up.startswith("POINTS "):
-            parts = line.split()
-            n = int(parts[1])
-            vals = []
-            i += 1
-            while i < len(lines) and len(vals) < n * 3:
-                vals.extend(float(x) for x in lines[i].split())
-                i += 1
-            if len(vals) < n * 3:
-                raise ValueError(f"truncated POINTS in {path}")
-            points = np.asarray(vals[: n * 3], dtype=np.float64).reshape(n, 3)
+    pts = vtk_to_numpy(poly.GetPoints().GetData()).astype(np.float64, copy=False)
+    arrays = {}
+    pd = poly.GetPointData()
+    for i in range(pd.GetNumberOfArrays()):
+        arr = pd.GetArray(i)
+        if arr is None or arr.GetName() is None:
             continue
-        if up.startswith("POINT_DATA "):
-            point_count = int(line.split()[1])
-            i += 1
-            continue
-        if point_count is not None and up.startswith("SCALARS "):
-            parts = line.split()
-            name = parts[1]
-            ncomp = int(parts[3]) if len(parts) >= 4 and parts[3].isdigit() else 1
-            i += 1
-            if i < len(lines) and lines[i].strip().upper().startswith("LOOKUP_TABLE"):
-                i += 1
-            need = point_count * ncomp
-            vals = []
-            while i < len(lines) and len(vals) < need:
-                probe = lines[i].strip()
-                probe_up = probe.upper()
-                if probe_up.startswith(("SCALARS ", "VECTORS ", "FIELD ", "CELL_DATA ", "POINT_DATA ")):
-                    break
-                if probe:
-                    vals.extend(float(x) for x in probe.split())
-                i += 1
-            if len(vals) >= need:
-                arr = np.asarray(vals[:need], dtype=np.float64).reshape(point_count, ncomp)
-                if ncomp == 1:
-                    arr = arr[:, 0]
-                scalars[name] = arr
-            continue
-        i += 1
+        np_arr = vtk_to_numpy(arr)
+        arrays[arr.GetName()] = np_arr
+    return pts, arrays
 
-    if points is None:
-        raise ValueError(f"POINTS section missing in {path}")
-    return points, scalars
-
-def find_scalar(scalars):
+def find_scalar(arrays):
     scored = []
-    for key, arr in scalars.items():
-        if np.asarray(arr).ndim != 1:
+    for key, value in arrays.items():
+        arr = np.asarray(value)
+        if arr.ndim > 1 and arr.shape[-1] == 1:
+            arr = arr.reshape(-1)
+        if arr.ndim != 1:
             continue
         score = sum(w in key.lower() for w in CANDIDATE_WORDS)
         if score:
-            scored.append((score, key, np.asarray(arr, dtype=np.float64)))
+            scored.append((score, key, arr.astype(np.float64, copy=False)))
     if not scored:
         return None, None
     scored.sort(key=lambda x: (x[0], x[1]), reverse=True)
@@ -110,17 +78,25 @@ def main():
     particle_max = None
 
     for seq, path in enumerate(selected):
-        pts, scalars = read_legacy_polydata(path)
-        all_fields.update(scalars.keys())
+        pts, arrays = read_polydata(path)
+        all_fields.update(arrays.keys())
         particle_min = len(pts) if particle_min is None else min(particle_min, len(pts))
         particle_max = len(pts) if particle_max is None else max(particle_max, len(pts))
 
-        key, candidate = find_scalar(scalars)
+        key, candidate = find_scalar(arrays)
         if chosen_field is None and key is not None:
             chosen_field = key
-        scalar = scalars.get(chosen_field) if chosen_field else candidate
-        if scalar is not None and np.asarray(scalar).ndim == 1 and len(scalar) == len(pts):
-            scalar = np.asarray(scalar, dtype=np.float64)
+
+        scalar = None
+        if chosen_field and chosen_field in arrays:
+            scalar = np.asarray(arrays[chosen_field])
+            if scalar.ndim > 1 and scalar.shape[-1] == 1:
+                scalar = scalar.reshape(-1)
+        elif candidate is not None:
+            scalar = candidate
+
+        if scalar is not None and scalar.ndim == 1 and len(scalar) == len(pts):
+            scalar = scalar.astype(np.float64, copy=False)
             smin, smax = float(np.nanmin(scalar)), float(np.nanmax(scalar))
             global_scalar_min = smin if global_scalar_min is None else min(global_scalar_min, smin)
             global_scalar_max = smax if global_scalar_max is None else max(global_scalar_max, smax)
