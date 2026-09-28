@@ -20,6 +20,7 @@ on:
       - 'SPH sample pack 5'
       - 'SPH two-phase sample pack 5'
       - 'SPH elastic sample pack 5'
+      - 'SPH elastic burst pack 5'
     types: [completed]
 
 permissions:
