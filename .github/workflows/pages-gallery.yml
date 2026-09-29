@@ -23,6 +23,7 @@ on:
       - 'SPH elastic burst pack 5'
       - 'SPH fracture overnight sweep 10'
       - 'SPH fracture 3D extreme'
+      - 'Publish fracture 3D extreme'
     types: [completed]
 
 permissions:
