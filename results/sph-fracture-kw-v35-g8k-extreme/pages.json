@@ -1,11 +1,15 @@
 {
   "title": "True fracture SPH \u2014 KW v35 Gc8k Extreme",
-  "description": "Extreme stress corner: very high impact and low fracture energy. Phase-field fracture via SoliDualSPHysics; Gc=8000, impact velocity=35 m/s. Exploratory, not a validation reproduction.",
+  "description": "Extreme stress corner: very high impact and low fracture energy. Phase-field fracture via SoliDualSPHysics; Gc=8000, impact velocity=35 m/s. Exploratory, not a validation reproduction. Blender 3D view uses mapped position + Displacement; visual thickness is added only for presentation.",
   "source_path": "sph-experiments/fracture-pack",
   "preview": "preview.png",
   "media": "media.mp4",
   "validation": "validation.json",
   "source_commit": "6f6313bb9100659aeb7de97dace58b7e297e85c6",
   "run_number": "9",
-  "run_id": "36463320360"
+  "run_id": "36463320360",
+  "representation": "Blender 3D displaced phase-field surface",
+  "validation_3d": "validation-3d.json",
+  "media_2d": "media-2d.mp4",
+  "preview_2d": "preview-2d.png"
 }

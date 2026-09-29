@@ -1,0 +1,21 @@
+{
+  "case": "kw-v35-g8k-extreme",
+  "representation": "Blender 3D displaced phase-field surface",
+  "source_physics": "2D mapped Kalthoff-Winkler phase-field fracture benchmark",
+  "visual_thickness_only": true,
+  "deformed_position": "initial mapped position + Displacement",
+  "phasefield_color": "1=intact blue, 0=fractured red",
+  "frames": 23,
+  "fps": 8,
+  "source_particles": 633600,
+  "render_vertices": 39600,
+  "render_faces": 39203,
+  "max_displacement_m": 0.24685899913311005,
+  "phasefield_min": 0.0,
+  "phasefield_max": 1.0,
+  "render_seconds": 313.03440682699966,
+  "preview_bytes": 290794,
+  "video_bytes": 59654,
+  "blend_bytes": 4248664,
+  "errors": []
+}
