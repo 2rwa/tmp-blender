@@ -1,0 +1,82 @@
+name: Publish fracture 3D extreme
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sph-fracture-3d-publish.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download successful 3D artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fracture-3d-extreme
+          path: artifacts/fracture-3d-extreme
+          run-id: 36492297377
+          github-token: ${{ github.token }}
+
+      - name: Inspect artifact layout
+        run: find artifacts/fracture-3d-extreme -maxdepth 3 -type f -printf '%P %s bytes\n' | sort
+
+      - name: Replace gallery media with Blender 3D version
+        run: |
+          set -euxo pipefail
+          target="results/sph-fracture-kw-v35-g8k-extreme"
+          src="artifacts/fracture-3d-extreme"
+          preview="$(find "$src" -type f -name preview.png -print -quit)"
+          media="$(find "$src" -type f -name media.mp4 -print -quit)"
+          validation="$(find "$src" -type f -name validation-3d.json -print -quit)"
+          blend="$(find "$src" -type f -name 'sph-fracture-3d-kw-v35-g8k-extreme.blend' -print -quit)"
+          test -s "$preview"
+          test -s "$media"
+          test -s "$validation"
+          test -s "$blend"
+
+          if [ ! -f "$target/preview-2d.png" ]; then cp "$target/preview.png" "$target/preview-2d.png"; fi
+          if [ ! -f "$target/media-2d.mp4" ]; then cp "$target/media.mp4" "$target/media-2d.mp4"; fi
+          if [ ! -f "$target/validation-2d.json" ]; then cp "$target/validation.json" "$target/validation-2d.json"; fi
+
+          cp "$preview" "$target/preview.png"
+          cp "$media" "$target/media.mp4"
+          cp "$validation" "$target/validation-3d.json"
+          cp "$blend" "$target/"
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/sph-fracture-kw-v35-g8k-extreme/pages.json")
+          d=json.loads(p.read_text())
+          suffix=" Blender 3D view uses mapped position + Displacement; visual thickness is added only for presentation."
+          if suffix.strip() not in d.get("description",""):
+              d["description"]=d.get("description","")+suffix
+          d["representation"]="Blender 3D displaced phase-field surface"
+          d["validation_3d"]="validation-3d.json"
+          d["media_2d"]="media-2d.mp4"
+          d["preview_2d"]="preview-2d.png"
+          p.write_text(json.dumps(d,indent=2)+"\n")
+          PY
+
+      - name: Commit 3D gallery result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/sph-fracture-kw-v35-g8k-extreme/
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: publish Blender 3D fracture visualization [skip ci]"
+          git push origin HEAD:main
